@@ -15,11 +15,7 @@ export default class MyDocument extends Document {
   render() {
     return (
       <html lang="en">
-        <Head>
-          <meta name="robots" content="index,follow" />
-          <meta httpEquiv="expires" content="10800" />
-          {this.props.styleTags}
-        </Head>
+        <Head>{this.props.styleTags}</Head>
         <body>
           <Main />
           <NextScript />
