@@ -21,13 +21,8 @@ const App = ({ children }) => {
   return <div>{children}</div>;
 };
 
-App.defaultProps = {
-  theme: 'main'
-};
-
 App.propTypes = {
-  children: PropTypes.object.isRequired,
-  theme: PropTypes.string
+  children: PropTypes.object.isRequired
 };
 
 export default App;

@@ -1,7 +1,8 @@
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
-import App from '../components/App';
+import Default from '../containers/Default';
 import withData from '../libraries/withData';
+import Signin from '../components/Signin';
 
 const styles = theme => ({
   button: {
@@ -15,54 +16,12 @@ const styles = theme => ({
 const index = withData(props => {
   const { classes } = props;
   return (
-    <App>
-      <div>
-        <h1>index</h1>
-        <p>HELLO WORLD! HELLO FROM RAN!</p>
-        <div>
-          <Button variant="contained" className={classes.button}>
-            Default
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-          >
-            Primary
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            className={classes.button}
-          >
-            Secondary
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            disabled
-            className={classes.button}
-          >
-            Disabled
-          </Button>
-          <Button
-            variant="contained"
-            href="#contained-buttons"
-            className={classes.button}
-          >
-            Link
-          </Button>
-          <input
-            accept="image/*"
-            className={classes.input}
-            id="contained-button-file"
-            multiple
-            type="file"
-          />
-        </div>
-        <hr />
-      </div>
-    </App>
+    <Default>
+      <Button variant="contained" className={classes.button}>
+        Default
+      </Button>
+      <Signin />
+    </Default>
   );
 });
 
