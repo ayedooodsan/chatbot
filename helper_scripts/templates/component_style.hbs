@@ -1,12 +1,19 @@
-import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
-// eslint-disable-next-line import/prefer-default-export
-export const {{filename}} = styled.div`
-  border: 1px solid red;
-  padding: 5px;
+const Style = ({ global }) => (
+  <style jsx global={global}>{`
+    p {
+      color: red;
+    }
+  `}</style>
+);
 
-  > span {
-    color: red;
-    font-weight: bold;
-  }
-`;
+Style.defaultProps = {
+  global: false
+};
+
+Style.propTypes = {
+  global: PropTypes.bool
+};
+
+export default Style;
