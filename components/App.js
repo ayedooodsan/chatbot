@@ -1,18 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { createGlobalStyle } from 'styled-components';
 
 let offlineInstalled = false;
-
-const GlobalStyle = createGlobalStyle`
-  * {
-    font-family: Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace, serif;
-  }
-  body {
-    margin: 0;
-    padding: 0;
-  }
-`;
 
 const App = ({ children }) => {
   if (process.env.OFFLINE_SUPPORT && process.browser && !offlineInstalled) {
@@ -29,12 +18,7 @@ const App = ({ children }) => {
     offlineInstalled = true;
   }
 
-  return (
-    <div>
-      <GlobalStyle />
-      {children}
-    </div>
-  );
+  return <div>{children}</div>;
 };
 
 App.defaultProps = {

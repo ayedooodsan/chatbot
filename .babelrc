@@ -20,14 +20,6 @@
   },
   "plugins": [
     "@babel/plugin-transform-flow-strip-types",
-    [
-      "babel-plugin-styled-components",
-      {
-        "ssr": true,
-        "displayName": true,
-        "preprocess": false
-      }
-    ],
     "import-graphql"
   ]
 }
