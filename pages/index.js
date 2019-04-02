@@ -1,15 +1,12 @@
-import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 import Default from '../containers/Default';
 import withData from '../libraries/withData';
 import Signin from '../components/Signin';
 
-const styles = theme => ({
-  button: {
-    margin: theme.spacing.unit
-  },
-  input: {
-    display: 'none'
+const style = theme => ({
+  root: {
+    marginTop: theme.spacing.unit * 20
   }
 });
 
@@ -17,12 +14,16 @@ const index = withData(props => {
   const { classes } = props;
   return (
     <Default>
-      <Button variant="contained" className={classes.button}>
-        Default
-      </Button>
-      <Signin />
+      <Grid
+        container
+        alignItems="center"
+        justify="center"
+        className={classes.root}
+      >
+        <Signin />
+      </Grid>
     </Default>
   );
 });
 
-export default withStyles(styles)(index);
+export default withStyles(style)(index);
