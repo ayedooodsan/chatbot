@@ -67,7 +67,7 @@ class Dashboard extends React.Component {
     return (
       <div className={classes.wrapper}>
         <Sidebar
-          logoText="Creative Tim"
+          logoText="Chatbot"
           logo="/static/img/reactlogo.png"
           image={this.state.image}
           handleDrawerToggle={this.handleDrawerToggle}

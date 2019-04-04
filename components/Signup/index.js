@@ -1,104 +1,95 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import MyCard from '../MyCard';
 
-const styles = theme => ({
-  margin: {
-    margin: theme.spacing.unit
+import CustomInput from 'material-dashboard-react/dist/components/CustomInput/CustomInput';
+import Button from 'material-dashboard-react/dist/components/CustomButtons/Button';
+import Card from 'material-dashboard-react/dist/components/Card/Card';
+import CardHeader from 'material-dashboard-react/dist/components/Card/CardHeader';
+import CardBody from 'material-dashboard-react/dist/components/Card/CardBody';
+import CardFooter from 'material-dashboard-react/dist/components/Card/CardFooter';
+
+import { Link } from '../../routes';
+
+const styles = {
+  cardCategoryWhite: {
+    color: 'rgba(255,255,255,.62)',
+    margin: '0',
+    fontSize: '14px',
+    marginTop: '0',
+    marginBottom: '0'
   },
-  mediumMarginTop: {
-    marginTop: theme.spacing.unit * 1.5
+  cardTitleWhite: {
+    color: '#FFFFFF',
+    marginTop: '0px',
+    minHeight: 'auto',
+    fontWeight: '300',
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    marginBottom: '3px',
+    textDecoration: 'none'
   }
-});
-
+};
 const Signup = props => {
   const { classes } = props;
   return (
-    <MyCard headerText="Sign Up">
-      <FormControl fullWidth className={classes.margin}>
-        <InputLabel
-          classes={{
-            root: classes.cssLabel,
-            focused: classes.cssFocused
-          }}
-        >
-          Username
-        </InputLabel>
-        <Input
-          classes={{
-            underline: classes.cssUnderline
+    <Card>
+      <CardHeader color="primary">
+        <h4 className={classes.cardTitleWhite}>Create Account</h4>
+        <p className={classes.cardCategoryWhite}>Complete your account</p>
+      </CardHeader>
+      <CardBody>
+        <CustomInput
+          labelText="Username"
+          id="username"
+          formControlProps={{
+            fullWidth: true
           }}
         />
-      </FormControl>
-      <FormControl fullWidth className={classes.margin}>
-        <InputLabel
-          classes={{
-            root: classes.cssLabel,
-            focused: classes.cssFocused
-          }}
-        >
-          Email
-        </InputLabel>
-        <Input
-          type="email"
-          classes={{
-            underline: classes.cssUnderline
+        <CustomInput
+          labelText="Email address"
+          id="email-address"
+          formControlProps={{
+            fullWidth: true
           }}
         />
-      </FormControl>
-      <FormControl fullWidth className={classes.margin}>
-        <InputLabel
-          required
-          classes={{
-            root: classes.cssLabel,
-            focused: classes.cssFocused
-          }}
-        >
-          Password
-        </InputLabel>
-        <Input
-          type="password"
-          classes={{
-            underline: classes.cssUnderline
+        <CustomInput
+          labelText="First Name"
+          id="first-name"
+          formControlProps={{
+            fullWidth: true
           }}
         />
-      </FormControl>
-      <FormControl fullWidth className={classes.margin}>
-        <InputLabel
-          required
-          classes={{
-            root: classes.cssLabel,
-            focused: classes.cssFocused
-          }}
-        >
-          Confirm Password
-        </InputLabel>
-        <Input
-          type="password"
-          classes={{
-            underline: classes.cssUnderline
+        <CustomInput
+          labelText="Last Name"
+          id="last-name"
+          formControlProps={{
+            fullWidth: true
           }}
         />
-      </FormControl>
-      <div className={classes.mediumMarginTop}>
-        <Button
-          size="small"
-          color="primary"
-          variant="contained"
-          className={classes.margin}
-        >
-          Sign up
-        </Button>
-        <Button size="small" color="primary" className={classes.margin}>
-          Cancel
-        </Button>
-      </div>
-    </MyCard>
+        <CustomInput
+          labelText="Password"
+          id="password"
+          formControlProps={{
+            fullWidth: true
+          }}
+        />
+        <CustomInput
+          labelText="Confirm Password"
+          id="confirm-password"
+          formControlProps={{
+            fullWidth: true
+          }}
+        />
+      </CardBody>
+      <CardFooter>
+        <Button color="primary">Create Account</Button>
+        <Link route="\">
+          <Button color="primary" link>
+            Already have an account
+          </Button>
+        </Link>
+      </CardFooter>
+    </Card>
   );
 };
 

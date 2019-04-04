@@ -1,8 +1,21 @@
-import Dashboard from '../containers/Dashboard';
-import UserProfile from '../components/UserProfile';
+import SignIn from '../components/Signin';
 
 export default () => (
-  <Dashboard>
-    <UserProfile />
-  </Dashboard>
+  <div className="full-screen">
+    <div className="login-section">
+      <SignIn />
+    </div>
+    <style jsx>{`
+      .full-screen {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        height: 80vh;
+      }
+      .login-section {
+        width: 450px;
+      }
+    `}</style>
+  </div>
 );

@@ -1,17 +1,11 @@
 // @material-ui/icons
-import AccessibilityNew from '@material-ui/icons/AccessibilityNew';
-import Assignment from '@material-ui/icons/Assignment';
+import QuestionAnswer from '@material-ui/icons/QuestionAnswer';
 
 const routes = [
   {
-    route: '/signin',
-    name: 'Sign In',
-    icon: AccessibilityNew
-  },
-  {
-    route: '/signup',
-    name: 'Sign Up',
-    icon: Assignment
+    route: '/dialog',
+    name: 'Dialog',
+    icon: QuestionAnswer
   }
 ];
 

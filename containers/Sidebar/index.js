@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import { withRouter } from 'next/router';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 import Drawer from '@material-ui/core/Drawer';
@@ -13,37 +14,31 @@ import Icon from '@material-ui/core/Icon';
 import AdminNavbarLinks from '../HeaderLinks';
 
 import style from './style';
-import { Link } from '../../routes';
-import routes from './routes';
+import routes, { Link } from '../../routes';
+import sideBarRoutes from './routes';
 
 const Sidebar = ({ ...props }) => {
   // verifies if routeName is the one active (in browser input)
-  function activeRoute(routeName) {
-    return routeName === '';
+  const { router, route, params } = props;
+  function activeRoute() {
+    return route === null
+      ? false
+      : routes.findAndGetUrls(route, params).urls.as === router.asPath;
   }
   const { classes, color, logo, image, logoText } = props;
   const links = (
     <List className={classes.list}>
-      {routes.map(prop => {
-        let activePro = ' ';
-        let listItemClasses;
-        if (prop.path === '/upgrade-to-pro') {
-          activePro = `${classes.activePro} `;
-          listItemClasses = classNames({
-            [`${classes[color]}`]: true
-          });
-        } else {
-          listItemClasses = classNames({
-            [`${classes[color]}`]: false
-          });
-        }
+      {sideBarRoutes.map(prop => {
+        const listItemClasses = classNames({
+          [`${classes[color]}`]: activeRoute()
+        });
         const whiteFontClasses = classNames({
-          [`${classes.whiteFont}`]: activeRoute(prop.route)
+          [`${classes.whiteFont}`]: activeRoute()
         });
         return (
           <Link
             route={prop.route}
-            className={activePro + classes.item}
+            className={classes.item}
             activeClassName="active"
             key={prop.route}
           >
@@ -145,6 +140,11 @@ const Sidebar = ({ ...props }) => {
   );
 };
 
+Sidebar.defaultProps = {
+  route: null,
+  params: null
+};
+
 Sidebar.propTypes = {
   classes: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
@@ -153,7 +153,10 @@ Sidebar.propTypes = {
   logo: PropTypes.string.isRequired,
   logoText: PropTypes.string.isRequired,
   handleDrawerToggle: PropTypes.func.isRequired,
-  open: PropTypes.bool.isRequired
+  open: PropTypes.bool.isRequired,
+  router: PropTypes.object.isRequired,
+  route: PropTypes.string,
+  params: PropTypes.object
 };
 
-export default withStyles(style)(Sidebar);
+export default withStyles(style)(withRouter(Sidebar));

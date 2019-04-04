@@ -1,74 +1,62 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import MyCard from '../MyCard';
+import CustomInput from 'material-dashboard-react/dist/components/CustomInput/CustomInput';
+import Button from 'material-dashboard-react/dist/components/CustomButtons/Button';
+import Card from 'material-dashboard-react/dist/components/Card/Card';
+import CardHeader from 'material-dashboard-react/dist/components/Card/CardHeader';
+import CardBody from 'material-dashboard-react/dist/components/Card/CardBody';
+import CardFooter from 'material-dashboard-react/dist/components/Card/CardFooter';
 
-const styles = theme => ({
-  margin: {
-    margin: theme.spacing.unit
-  },
-  mediumMarginTop: {
-    marginTop: theme.spacing.unit * 1.5
+import { Link } from '../../routes';
+
+const styles = {
+  cardTitleWhite: {
+    color: '#FFFFFF',
+    marginTop: '0px',
+    minHeight: 'auto',
+    fontWeight: '300',
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    marginBottom: '3px',
+    textDecoration: 'none'
   }
-});
+};
 
 const Signin = props => {
   const { classes } = props;
   return (
-    <MyCard headerText="Sign In">
-      <FormControl fullWidth className={classes.margin}>
-        <InputLabel
-          htmlFor="custom-css-standard-input"
-          classes={{
-            root: classes.cssLabel,
-            focused: classes.cssFocused
-          }}
-        >
-          Username
-        </InputLabel>
-        <Input
-          id="custom-css-standard-input"
-          classes={{
-            underline: classes.cssUnderline
+    <Card>
+      <CardHeader color="primary">
+        <h3 className={classes.cardTitleWhite}>SIGN IN</h3>
+      </CardHeader>
+      <CardBody>
+        <CustomInput
+          labelText="Username"
+          id="username"
+          formControlProps={{
+            fullWidth: true
           }}
         />
-      </FormControl>
-      <FormControl fullWidth className={classes.margin}>
-        <InputLabel
-          htmlFor="custom-css-standard-input"
-          classes={{
-            root: classes.cssLabel,
-            focused: classes.cssFocused
+        <CustomInput
+          labelText="Password"
+          id="password"
+          formControlProps={{
+            fullWidth: true
           }}
-        >
-          Password
-        </InputLabel>
-        <Input
-          type="password"
-          id="custom-css-standard-input"
-          classes={{
-            underline: classes.cssUnderline
+          inputProps={{
+            type: 'password'
           }}
         />
-      </FormControl>
-      <div className={classes.mediumMarginTop}>
-        <Button
-          size="small"
-          color="primary"
-          variant="contained"
-          className={classes.margin}
-        >
-          Sign in
-        </Button>
-        <Button size="small" color="primary" className={classes.margin}>
-          Sign up
-        </Button>
-      </div>
-    </MyCard>
+      </CardBody>
+      <CardFooter>
+        <Button color="primary">Sign in</Button>
+        <Link route="sign-up">
+          <Button color="primary" link>
+            Sign up
+          </Button>
+        </Link>
+      </CardFooter>
+    </Card>
   );
 };
 
