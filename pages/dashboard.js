@@ -1,8 +1,7 @@
 import Dashboard from '../containers/Dashboard';
-import UserProfile from '../components/UserProfile';
 
 export default () => (
   <Dashboard>
-    <UserProfile />
+    <div>Ceeek</div>
   </Dashboard>
 );
