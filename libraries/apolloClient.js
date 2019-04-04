@@ -7,7 +7,7 @@ import persist from './persist';
 let apolloClient = null;
 
 const httpLink = createHttpLink({
-  uri: 'https://api.graph.cool/simple/v1/cj7ke77fv0e9i0122pflagbvx',
+  uri: 'http://localhost:4000/graphql',
   credentials: 'include'
 });
 

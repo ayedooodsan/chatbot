@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import CustomInput from 'material-dashboard-react/dist/components/CustomInput/CustomInput';
 import Button from 'material-dashboard-react/dist/components/CustomButtons/Button';
 import Card from 'material-dashboard-react/dist/components/Card/Card';
 import CardHeader from 'material-dashboard-react/dist/components/Card/CardHeader';
 import CardBody from 'material-dashboard-react/dist/components/Card/CardBody';
 import CardFooter from 'material-dashboard-react/dist/components/Card/CardFooter';
+import CustomInput from '../CustomInput';
 
 import { Link } from '../../routes';
 
@@ -50,7 +50,7 @@ const Signin = props => {
       </CardBody>
       <CardFooter>
         <Button color="primary">Sign in</Button>
-        <Link route="sign-up">
+        <Link route="/sign-up">
           <Button color="primary" link>
             Sign up
           </Button>
