@@ -7,8 +7,7 @@ import persist from './persist';
 let apolloClient = null;
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4000/graphql',
-  credentials: 'include'
+  uri: 'http://localhost:4237/graphql'
 });
 
 function createClient(headers, token, initialState) {

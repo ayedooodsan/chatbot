@@ -38,4 +38,8 @@ export function mergeObjects(...args) {
   return dst;
 }
 
+export function isTypeOfString(value) {
+  return typeof value === 'string';
+}
+
 /* eslint-enable no-restricted-syntax */

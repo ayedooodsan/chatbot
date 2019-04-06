@@ -1,7 +1,7 @@
 import { createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 
-import { dispatchers } from '../components/AuthFields/store';
+import { dispatchers } from '../redux/auth';
 import rootReducer from './reducer';
 import createMiddleware from './middleware';
 import persist from './persist';

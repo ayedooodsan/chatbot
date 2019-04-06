@@ -115,18 +115,7 @@ const sidebarStyle = theme => ({
     display: 'block',
     top: '0',
     left: '0',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center center',
-    '&:after': {
-      position: 'absolute',
-      zIndex: '3',
-      width: '100%',
-      height: '100%',
-      content: '""',
-      display: 'block',
-      background: blackColor,
-      opacity: '.8'
-    }
+    backgroundColor: '#1c1c21'
   },
   list: {
     marginTop: '20px',
@@ -148,8 +137,8 @@ const sidebarStyle = theme => ({
   itemLink: {
     width: 'auto',
     transition: 'all 300ms linear',
-    margin: '10px 15px 0',
-    borderRadius: '3px',
+    margin: '0',
+    borderRadius: '0',
     position: 'relative',
     display: 'block',
     padding: '10px 15px',
@@ -211,18 +200,8 @@ const sidebarStyle = theme => ({
   },
   green: {
     backgroundColor: successColor[0],
-    boxShadow: `0 12px 20px -10px rgba(${hexToRgb(
-      successColor[0]
-    )},.28), 0 4px 20px 0 rgba(${hexToRgb(
-      blackColor
-    )},.12), 0 7px 8px -5px rgba(${hexToRgb(successColor[0])},.2)`,
     '&:hover': {
-      backgroundColor: successColor[0],
-      boxShadow: `0 12px 20px -10px rgba(${hexToRgb(
-        successColor[0]
-      )},.28), 0 4px 20px 0 rgba(${hexToRgb(
-        blackColor
-      )},.12), 0 7px 8px -5px rgba(${hexToRgb(successColor[0])},.2)`
+      backgroundColor: successColor[0]
     }
   },
   orange: {
@@ -262,15 +241,9 @@ const sidebarStyle = theme => ({
     height: 'calc(100vh - 75px)',
     overflow: 'auto',
     width: '260px',
+    marginTop: '50px',
     zIndex: '4',
     overflowScrolling: 'touch'
-  },
-  activePro: {
-    [theme.breakpoints.up('md')]: {
-      position: 'absolute',
-      width: '100%',
-      bottom: '13px'
-    }
   }
 });
 

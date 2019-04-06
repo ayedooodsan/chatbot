@@ -1,5 +1,4 @@
 import {
-  container,
   defaultFont,
   primaryColor,
   defaultBoxShadow,
@@ -7,31 +6,29 @@ import {
   successColor,
   warningColor,
   dangerColor,
-  whiteColor,
-  grayColor
+  whiteColor
 } from '../../libraries/materialDashboardReactStyle';
 
 const headerStyle = () => ({
   appBar: {
-    backgroundColor: 'transparent',
+    backgroundColor: 'black',
     boxShadow: 'none',
     borderBottom: '0',
     marginBottom: '0',
     position: 'absolute',
     width: '100%',
-    paddingTop: '10px',
+    paddingTop: '0',
+    paddingBottom: '0',
     zIndex: '1029',
-    color: grayColor[7],
+    color: whiteColor,
     border: '0',
-    borderRadius: '3px',
-    padding: '10px 0',
     transition: 'all 150ms ease 0s',
-    minHeight: '50px',
+    height: '64px',
     display: 'block'
   },
   container: {
-    ...container,
-    minHeight: '50px'
+    height: '64px',
+    padding: '0'
   },
   flex: {
     flex: 1
@@ -75,6 +72,11 @@ const headerStyle = () => ({
     backgroundColor: dangerColor[0],
     color: whiteColor,
     ...defaultBoxShadow
+  },
+  project: {
+    color: whiteColor,
+    width: '245px',
+    paddingRight: '15px'
   }
 });
 

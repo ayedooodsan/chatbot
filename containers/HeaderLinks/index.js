@@ -13,10 +13,7 @@ import Poppers from '@material-ui/core/Popper';
 // @material-ui/icons
 import Person from '@material-ui/icons/Person';
 import Notifications from '@material-ui/icons/Notifications';
-import Dashboard from '@material-ui/icons/Dashboard';
-import Search from '@material-ui/icons/Search';
 // core components
-import CustomInput from 'material-dashboard-react/dist/components/CustomInput/CustomInput';
 import Button from 'material-dashboard-react/dist/components/CustomButtons/Button';
 
 import headerLinksStyle from './style';
@@ -49,34 +46,6 @@ class HeaderLinks extends React.Component {
     const { open } = this.state;
     return (
       <div>
-        <div className={classes.searchWrapper}>
-          <CustomInput
-            formControlProps={{
-              className: `${classes.margin} ${classes.search}`
-            }}
-            inputProps={{
-              placeholder: 'Search',
-              inputProps: {
-                'aria-label': 'Search'
-              }
-            }}
-          />
-          <Button color="white" aria-label="edit" justIcon round>
-            <Search />
-          </Button>
-        </div>
-        <Button
-          color={this.state.windowInnerWidth > 959 ? 'transparent' : 'white'}
-          justIcon={this.state.windowInnerWidth > 959}
-          simple={!(this.state.windowInnerWidth > 959)}
-          aria-label="Dashboard"
-          className={classes.buttonLink}
-        >
-          <Dashboard className={classes.icons} />
-          <Hidden mdUp implementation="css">
-            <p className={classes.linkText}>Dashboard</p>
-          </Hidden>
-        </Button>
         <div className={classes.manager}>
           <Button
             buttonRef={node => {
@@ -107,19 +76,13 @@ class HeaderLinks extends React.Component {
             anchorEl={this.anchorEl}
             transition
             disablePortal
+            placement="bottom-end"
             className={`${classNames({ [classes.popperClose]: !open })} ${
               classes.pooperNav
             }`}
           >
-            {({ TransitionProps, placement }) => (
-              <Grow
-                {...TransitionProps}
-                id="menu-list-grow"
-                style={{
-                  transformOrigin:
-                    placement === 'bottom' ? 'center top' : 'center bottom'
-                }}
-              >
+            {({ TransitionProps }) => (
+              <Grow {...TransitionProps} id="menu-list-grow">
                 <Paper>
                   <ClickAwayListener onClickAway={this.handleClose}>
                     <MenuList role="menu">

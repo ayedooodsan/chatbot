@@ -1,4 +1,4 @@
-import Router from 'next/router';
+import { Router } from '../routes';
 
 export default (context, target) => {
   if (context.res) {
@@ -7,7 +7,6 @@ export default (context, target) => {
     context.res.writeHead(303, { Location: target });
     context.res.end();
   } else {
-    // In the browser, we just pretend like this never even happened ;)
-    Router.replace(target);
+    Router.replaceRoute(target);
   }
 };

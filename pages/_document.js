@@ -94,11 +94,6 @@ MyDocument.getInitialProps = ctx => {
           dangerouslySetInnerHTML={{ __html: css }}
         />
         {flush() || null}
-        <style jsx global>{`
-          body {
-            background-color: #eeeeee !important;
-          }
-        `}</style>
       </React.Fragment>
     )
   };

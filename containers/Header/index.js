@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -10,24 +9,18 @@ import Hidden from '@material-ui/core/Hidden';
 // @material-ui/icons
 import Menu from '@material-ui/icons/Menu';
 // core components
-import Button from 'material-dashboard-react/dist/components/CustomButtons/Button';
 import AdminNavbarLinks from '../HeaderLinks';
+import ProjectBar from '../../components/ProjectBar';
 
 import style from './style';
 
 function Header({ ...props }) {
-  const { classes, color } = props;
-  const appBarClasses = classNames({
-    [`${classes[color]}`]: color
-  });
+  const { classes } = props;
   return (
-    <AppBar className={classes.appBar + appBarClasses}>
+    <AppBar className={classes.appBar}>
       <Toolbar className={classes.container}>
-        <div className={classes.flex}>
-          <Button color="transparent" href="#" className={classes.title}>
-            Sign In
-          </Button>
-        </div>
+        <ProjectBar />
+        <div className={classes.flex}> </div>
         <Hidden smDown implementation="css">
           <AdminNavbarLinks />
         </Hidden>
@@ -47,9 +40,7 @@ function Header({ ...props }) {
 
 Header.propTypes = {
   classes: PropTypes.object.isRequired,
-  handleDrawerToggle: PropTypes.object.isRequired,
-  color: PropTypes.oneOf(['primary', 'info', 'success', 'warning', 'danger'])
-    .isRequired
+  handleDrawerToggle: PropTypes.object.isRequired
 };
 
 export default withStyles(style)(Header);

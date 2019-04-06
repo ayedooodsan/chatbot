@@ -1,6 +1,7 @@
+import withData from '../libraries/withData';
 import SignIn from '../components/Signin';
 
-export default () => (
+export default withData(() => (
   <div className="full-screen">
     <div className="login-section">
       <SignIn />
@@ -18,4 +19,4 @@ export default () => (
       }
     `}</style>
   </div>
-);
+));

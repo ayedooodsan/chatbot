@@ -14,7 +14,9 @@ const appStyle = theme => ({
     [theme.breakpoints.up('md')]: {
       width: `calc(100% - ${drawerWidth}px)`
     },
-    overflow: 'auto',
+    marginTop: '63px',
+    height: 'calc(100vh - 63px)',
+    overflow: 'hidden',
     position: 'relative',
     float: 'right',
     ...transition,
@@ -23,7 +25,6 @@ const appStyle = theme => ({
     overflowScrolling: 'touch'
   },
   content: {
-    marginTop: '70px',
     padding: '30px 15px',
     minHeight: 'calc(100vh - 123px)'
   },

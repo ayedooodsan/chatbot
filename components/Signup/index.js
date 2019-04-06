@@ -9,7 +9,9 @@ import CardHeader from 'material-dashboard-react/dist/components/Card/CardHeader
 import CardBody from 'material-dashboard-react/dist/components/Card/CardBody';
 import CardFooter from 'material-dashboard-react/dist/components/Card/CardFooter';
 import CustomInput from '../CustomInput';
-
+import connect from './store';
+import redirect from '../../libraries/redirect';
+import { isTypeOfString } from '../../libraries/helpers';
 import { Link } from '../../routes';
 
 const styles = {
@@ -31,8 +33,15 @@ const styles = {
   }
 };
 
-const onSubmit = values => {
-  console.log(values);
+const onSubmit = props => {
+  return values => {
+    props.mutations.signUp(values).then(response => {
+      if (response.data.signUp.token) {
+        props.actions.signIn(response.data.signUp.token);
+        redirect(null, '/dialog');
+      }
+    });
+  };
 };
 
 const validate = values => {
@@ -49,16 +58,14 @@ const validate = values => {
   if (!values.password) {
     errors.password = 'Password address is required';
   } else if (values.password.length < 7) {
-    errors.password = 'Password must longer than six character';
+    errors.password = 'Password must be at least 7 characters';
   }
   return errors;
 };
 
-const isTypeOfString = value => typeof value === 'string';
-
 const Signup = props => {
   const { form, handleSubmit, prestine, submitting } = useForm({
-    onSubmit,
+    onSubmit: onSubmit(props),
     validate
   });
   const username = useField('username', form);
@@ -70,7 +77,7 @@ const Signup = props => {
   return (
     <form onSubmit={handleSubmit}>
       <Card>
-        <CardHeader color="primary">
+        <CardHeader color="success">
           <h4 className={classes.cardTitleWhite}>Create Account</h4>
           <p className={classes.cardCategoryWhite}>Complete your account</p>
         </CardHeader>
@@ -144,14 +151,14 @@ const Signup = props => {
         </CardBody>
         <CardFooter>
           <Button
-            color="primary"
+            color="success"
             type="submit"
             disabled={prestine || submitting}
           >
             Create Account
           </Button>
           <Link route="\">
-            <Button color="primary" link>
+            <Button color="success" link>
               Already have an account
             </Button>
           </Link>
@@ -165,4 +172,4 @@ Signup.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Signup);
+export default withStyles(styles)(connect(Signup));

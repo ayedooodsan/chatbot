@@ -3,6 +3,7 @@ const routes = require('next-routes')();
 //
 // ------------ ROUTES ---------------
 // @RANStartRoutes
+routes.add('dialog');
 routes.add('signup', '/sign-up');
 // @RANEndRoutes
 // ------------ ROUTES ---------------

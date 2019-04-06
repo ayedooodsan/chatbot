@@ -1,12 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// creates a beautiful scrollbar
-import PerfectScrollbar from 'perfect-scrollbar';
-import 'perfect-scrollbar/css/perfect-scrollbar.css';
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles';
 // core components
-import Footer from '../Footer';
 import Header from '../Header';
 import Sidebar from '../Sidebar';
 
@@ -17,7 +13,7 @@ class Dashboard extends React.Component {
     super(props);
     this.state = {
       image: '/static/img/sidebar-1.jpg',
-      color: 'blue',
+      color: 'green',
       fixedClasses: 'dropdown show',
       mobileOpen: false
     };
@@ -25,9 +21,6 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    if (navigator.platform.indexOf('Win') > -1) {
-      this.ps = new PerfectScrollbar(this.mainPanel.current);
-    }
     window.addEventListener('resize', this.resizeFunction);
   }
 
@@ -63,7 +56,7 @@ class Dashboard extends React.Component {
   };
 
   render() {
-    const { classes, ...rest } = this.props;
+    const { classes } = this.props;
     return (
       <div className={classes.wrapper}>
         <Sidebar
@@ -73,14 +66,10 @@ class Dashboard extends React.Component {
           handleDrawerToggle={this.handleDrawerToggle}
           open={this.state.mobileOpen}
           color={this.state.color}
-          {...rest}
         />
+        <Header handleDrawerToggle={this.handleDrawerToggle} />
         <div className={classes.mainPanel} ref={this.mainPanel}>
-          <Header handleDrawerToggle={this.handleDrawerToggle} {...rest} />
-          <div className={classes.content}>
-            <div className={classes.container}>{this.props.children}</div>
-          </div>
-          <Footer />
+          <div>{this.props.children}</div>
         </div>
       </div>
     );

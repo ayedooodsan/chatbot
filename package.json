@@ -72,6 +72,7 @@
     "js-cookie": "2.2.0",
     "lru-cache": "5.1.1",
     "material-dashboard-react": "^1.6.0",
+    "material-ui-flat-pagination": "^3.2.0",
     "moment": "2.24.0",
     "next": "7.0.3",
     "next-cookies": "Sly777/next-cookies#master",
