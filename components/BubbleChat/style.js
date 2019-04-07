@@ -83,8 +83,7 @@ const style = () => ({
   selfMessages: {
     order: 1,
     borderBottomRightRadius: 0,
-    boxShadow:
-      '9px 3px 3.5px 0px rgba(0,0,0,0.2), -3px 3px 3.5px 0px rgba(0,0,0,0.1)'
+    boxShadow: '-1px 3px 3.5px 0px rgba(0,0,0,0.2)'
   }
 });
 

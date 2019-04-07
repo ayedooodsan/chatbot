@@ -1,79 +1,103 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import PerfectScrollbar from 'perfect-scrollbar';
-import MenuList from '@material-ui/core/MenuList';
-import MenuItem from '@material-ui/core/MenuItem';
+import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
-
-import DialogBar from '../DialogBar';
 import style from './style';
+import BubbleChat from '../BubbleChat';
+import DialogBar from '../DialogBar';
+import DialogInput from '../DialogInput';
 
-class DialogList extends Component {
+class DialogMenu extends Component {
   constructor(props) {
     super(props);
-    this.container = React.createRef();
     this.state = {
-      dialogs: [
-        { id: 1, title: 'Introduction' },
-        { id: 2, title: 'FAQ product' }
-      ],
-      pagination: {
-        limit: 10,
-        offset: 3
-      },
-      keyword: ''
+      // dialogId: 1,
+      dialogTitle: 'Introduction',
+      dialog: [
+        {
+          order: 1,
+          type: 'user',
+          options: [
+            {
+              id: 1,
+              title: 'Say name',
+              intentId: 1,
+              intent: {
+                id: 1,
+                name: 'Say name',
+                examples: [
+                  'Hai my name is Aditio',
+                  'I am susan sines',
+                  "It's joko",
+                  'You can tell me elvis',
+                  'Call me juan'
+                ],
+                params: [
+                  {
+                    name: 'first',
+                    required: true
+                  },
+                  {
+                    name: 'last',
+                    required: false
+                  }
+                ]
+              }
+            },
+            {
+              id: 2,
+              title: 'Say Hello',
+              intentId: 2,
+              intent: {
+                name: 'Say hai',
+                values: ['Good morning', 'Hello', 'Hai'],
+                params: []
+              }
+            }
+          ]
+        },
+        {
+          order: 2,
+          type: 'bot',
+          templateName: 'text',
+          payload: 'Hello, I am robot.'
+        }
+      ]
     };
   }
 
-  componentDidMount() {
-    this.ps = new PerfectScrollbar(this.container.current);
-  }
-
-  handleClickPagination = offset => {
-    this.setState(offset);
-  };
-
-  setKeyword = keyword => {
-    this.setState({ keyword });
-  };
-
   render() {
     const { classes } = this.props;
-    const { dialogs, pagination, keyword } = this.state;
+    const { dialog, dialogTitle } = this.state;
     return (
       <Paper className={classes.root}>
         <Paper className={classes.header}>
-          <DialogBar
-            setKeyword={this.setKeyword}
-            pagination={{ ...pagination, dataLength: dialogs.length }}
-          />
+          <DialogBar values={dialogTitle} />
         </Paper>
-        <div className={classes.container} ref={this.container}>
-          <MenuList>
-            {dialogs.map(dialog => (
-              <MenuItem
-                key={dialog.id}
-                className={`${classes.menuItem} ${classes.whiteText}`}
-              >
-                <Typography
-                  variant="caption"
-                  className={`${classes.menuTitle} ${classes.whiteText}`}
-                >
-                  {dialog.title} {keyword}
-                </Typography>
-              </MenuItem>
-            ))}
-          </MenuList>
+        <div className={classes.container}>
+          {dialog.map(message =>
+            message.type === 'bot' ? (
+              <BubbleChat type="self">
+                <Typography variant="h6">{message.payload}</Typography>
+              </BubbleChat>
+            ) : (
+              <BubbleChat type="other">
+                <Typography variant="h6">{message.options[0].name}</Typography>
+              </BubbleChat>
+            )
+          )}
         </div>
+        <Paper className={classes.footer}>
+          <DialogInput />
+        </Paper>
       </Paper>
     );
   }
 }
 
-DialogList.propTypes = {
+DialogMenu.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(style)(DialogList);
+export default withStyles(style)(DialogMenu);

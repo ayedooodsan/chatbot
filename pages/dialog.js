@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
-import GridContainer from 'material-dashboard-react/dist/components/Grid/GridContainer';
-import GridItem from 'material-dashboard-react/dist/components/Grid/GridItem';
+import Grid from '@material-ui/core/Grid';
 import withData from '../libraries/withData';
 import Dashboard from '../containers/Dashboard';
+import DialogsMenu from '../components/DialogsMenu';
 import DialogMenu from '../components/DialogMenu';
-import BubbleChat from '../components/BubbleChat';
 
 const style = () => ({
-  container: {
-    width: 'inherit'
+  dialogGrid: {
+    paddingLeft: '0'
   }
 });
 
@@ -21,18 +20,17 @@ class Dialog extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <Dashboard>
-        <GridContainer>
-          <GridItem md={3}>
+        <Grid container spacing={0}>
+          <Grid item md={3}>
+            <DialogsMenu />
+          </Grid>
+          <Grid item md={9} className={classes.dialogGrid}>
             <DialogMenu />
-          </GridItem>
-          <GridItem md={9}>
-            <BubbleChat type="sender">
-              <div>Cek</div>
-            </BubbleChat>
-          </GridItem>
-        </GridContainer>
+          </Grid>
+        </Grid>
       </Dashboard>
     );
   }

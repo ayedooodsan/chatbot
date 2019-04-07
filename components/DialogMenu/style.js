@@ -1,37 +1,23 @@
-const style = theme => ({
-  menuItem: {
-    '&:focus': {
-      backgroundColor: theme.palette.primary.main,
-      '& $primary, & $icon': {
-        color: theme.palette.common.white
-      }
-    }
+const style = () => ({
+  root: {
+    position: 'relative',
+    backgroundColor: '#4c4c54',
+    borderRadius: 0
   },
-  primary: {},
-  icon: {},
-  noBorderRadius: {
-    borderRadius: '0px'
+  header: {
+    backgroundColor: '#4c4c54',
+    borderRadius: 0,
+    padding: '13px 25px'
+  },
+  footer: {
+    borderRadius: 0,
+    padding: '5px 10px'
   },
   container: {
     position: 'relative',
     overflow: 'auto',
-    height: 'calc(100vh - 65px)',
+    height: 'calc(100vh - 220px)',
     borderRadius: '0px'
-  },
-  header: {
-    backgroundColor: '#28282e',
-    borderRadius: '0px',
-    padding: '13px 25px'
-  },
-  root: {
-    backgroundColor: '#28282e'
-  },
-  whiteText: {
-    color: 'white'
-  },
-  pagination: {
-    display: 'flex',
-    justifyContent: 'center'
   }
 });
 

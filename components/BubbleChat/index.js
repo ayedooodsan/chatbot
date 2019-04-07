@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Face from '@material-ui/icons/Face';
+import Android from '@material-ui/icons/Android';
 import style from './style';
 
 const BubbleChat = props => {
@@ -21,7 +22,7 @@ const BubbleChat = props => {
     <div className={`${classes.li} ${classes.bubbleSelf}`}>
       <div className={classes.avatarSelf}>
         <div className={classes.img}>
-          <Face className={classes.icon} />
+          <Android className={classes.icon} />
         </div>
       </div>
       <div className={`${classes.messages} ${classes.selfMessages}`}>
