@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import style from './style';
 import BubbleChat from '../BubbleChat';
 import DialogBar from '../DialogBar';
-import DialogInput from '../DialogInput';
+import RobotDialogInput from '../RobotDialogInput';
 
 class DialogMenu extends Component {
   constructor(props) {
@@ -89,7 +89,7 @@ class DialogMenu extends Component {
           )}
         </div>
         <Paper className={classes.footer}>
-          <DialogInput />
+          <RobotDialogInput />
         </Paper>
       </Paper>
     );

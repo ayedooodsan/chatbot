@@ -6,8 +6,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
 import getPageContext from '../libraries/getPageContext';
 
-import 'perfect-scrollbar/css/perfect-scrollbar.css';
-
 class MyApp extends App {
   constructor() {
     super();

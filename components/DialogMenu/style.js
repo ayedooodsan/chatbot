@@ -1,6 +1,8 @@
 const style = () => ({
   root: {
-    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    height: 'calc(100vh - 63px)',
     backgroundColor: '#4c4c54',
     borderRadius: 0
   },
@@ -14,9 +16,9 @@ const style = () => ({
     padding: '5px 10px'
   },
   container: {
+    flex: 1,
     position: 'relative',
     overflow: 'auto',
-    height: 'calc(100vh - 220px)',
     borderRadius: '0px'
   }
 });
