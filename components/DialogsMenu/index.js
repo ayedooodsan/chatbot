@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Scrollbar from 'react-scrollbars-custom';
 import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
@@ -46,21 +47,23 @@ class DialogsMenu extends Component {
           />
         </Paper>
         <div className={classes.container}>
-          <MenuList>
-            {dialogs.map(dialog => (
-              <MenuItem
-                key={dialog.id}
-                className={`${classes.menuItem} ${classes.whiteText}`}
-              >
-                <Typography
-                  variant="caption"
-                  className={`${classes.menuTitle} ${classes.whiteText}`}
+          <Scrollbar>
+            <MenuList>
+              {dialogs.map(dialog => (
+                <MenuItem
+                  key={dialog.id}
+                  className={`${classes.menuItem} ${classes.whiteText}`}
                 >
-                  {dialog.title} {keyword}
-                </Typography>
-              </MenuItem>
-            ))}
-          </MenuList>
+                  <Typography
+                    variant="caption"
+                    className={`${classes.menuTitle} ${classes.whiteText}`}
+                  >
+                    {dialog.title} {keyword}
+                  </Typography>
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Scrollbar>
         </div>
       </Paper>
     );

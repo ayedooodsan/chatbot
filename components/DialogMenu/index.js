@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Scrollbar from 'react-scrollbars-custom';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -7,6 +8,74 @@ import style from './style';
 import BubbleChat from '../BubbleChat';
 import DialogBar from '../DialogBar';
 import RobotDialogInput from '../RobotDialogInput';
+import UserMessage from '../UserMessage';
+
+const dialog = [
+  {
+    id: 1,
+    parentId: null,
+    type: 'user',
+    title: 'Say name',
+    intent: {
+      id: 1,
+      name: 'Say name',
+      examples: [
+        'Hai my name is Aditio',
+        'I am susan sines',
+        "It's joko",
+        'You can tell me elvis',
+        'Call me juan'
+      ],
+      params: [
+        {
+          name: 'first',
+          required: true,
+          messsage: 'Please tell me your first name'
+        },
+        {
+          name: 'last',
+          required: false
+        }
+      ]
+    }
+  },
+  {
+    id: 2,
+    parentId: 1,
+    type: 'bot',
+    templateName: 'text',
+    payload: 'Hello, I am robot.'
+  },
+  {
+    id: 3,
+    parentId: 2,
+    type: 'user',
+    title: 'Say Hello',
+    intentId: 2,
+    intent: {
+      name: 'Say hai',
+      values: ['Good morning', 'Hello', 'Hai'],
+      params: []
+    }
+  },
+  {
+    id: 4,
+    parentId: 2,
+    type: 'user',
+    title: 'Say Wish',
+    intentId: 2,
+    intent: {
+      name: 'Say hai',
+      values: ['I want food', 'I wish could eat banana', 'Need fresh water'],
+      params: [
+        {
+          name: 'good',
+          required: true
+        }
+      ]
+    }
+  }
+];
 
 class DialogMenu extends Component {
   constructor(props) {
@@ -14,82 +83,77 @@ class DialogMenu extends Component {
     this.state = {
       // dialogId: 1,
       dialogTitle: 'Introduction',
-      dialog: [
-        {
-          order: 1,
-          type: 'user',
-          options: [
-            {
-              id: 1,
-              title: 'Say name',
-              intentId: 1,
-              intent: {
-                id: 1,
-                name: 'Say name',
-                examples: [
-                  'Hai my name is Aditio',
-                  'I am susan sines',
-                  "It's joko",
-                  'You can tell me elvis',
-                  'Call me juan'
-                ],
-                params: [
-                  {
-                    name: 'first',
-                    required: true
-                  },
-                  {
-                    name: 'last',
-                    required: false
-                  }
-                ]
-              }
-            },
-            {
-              id: 2,
-              title: 'Say Hello',
-              intentId: 2,
-              intent: {
-                name: 'Say hai',
-                values: ['Good morning', 'Hello', 'Hai'],
-                params: []
-              }
-            }
-          ]
-        },
-        {
-          order: 2,
-          type: 'bot',
-          templateName: 'text',
-          payload: 'Hello, I am robot.'
-        }
-      ]
+      viewedDialog: [],
+      activeMessageIds: []
     };
+  }
+
+  static getDerivedStateFromProps() {
+    const viewedDialog = [];
+    const activeMessageIds = [];
+    let messages = [];
+    let currentActiveMessageId = null;
+    const tempDialog = [...dialog];
+    while (tempDialog.length > 0) {
+      const message = tempDialog.shift();
+      if (message.parentId === currentActiveMessageId) {
+        messages.push(message);
+      } else {
+        const activeMessage = messages.find(
+          // eslint-disable-next-line no-loop-func
+          parent => parent.id === message.parentId
+        );
+        if (activeMessage !== undefined) {
+          viewedDialog.push(messages);
+          messages = [message];
+          currentActiveMessageId = activeMessage.id;
+          activeMessageIds.push(currentActiveMessageId);
+        }
+      }
+    }
+    viewedDialog.push(messages);
+    currentActiveMessageId = messages[0].id;
+    activeMessageIds.push(currentActiveMessageId);
+    return { viewedDialog, activeMessageIds };
   }
 
   render() {
     const { classes } = this.props;
-    const { dialog, dialogTitle } = this.state;
+    const { viewedDialog, activeMessageIds, dialogTitle } = this.state;
+    const selectedMessage = 'Say name';
     return (
       <Paper className={classes.root}>
         <Paper className={classes.header}>
           <DialogBar values={dialogTitle} />
         </Paper>
         <div className={classes.container}>
-          {dialog.map(message =>
-            message.type === 'bot' ? (
-              <BubbleChat type="self">
-                <Typography variant="h6">{message.payload}</Typography>
-              </BubbleChat>
-            ) : (
-              <BubbleChat type="other">
-                <Typography variant="h6">{message.options[0].name}</Typography>
-              </BubbleChat>
-            )
-          )}
+          <Scrollbar>
+            {viewedDialog.map((messages, index) =>
+              messages[0].type === 'user' ? (
+                <UserMessage
+                  messages={messages}
+                  activeMessageId={activeMessageIds[index]}
+                  activeChildMessageId={activeMessageIds[index + 1]}
+                />
+              ) : (
+                <BubbleChat type="bot">
+                  <Typography variant="h6">{messages[0].payload}</Typography>
+                </BubbleChat>
+              )
+            )}
+          </Scrollbar>
         </div>
         <Paper className={classes.footer}>
-          <RobotDialogInput />
+          <RobotDialogInput
+            preview={() => (
+              <Paper elevation={0} className={classes.preview}>
+                <Typography variant="overline" color="primary">
+                  User says:{' '}
+                </Typography>
+                <Typography variant="caption">{selectedMessage}</Typography>
+              </Paper>
+            )}
+          />
         </Paper>
       </Paper>
     );

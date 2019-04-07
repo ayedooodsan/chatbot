@@ -39,7 +39,7 @@ const RobotDialogInput = props => {
     validate
   });
   const message = useField('message', form);
-  const { classes } = props;
+  const { classes, preview } = props;
   return (
     <form onSubmit={handleSubmit} className={classes.root}>
       <div className={classes.buttonContainer}>
@@ -48,8 +48,10 @@ const RobotDialogInput = props => {
         </Button>
       </div>
       <div className={`${classes.inputContainer} ${classes.margin}`}>
+        {preview()}
         <TextField
           multiline
+          rowsMax="4"
           label="Message"
           margin="none"
           variant="filled"
@@ -68,8 +70,13 @@ const RobotDialogInput = props => {
   );
 };
 
+RobotDialogInput.defaultProps = {
+  preview: () => null
+};
+
 RobotDialogInput.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  preview: PropTypes.func
 };
 
 export default withStyles(style)(RobotDialogInput);

@@ -20,6 +20,11 @@ const style = () => ({
     position: 'relative',
     overflow: 'auto',
     borderRadius: '0px'
+  },
+  preview: {
+    backgroundColor: '#e8e8e8',
+    marginBottom: '5px',
+    padding: '5px 15px'
   }
 });
 
