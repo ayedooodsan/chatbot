@@ -4,7 +4,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
 import Done from '@material-ui/icons/Done';
-import Warning from '@material-ui/icons/Warning';
+import ErrorOutline from '@material-ui/icons/ErrorOutline';
 
 import BubbleChat from '../BubbleChat';
 import style from './style';
@@ -37,10 +37,14 @@ const UserMessage = props => {
   return (
     <React.Fragment>
       {messages.length > 1 && (
-        <div>
+        <div className={classes.chipContainer}>
           {messages.map(message =>
-            message.id === activeMessage ? (
-              <Chip label={message.title} className={classes.chip} />
+            message.id === activeMessageId ? (
+              <Chip
+                label={message.title}
+                className={classes.chip}
+                color="primary"
+              />
             ) : (
               <Chip
                 label={message.title}
@@ -59,12 +63,13 @@ const UserMessage = props => {
         <Typography variant="caption">{activeMessage.intent.name}</Typography>
       </BubbleChat>
       {requiredParams.length > 0 && (
-        <div>
+        <div className={classes.chipContainer}>
           {!activeParamName ? (
             <Chip
               label="Satisfied"
               className={classes.chip}
-              deleteIcon={<Done />}
+              icon={<Done />}
+              color="primary"
             />
           ) : (
             <Chip
@@ -81,14 +86,14 @@ const UserMessage = props => {
           {requiredParams.map(param =>
             param.name === activeParamName ? (
               <Chip
-                icon={<Warning />}
+                icon={<ErrorOutline style={{ color: 'rgba(0, 0, 0, 0.87)' }} />}
                 label={param.name}
                 className={classes.chip}
               />
             ) : (
               <Chip
                 variant="outlined"
-                icon={<Warning />}
+                icon={<ErrorOutline style={{ color: 'rgba(0, 0, 0, 0.87)' }} />}
                 label={param.name}
                 className={classes.chip}
                 onClick={() => {
