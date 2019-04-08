@@ -172,8 +172,6 @@ class DialogMenu extends Component {
       isViewUnsatifiedParam,
       viewedUnsatifiedDialog
     } = this.state;
-    console.log({ viewedDialog });
-    console.log({ activeMessageIds });
     const selectedMessage = 'Say name';
     return (
       <Paper className={classes.root}>

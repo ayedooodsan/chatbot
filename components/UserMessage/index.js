@@ -35,8 +35,6 @@ const UserMessage = props => {
     message => message.id === activeMessageId
   );
 
-  console.log('activeMessage', activeMessage);
-
   const requiredParams = activeMessage.intent.params.filter(
     param => param.required
   );
@@ -48,6 +46,8 @@ const UserMessage = props => {
     );
   }
 
+  const replyable = () =>
+    !activeChildMessageId || (activeParamName && !activeParam.message);
   return (
     <React.Fragment>
       {messages.length > 1 && (
@@ -66,7 +66,7 @@ const UserMessage = props => {
                 variant="outlined"
                 onClick={() => {
                   onChangeActiveMessage(message.id);
-                  if (setActiveParamName !== null) {
+                  if (activeParamName !== null) {
                     onChangeChildActiveMessage(activeChildMessageId);
                     setActiveParamName(null);
                   }
@@ -82,9 +82,11 @@ const UserMessage = props => {
             {activeMessage.title}
           </Typography>
           <div className={classes.buttons}>
-            <IconButton className={classes.iconButton}>
-              <Reply className={classes.miniIcon} />
-            </IconButton>
+            {replyable() && (
+              <IconButton className={classes.iconButton}>
+                <Reply className={classes.miniIcon} />
+              </IconButton>
+            )}
             <IconButton className={classes.iconButton}>
               <Edit className={classes.miniIcon} />
             </IconButton>
