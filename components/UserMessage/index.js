@@ -33,11 +33,14 @@ const UserMessage = props => {
     classes
   } = props;
 
-  useEffect(() => {
-    if (activeParamName !== null) {
-      onChangeChildActiveMessage(null);
-    }
-  }, [activeParamName]);
+  useEffect(
+    function activeParamChange() {
+      if (activeParamName !== null) {
+        onChangeChildActiveMessage(null);
+      }
+    },
+    [activeParamName]
+  );
 
   const activeMessage = messages.find(
     message => message.id === activeMessageId
@@ -73,12 +76,12 @@ const UserMessage = props => {
                 className={classes.chip}
                 variant="outlined"
                 onClick={() => {
-                  onChangeActiveMessage(message.id);
-                  onChangeDialogInput({});
                   if (activeParamName !== null) {
                     onChangeChildActiveMessage(activeChildMessageId);
                     setActiveParamName(null);
                   }
+                  onChangeActiveMessage(message.id);
+                  onChangeDialogInput({});
                 }}
               />
             )
