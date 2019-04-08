@@ -3,8 +3,12 @@ import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
 import Done from '@material-ui/icons/Done';
 import ErrorOutline from '@material-ui/icons/ErrorOutline';
+import Edit from '@material-ui/icons/Edit';
+import Delete from '@material-ui/icons/Delete';
+import Reply from '@material-ui/icons/Reply';
 
 import BubbleChat from '../BubbleChat';
 import style from './style';
@@ -30,6 +34,8 @@ const UserMessage = props => {
   const activeMessage = messages.find(
     message => message.id === activeMessageId
   );
+
+  console.log('activeMessage', activeMessage);
 
   const requiredParams = activeMessage.intent.params.filter(
     param => param.required
@@ -71,8 +77,34 @@ const UserMessage = props => {
         </div>
       )}
       <BubbleChat type="other">
-        <Typography variant="caption">{activeMessage.title}</Typography>
-        <Typography variant="caption">{activeMessage.intent.name}</Typography>
+        <div className={classes.headerBubble}>
+          <Typography variant="subtitle2" color="primary">
+            {activeMessage.title}
+          </Typography>
+          <div className={classes.buttons}>
+            <IconButton className={classes.iconButton}>
+              <Reply className={classes.miniIcon} />
+            </IconButton>
+            <IconButton className={classes.iconButton}>
+              <Edit className={classes.miniIcon} />
+            </IconButton>
+            <IconButton className={classes.iconButton}>
+              <Delete className={classes.miniIcon} />
+            </IconButton>
+          </div>
+        </div>
+        <Typography variant="subtitle2">
+          {activeMessage.intent.name} INTENT
+        </Typography>
+        {activeMessage.intent.values && (
+          <ul className={classes.intentValues}>
+            {activeMessage.intent.values.map(value => (
+              <li>
+                <Typography variant="caption">{value}</Typography>
+              </li>
+            ))}
+          </ul>
+        )}
       </BubbleChat>
       {requiredParams.length > 0 && (
         <div className={classes.chipContainer}>
