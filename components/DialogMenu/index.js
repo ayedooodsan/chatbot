@@ -3,11 +3,10 @@ import PropTypes from 'prop-types';
 import Scrollbar from 'react-scrollbars-custom';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import style from './style';
-import BubbleChat from '../BubbleChat';
 import DialogBar from '../DialogBar';
 import DialogInput from '../DialogInput';
+import RobotMessage from '../RobotMessage';
 import UserMessage from '../UserMessage';
 import {
   REPLY_USER,
@@ -252,11 +251,11 @@ class DialogMenu extends Component {
                       activeChildMessageId={activeMessageIds[index + 1]}
                     />
                   ) : (
-                    <BubbleChat type="bot">
-                      <Typography variant="h6">
-                        {messages[0].payload}
-                      </Typography>
-                    </BubbleChat>
+                    <RobotMessage
+                      messages={messages}
+                      onChangeDialogInput={this.onChangeDialogInputProps}
+                      activeChildMessageId={activeMessageIds[index + 1]}
+                    />
                   )
                 )
               : viewedDialog.map((messages, index) =>
@@ -274,11 +273,11 @@ class DialogMenu extends Component {
                       activeChildMessageId={activeMessageIds[index + 1]}
                     />
                   ) : (
-                    <BubbleChat type="bot">
-                      <Typography variant="h6">
-                        {messages[0].payload}
-                      </Typography>
-                    </BubbleChat>
+                    <RobotMessage
+                      messages={messages}
+                      onChangeDialogInput={this.onChangeDialogInputProps}
+                      activeChildMessageId={activeMessageIds[index + 1]}
+                    />
                   )
                 )}
           </Scrollbar>
