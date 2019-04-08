@@ -42,45 +42,59 @@ const UserDialogInput = props => {
   const intent = useField('intent', form);
   const { classes, preview } = props;
   return (
-    <form onSubmit={handleSubmit} className={classes.root}>
-      <div className={classes.inputContainer}>
-        {preview()}
-        <Grid container spacing={6}>
-          <Grid item xs>
-            <TextField
-              label="Title"
-              margin="none"
-              variant="filled"
-              fullWidth
-              InputProps={title.input}
-              error={title.meta.touched && isTypeOfString(title.meta.error)}
-            />
+    <React.Fragment>
+      {preview()}
+      <form onSubmit={handleSubmit} className={classes.root}>
+        <div className={classes.inputContainer}>
+          <Grid container spacing={6}>
+            <Grid
+              item
+              xs
+              className={`${classes.margin} ${classes.noRightMargin}`}
+            >
+              <TextField
+                label="Title"
+                margin="none"
+                variant="filled"
+                fullWidth
+                InputProps={title.input}
+                error={title.meta.touched && isTypeOfString(title.meta.error)}
+              />
+            </Grid>
+            <Grid item xs className={classes.margin}>
+              <TextField
+                label="Intent"
+                margin="none"
+                variant="filled"
+                fullWidth
+                InputProps={intent.input}
+                error={intent.meta.touched && isTypeOfString(intent.meta.error)}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs className={classes.smallMarginLeft}>
-            <TextField
-              label="Intent"
-              margin="none"
-              variant="filled"
-              fullWidth
-              InputProps={intent.input}
-              error={intent.meta.touched && isTypeOfString(intent.meta.error)}
-            />
-          </Grid>
-        </Grid>
-      </div>
-      <div className={classes.buttonContainer}>
-        <Button color="primary" type="submit" disabled={prestine || submitting}>
-          <Face />
-          <Send />
-        </Button>
-      </div>
-    </form>
+        </div>
+        <div className={classes.buttonContainer}>
+          <Button
+            color="primary"
+            type="submit"
+            disabled={prestine || submitting}
+          >
+            <Face />
+            <Send />
+          </Button>
+        </div>
+      </form>
+    </React.Fragment>
   );
+};
+
+UserDialogInput.defaultProps = {
+  preview: () => null
 };
 
 UserDialogInput.propTypes = {
   classes: PropTypes.object.isRequired,
-  preview: PropTypes.func.isRequired
+  preview: PropTypes.func
 };
 
 export default withStyles(style)(UserDialogInput);

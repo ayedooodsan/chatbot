@@ -5,7 +5,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Send from '@material-ui/icons/Send';
-import Delete from '@material-ui/icons/Delete';
+import Face from '@material-ui/icons/Face';
 import { isTypeOfString } from '../../libraries/helpers';
 import style from './style';
 
@@ -17,16 +17,13 @@ const onSubmit = props => {
 
 const validate = values => {
   const errors = {};
-  if (!values.title) {
-    errors.title = 'Title is required';
-  }
-  if (!values.intent) {
-    errors.intent = 'Intent is required';
+  if (!values.message) {
+    errors.message = 'Message is required';
   }
   return errors;
 };
 
-const DeleteMessageDialogInput = props => {
+const UserSayInput = props => {
   const { form, handleSubmit, prestine, submitting } = useForm({
     onSubmit: onSubmit(props),
     validate
@@ -39,7 +36,9 @@ const DeleteMessageDialogInput = props => {
       <form onSubmit={handleSubmit} className={classes.root}>
         <div className={`${classes.inputContainer} ${classes.margin}`}>
           <TextField
-            label="Title"
+            multiline
+            rowsMax="4"
+            label="Message"
             margin="none"
             variant="filled"
             fullWidth
@@ -53,7 +52,7 @@ const DeleteMessageDialogInput = props => {
             type="submit"
             disabled={prestine || submitting}
           >
-            <Delete />
+            <Face />
             <Send />
           </Button>
         </div>
@@ -62,13 +61,13 @@ const DeleteMessageDialogInput = props => {
   );
 };
 
-DeleteMessageDialogInput.defaultProps = {
+UserSayInput.defaultProps = {
   preview: () => null
 };
 
-DeleteMessageDialogInput.propTypes = {
+UserSayInput.propTypes = {
   classes: PropTypes.object.isRequired,
   preview: PropTypes.func
 };
 
-export default withStyles(style)(DeleteMessageDialogInput);
+export default withStyles(style)(UserSayInput);

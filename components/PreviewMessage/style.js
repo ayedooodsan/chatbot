@@ -7,8 +7,12 @@ const style = () => ({
     width: '100%',
     margin: '8px 0'
   },
-  inputContainer: {
+  strechWidth: {
     flex: 1
+  },
+  preview: {
+    backgroundColor: '#e8e8e8',
+    padding: '5px 15px'
   },
   buttonContainer: {
     display: 'flex',
@@ -16,9 +20,6 @@ const style = () => ({
   },
   margin: {
     margin: '0px 10px'
-  },
-  previewContainer: {
-    marginLeft: '65px'
   }
 });
 

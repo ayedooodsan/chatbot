@@ -35,32 +35,38 @@ const RobotDialogInput = props => {
   const message = useField('message', form);
   const { classes, preview } = props;
   return (
-    <form onSubmit={handleSubmit} className={classes.root}>
-      <div className={classes.buttonContainer}>
-        <Button color="primary">
-          <Add />
-        </Button>
-      </div>
-      <div className={`${classes.inputContainer} ${classes.margin}`}>
-        {preview()}
-        <TextField
-          multiline
-          rowsMax="4"
-          label="Message"
-          margin="none"
-          variant="filled"
-          fullWidth
-          InputProps={message.input}
-          error={message.meta.touched && isTypeOfString(message.meta.error)}
-        />
-      </div>
-      <div className={classes.buttonContainer}>
-        <Button color="primary" type="submit" disabled={prestine || submitting}>
-          <Android />
-          <Send />
-        </Button>
-      </div>
-    </form>
+    <React.Fragment>
+      <div className={classes.previewContainer}>{preview()}</div>
+      <form onSubmit={handleSubmit} className={classes.root}>
+        <div className={classes.buttonContainer}>
+          <Button color="primary">
+            <Add />
+          </Button>
+        </div>
+        <div className={`${classes.inputContainer} ${classes.margin}`}>
+          <TextField
+            multiline
+            rowsMax="4"
+            label="Message"
+            margin="none"
+            variant="filled"
+            fullWidth
+            InputProps={message.input}
+            error={message.meta.touched && isTypeOfString(message.meta.error)}
+          />
+        </div>
+        <div className={classes.buttonContainer}>
+          <Button
+            color="primary"
+            type="submit"
+            disabled={prestine || submitting}
+          >
+            <Android />
+            <Send />
+          </Button>
+        </div>
+      </form>
+    </React.Fragment>
   );
 };
 

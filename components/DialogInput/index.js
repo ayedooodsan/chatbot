@@ -4,6 +4,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
+import PreviewMessage from '../PreviewMessage';
 import RobotDialogInput from '../RobotDialogInput';
 import UserDialogInput from '../UserDialogInput';
 import DeleteMessageDialogInput from '../DeleteMessageDialogInput';
@@ -21,19 +22,18 @@ import {
 } from './constant';
 
 const DialogInput = props => {
-  const { type, payload, send, classes } = props;
+  const { type, payload, send, classes, reset } = props;
   let Element = null;
   switch (type) {
     case REPLY_ROBOT: {
       Element = (
         <UserDialogInput
           preview={() => (
-            <Paper elevation={0} className={classes.preview}>
-              <Typography variant="subtitle2" color="primary">
-                REPLY ROBOT SAYS:
-              </Typography>
-              <Typography variant="caption">{payload.payload}</Typography>
-            </Paper>
+            <PreviewMessage
+              title="REPLY ROBOT SAYS:"
+              subtitle={payload.payload}
+              reset={reset}
+            />
           )}
           send={send}
           type={REPLY_ROBOT}
@@ -46,12 +46,11 @@ const DialogInput = props => {
       Element = (
         <RobotDialogInput
           preview={() => (
-            <Paper elevation={0} className={classes.preview}>
-              <Typography variant="subtitle2" color="primary">
-                EDIT ROBOT SAYS:
-              </Typography>
-              <Typography variant="caption">{payload.payload}</Typography>
-            </Paper>
+            <PreviewMessage
+              title="EDIT ROBOT SAYS:"
+              subtitle={payload.payload}
+              reset={reset}
+            />
           )}
           send={send}
           type={EDIT_ROBOT}
@@ -63,15 +62,12 @@ const DialogInput = props => {
       Element = (
         <DeleteMessageDialogInput
           preview={() => (
-            <Paper elevation={0} className={classes.preview}>
-              <Typography variant="subtitle2" color="primary">
-                DELETE ROBOT SAYS:
-              </Typography>
-              <Typography variant="caption">{payload.payload}</Typography>
-              <Typography variant="caption" color="primary">
-                Type the the first word and click the send button.
-              </Typography>
-            </Paper>
+            <PreviewMessage
+              title="DELETE ROBOT SAYS:"
+              subtitle={payload.payload}
+              footTitle="Type the the first word and click the send button."
+              reset={reset}
+            />
           )}
           send={send}
           type={DELETE_ROBOT}
@@ -84,12 +80,11 @@ const DialogInput = props => {
       Element = (
         <RobotDialogInput
           preview={() => (
-            <Paper elevation={0} className={classes.preview}>
-              <Typography variant="subtitle2" color="primary">
-                REPLY USER SAYS:
-              </Typography>
-              <Typography variant="caption">{payload.title}</Typography>
-            </Paper>
+            <PreviewMessage
+              title="REPLY USER SAYS:"
+              subtitle={payload.title}
+              reset={reset}
+            />
           )}
           send={send}
           type={REPLY_USER}
@@ -101,12 +96,11 @@ const DialogInput = props => {
       Element = (
         <RobotDialogInput
           preview={() => (
-            <Paper elevation={0} className={classes.preview}>
-              <Typography variant="subtitle2" color="primary">
-                {`REPLY USER DOESN'T SAYS "${payload.param.name.toUpperCase()}" PARAMETER:`}
-              </Typography>
-              <Typography variant="caption">{payload.message.title}</Typography>
-            </Paper>
+            <PreviewMessage
+              title={`REPLY USER DOESN'T SAYS "${payload.param.name.toUpperCase()}" PARAMETER:`}
+              subtitle={payload.message.title}
+              reset={reset}
+            />
           )}
           send={send}
           type={REPLY_USER_PARAM}
@@ -119,12 +113,11 @@ const DialogInput = props => {
       Element = (
         <RobotDialogInput
           preview={() => (
-            <Paper elevation={0} className={classes.preview}>
-              <Typography variant="subtitle2" color="primary">
-                {`EDIT ROBOT SAYS ABOUT "${payload.param.name.toUpperCase()}" PARAMETER DOESN'T APPEAR:`}
-              </Typography>
-              <Typography variant="caption">{payload.param.message}</Typography>
-            </Paper>
+            <PreviewMessage
+              title={`EDIT ROBOT SAYS ABOUT "${payload.param.name.toUpperCase()}" PARAMETER DOESN'T APPEAR:`}
+              subtitle={payload.param.message}
+              reset={reset}
+            />
           )}
           send={send}
           type={EDIT_USER_PARAM}
@@ -137,12 +130,11 @@ const DialogInput = props => {
       Element = (
         <UserDialogInput
           preview={() => (
-            <Paper elevation={0} className={classes.preview}>
-              <Typography variant="subtitle2" color="primary">
-                EDIT USER SAYS:
-              </Typography>
-              <Typography variant="caption">{payload.title}</Typography>
-            </Paper>
+            <PreviewMessage
+              title="EDIT USER SAYS:"
+              subtitle={payload.title}
+              reset={reset}
+            />
           )}
           send={send}
           type={EDIT_USER}
@@ -155,15 +147,12 @@ const DialogInput = props => {
       Element = (
         <DeleteMessageDialogInput
           preview={() => (
-            <Paper elevation={0} className={classes.preview}>
-              <Typography variant="subtitle2" color="primary">
-                {`DELETE ROBOT SAYS ABOUT "${payload.param.name.toUpperCase()}" PARAMETER DOESN'T APPEAR:`}
-              </Typography>
-              <Typography variant="caption">{payload.param.message}</Typography>
-              <Typography variant="caption" color="primary">
-                Type the first and click the send button.
-              </Typography>
-            </Paper>
+            <PreviewMessage
+              title={`DELETE ROBOT SAYS ABOUT "${payload.param.name.toUpperCase()}" PARAMETER DOESN'T APPEAR:`}
+              subtitle={payload.param.message}
+              footTitle="Type the first and click the send button."
+              reset={reset}
+            />
           )}
           send={send}
           type={DELETE_USER_PARAM}
@@ -176,15 +165,12 @@ const DialogInput = props => {
       Element = (
         <DeleteMessageDialogInput
           preview={() => (
-            <Paper elevation={0} className={classes.preview}>
-              <Typography variant="subtitle2" color="primary">
-                DELETE USER SAYS:
-              </Typography>
-              <Typography variant="caption">{payload.title}</Typography>
-              <Typography variant="caption" color="primary">
-                Type the title and click the send button.
-              </Typography>
-            </Paper>
+            <PreviewMessage
+              title="DELETE USER SAYS:"
+              subtitle={payload.title}
+              footTitle="Type the title and click the send button."
+              reset={reset}
+            />
           )}
           send={send}
           type={DELETE_USER}

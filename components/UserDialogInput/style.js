@@ -4,19 +4,21 @@ const style = () => ({
     flexDirection: 'row',
     alignItems: 'stretch',
     justifyContent: 'center',
-    width: '100%'
+    width: '100%',
+    margin: '8px 0'
   },
   inputContainer: {
-    flex: 1,
-    margin: '8px 10px'
+    flex: 1
   },
   buttonContainer: {
     display: 'flex',
-    alignItems: 'flex-end',
-    margin: '8px 0px'
+    alignItems: 'flex-end'
   },
-  smallMarginLeft: {
-    marginLeft: '8px'
+  margin: {
+    margin: '0px 10px'
+  },
+  noRightMargin: {
+    marginRight: 0
   }
 });
 
