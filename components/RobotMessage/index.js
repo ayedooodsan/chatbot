@@ -8,7 +8,7 @@ import Edit from '@material-ui/icons/Edit';
 import Reply from '@material-ui/icons/Reply';
 import BubbleChat from '../BubbleChat';
 import style from './style';
-import { REPLY_ROBOT, EDIT_ROBOT, DELETE_ROBOT } from './constant';
+import { REPLY_ROBOT, EDIT_ROBOT, DELETE_ROBOT } from '../DialogInput/constant';
 
 const RobotMessage = props => {
   const {

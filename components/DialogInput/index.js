@@ -12,7 +12,9 @@ import {
   REPLY_USER,
   REPLY_USER_PARAM,
   EDIT_USER,
+  EDIT_USER_PARAM,
   DELETE_USER,
+  DELETE_USER_PARAM,
   REPLY_ROBOT,
   EDIT_ROBOT,
   DELETE_ROBOT
@@ -101,13 +103,31 @@ const DialogInput = props => {
           preview={() => (
             <Paper elevation={0} className={classes.preview}>
               <Typography variant="subtitle2" color="primary">
-                {`REPLY USER DOESN'T SAYS '${payload.param.name.toUpperCase()}' PARAMETER:`}
+                {`REPLY USER DOESN'T SAYS "${payload.param.name.toUpperCase()}" PARAMETER:`}
               </Typography>
               <Typography variant="caption">{payload.message.title}</Typography>
             </Paper>
           )}
           send={send}
           type={REPLY_USER_PARAM}
+          payload={payload}
+        />
+      );
+      break;
+    }
+    case EDIT_USER_PARAM: {
+      Element = (
+        <RobotDialogInput
+          preview={() => (
+            <Paper elevation={0} className={classes.preview}>
+              <Typography variant="subtitle2" color="primary">
+                {`EDIT ROBOT SAYS ABOUT "${payload.param.name.toUpperCase()}" PARAMETER DOESN'T APPEAR:`}
+              </Typography>
+              <Typography variant="caption">{payload.param.message}</Typography>
+            </Paper>
+          )}
+          send={send}
+          type={EDIT_USER_PARAM}
           payload={payload}
         />
       );
@@ -126,6 +146,27 @@ const DialogInput = props => {
           )}
           send={send}
           type={EDIT_USER}
+          payload={payload}
+        />
+      );
+      break;
+    }
+    case DELETE_USER_PARAM: {
+      Element = (
+        <DeleteMessageDialogInput
+          preview={() => (
+            <Paper elevation={0} className={classes.preview}>
+              <Typography variant="subtitle2" color="primary">
+                {`DELETE ROBOT SAYS ABOUT "${payload.param.name.toUpperCase()}" PARAMETER DOESN'T APPEAR:`}
+              </Typography>
+              <Typography variant="caption">{payload.param.message}</Typography>
+              <Typography variant="caption" color="primary">
+                Type the first and click the send button.
+              </Typography>
+            </Paper>
+          )}
+          send={send}
+          type={DELETE_USER_PARAM}
           payload={payload}
         />
       );

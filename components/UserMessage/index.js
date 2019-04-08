@@ -14,7 +14,9 @@ import {
   REPLY_USER,
   REPLY_USER_PARAM,
   EDIT_USER,
-  DELETE_USER
+  DELETE_USER,
+  EDIT_USER_PARAM,
+  DELETE_USER_PARAM
 } from '../DialogInput/constant';
 import BubbleChat from '../BubbleChat';
 import style from './style';
@@ -72,6 +74,7 @@ const UserMessage = props => {
                 variant="outlined"
                 onClick={() => {
                   onChangeActiveMessage(message.id);
+                  onChangeDialogInput({});
                   if (activeParamName !== null) {
                     onChangeChildActiveMessage(activeChildMessageId);
                     setActiveParamName(null);
@@ -165,6 +168,7 @@ const UserMessage = props => {
               className={classes.chip}
               onClick={() => {
                 onChangeChildActiveMessage(activeChildMessageId);
+                onChangeDialogInput({});
                 setActiveParamName(null);
               }}
             />
@@ -184,6 +188,7 @@ const UserMessage = props => {
                 label={param.name}
                 className={classes.chip}
                 onClick={() => {
+                  onChangeDialogInput({});
                   setActiveParamName(param.name);
                 }}
               />
@@ -193,7 +198,39 @@ const UserMessage = props => {
       )}
       {activeParamName && activeParam.message && (
         <BubbleChat type="self">
-          <Typography variant="caption">{activeParam.message}</Typography>
+          <div className={classes.headerBubble}>
+            <Typography variant="subtitle2">{activeParam.message}</Typography>
+            <div className={classes.buttons}>
+              <IconButton
+                className={classes.iconButton}
+                onClick={() => {
+                  onChangeDialogInput({
+                    type: EDIT_USER_PARAM,
+                    payload: {
+                      message: activeMessage,
+                      param: activeParam
+                    }
+                  });
+                }}
+              >
+                <Edit className={classes.miniIcon} />
+              </IconButton>
+              <IconButton
+                className={classes.iconButton}
+                onClick={() => {
+                  onChangeDialogInput({
+                    type: DELETE_USER_PARAM,
+                    payload: {
+                      message: activeMessage,
+                      param: activeParam
+                    }
+                  });
+                }}
+              >
+                <Delete className={classes.miniIcon} />
+              </IconButton>
+            </div>
+          </div>
         </BubbleChat>
       )}
     </React.Fragment>
