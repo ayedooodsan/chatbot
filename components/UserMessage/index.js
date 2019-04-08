@@ -10,6 +10,12 @@ import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
 import Reply from '@material-ui/icons/Reply';
 
+import {
+  REPLY_USER,
+  REPLY_USER_PARAM,
+  EDIT_USER,
+  DELETE_USER
+} from '../DialogInput/constant';
 import BubbleChat from '../BubbleChat';
 import style from './style';
 
@@ -21,7 +27,7 @@ const UserMessage = props => {
     activeChildMessageId,
     onChangeActiveMessage,
     onChangeChildActiveMessage,
-    // onChangeEditableMessage,
+    onChangeDialogInput,
     classes
   } = props;
 
@@ -83,14 +89,48 @@ const UserMessage = props => {
           </Typography>
           <div className={classes.buttons}>
             {replyable() && (
-              <IconButton className={classes.iconButton}>
+              <IconButton
+                className={classes.iconButton}
+                onClick={() => {
+                  if (activeParamName === null) {
+                    onChangeDialogInput({
+                      type: REPLY_USER,
+                      payload: activeMessage
+                    });
+                  } else {
+                    onChangeDialogInput({
+                      type: REPLY_USER_PARAM,
+                      payload: {
+                        message: activeMessage,
+                        param: activeParam
+                      }
+                    });
+                  }
+                }}
+              >
                 <Reply className={classes.miniIcon} />
               </IconButton>
             )}
-            <IconButton className={classes.iconButton}>
+            <IconButton
+              className={classes.iconButton}
+              onClick={() => {
+                onChangeDialogInput({
+                  type: EDIT_USER,
+                  payload: activeMessage
+                });
+              }}
+            >
               <Edit className={classes.miniIcon} />
             </IconButton>
-            <IconButton className={classes.iconButton}>
+            <IconButton
+              className={classes.iconButton}
+              onClick={() => {
+                onChangeDialogInput({
+                  type: DELETE_USER,
+                  payload: activeMessage
+                });
+              }}
+            >
               <Delete className={classes.miniIcon} />
             </IconButton>
           </div>
@@ -166,7 +206,7 @@ UserMessage.propTypes = {
   activeChildMessageId: PropTypes.number.isRequired,
   onChangeActiveMessage: PropTypes.func.isRequired,
   onChangeChildActiveMessage: PropTypes.func.isRequired,
-  onChangeEditableMessage: PropTypes.func.isRequired,
+  onChangeDialogInput: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 };
 

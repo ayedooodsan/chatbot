@@ -7,18 +7,12 @@ import TextField from '@material-ui/core/TextField';
 import Send from '@material-ui/icons/Send';
 import Android from '@material-ui/icons/Android';
 import Add from '@material-ui/icons/Add';
-import redirect from '../../libraries/redirect';
 import { isTypeOfString } from '../../libraries/helpers';
 import style from './style';
 
 const onSubmit = props => {
   return values => {
-    props.mutations.signIn(values).then(response => {
-      if (response.data.signIn.token) {
-        props.actions.signIn(response.data.signIn.token);
-        redirect({}, '/dialog');
-      }
-    });
+    props.send(values);
   };
 };
 

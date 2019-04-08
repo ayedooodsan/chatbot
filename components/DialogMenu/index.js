@@ -7,8 +7,14 @@ import Typography from '@material-ui/core/Typography';
 import style from './style';
 import BubbleChat from '../BubbleChat';
 import DialogBar from '../DialogBar';
-import RobotDialogInput from '../RobotDialogInput';
+import DialogInput from '../DialogInput';
 import UserMessage from '../UserMessage';
+import {
+  REPLY_USER,
+  REPLY_USER_PARAM,
+  EDIT_USER,
+  DELETE_USER
+} from '../DialogInput/constant';
 
 const dialog = [
   {
@@ -93,13 +99,18 @@ class DialogMenu extends Component {
       viewedDialog: [],
       activeMessageIds: [],
       isViewUnsatifiedParam: false,
-      viewedUnsatifiedDialog: []
+      viewedUnsatifiedDialog: [],
+      dialogInputProps: {}
     };
   }
 
   componentDidMount() {
     this.setState(this.updateViewedDialog(null, [], []));
   }
+
+  onChangeDialogInputProps = dialogInputProps => {
+    this.setState({ dialogInputProps });
+  };
 
   updateViewedDialog = (
     parentId,
@@ -163,6 +174,51 @@ class DialogMenu extends Component {
     });
   };
 
+  send = values => {
+    const { dialogInputProps } = this.state;
+    switch (dialogInputProps.type) {
+      case REPLY_USER: {
+        dialog.push({
+          id: dialog.length,
+          parentId: values.id,
+          type: 'bot',
+          templateName: 'text',
+          payload: values.message
+        });
+        break;
+      }
+      case REPLY_USER_PARAM: {
+        const selectedMessage = dialog.find(
+          message => message.id === values.id
+        );
+        const selectedParam = selectedMessage.intent.params.find(
+          param => param.name === values.paramName
+        );
+        selectedParam.message = values.message;
+        break;
+      }
+      case EDIT_USER: {
+        const selectedMessage = dialog.find(
+          message => message.id === values.id
+        );
+        selectedMessage.title = values.title;
+        selectedMessage.intentId = values.intentId;
+        selectedMessage.intent = values.intent;
+        break;
+      }
+      case DELETE_USER: {
+        const selectedMessageIndex = dialog.findIndex(
+          message => message.id === values.id
+        );
+        dialog.splice(selectedMessageIndex, 1);
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  };
+
   render() {
     const { classes } = this.props;
     const {
@@ -170,9 +226,9 @@ class DialogMenu extends Component {
       activeMessageIds,
       dialogTitle,
       isViewUnsatifiedParam,
-      viewedUnsatifiedDialog
+      viewedUnsatifiedDialog,
+      dialogInputProps
     } = this.state;
-    const selectedMessage = 'Say name';
     return (
       <Paper className={classes.root}>
         <Paper className={classes.header}>
@@ -185,6 +241,7 @@ class DialogMenu extends Component {
                   messages[0].type === 'user' ? (
                     <UserMessage
                       messages={messages}
+                      onChangeDialogInput={this.onChangeDialogInputProps}
                       onChangeActiveMessage={activeMessageId => {
                         this.changeActiveMessageIds(index, activeMessageId);
                       }}
@@ -206,6 +263,7 @@ class DialogMenu extends Component {
                   messages[0].type === 'user' ? (
                     <UserMessage
                       messages={messages}
+                      onChangeDialogInput={this.onChangeDialogInputProps}
                       onChangeActiveMessage={activeMessageId => {
                         this.changeActiveMessageIds(index, activeMessageId);
                       }}
@@ -226,16 +284,7 @@ class DialogMenu extends Component {
           </Scrollbar>
         </div>
         <Paper className={classes.footer}>
-          <RobotDialogInput
-            preview={() => (
-              <Paper elevation={0} className={classes.preview}>
-                <Typography variant="overline" color="primary">
-                  User says:
-                </Typography>
-                <Typography variant="caption">{selectedMessage}</Typography>
-              </Paper>
-            )}
-          />
+          <DialogInput {...dialogInputProps} />
         </Paper>
       </Paper>
     );

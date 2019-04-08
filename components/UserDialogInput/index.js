@@ -40,12 +40,13 @@ const UserDialogInput = props => {
   });
   const title = useField('title', form);
   const intent = useField('intent', form);
-  const { classes } = props;
+  const { classes, preview } = props;
   return (
     <form onSubmit={handleSubmit} className={classes.root}>
       <div className={classes.inputContainer}>
+        {preview()}
         <Grid container spacing={6}>
-          <Grid item xs className={classes.margin}>
+          <Grid item xs>
             <TextField
               label="Title"
               margin="none"
@@ -55,7 +56,7 @@ const UserDialogInput = props => {
               error={title.meta.touched && isTypeOfString(title.meta.error)}
             />
           </Grid>
-          <Grid item xs className={classes.margin}>
+          <Grid item xs className={classes.smallMarginLeft}>
             <TextField
               label="Intent"
               margin="none"
@@ -78,7 +79,8 @@ const UserDialogInput = props => {
 };
 
 UserDialogInput.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  preview: PropTypes.func.isRequired
 };
 
 export default withStyles(style)(UserDialogInput);

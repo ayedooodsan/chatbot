@@ -7,15 +7,16 @@ const style = () => ({
     width: '100%'
   },
   inputContainer: {
-    flex: 1
+    flex: 1,
+    margin: '8px 10px'
   },
   buttonContainer: {
     display: 'flex',
     alignItems: 'flex-end',
     margin: '8px 0px'
   },
-  margin: {
-    margin: '8px 10px'
+  smallMarginLeft: {
+    marginLeft: '8px'
   }
 });
 
