@@ -30,7 +30,7 @@ const dialog = [
         {
           name: 'first',
           required: true,
-          messsage: 'Please tell me your first name'
+          message: 'Please tell me your first name'
         },
         {
           name: 'last',
@@ -74,6 +74,13 @@ const dialog = [
         }
       ]
     }
+  },
+  {
+    id: 5,
+    parentId: 4,
+    type: 'bot',
+    templateName: 'text',
+    payload: 'Okay, I will.'
   }
 ];
 
@@ -84,15 +91,25 @@ class DialogMenu extends Component {
       // dialogId: 1,
       dialogTitle: 'Introduction',
       viewedDialog: [],
-      activeMessageIds: []
+      activeMessageIds: [],
+      isViewUnsatifiedParam: false,
+      viewedUnsatifiedDialog: []
     };
   }
 
-  static getDerivedStateFromProps() {
-    const viewedDialog = [];
-    const activeMessageIds = [];
+  componentDidMount() {
+    this.setState(this.updateViewedDialog(null, [], []));
+  }
+
+  updateViewedDialog = (
+    parentId,
+    currentViewedDialog,
+    currentActiveMessageIds
+  ) => {
+    const viewedDialog = [...currentViewedDialog];
+    const activeMessageIds = [...currentActiveMessageIds];
     let messages = [];
-    let currentActiveMessageId = null;
+    let currentActiveMessageId = parentId;
     const tempDialog = [...dialog];
     while (tempDialog.length > 0) {
       const message = tempDialog.shift();
@@ -111,15 +128,52 @@ class DialogMenu extends Component {
         }
       }
     }
-    viewedDialog.push(messages);
-    currentActiveMessageId = messages[0].id;
-    activeMessageIds.push(currentActiveMessageId);
+    if (messages.length !== 0) {
+      viewedDialog.push(messages);
+      currentActiveMessageId = messages[0].id;
+      activeMessageIds.push(currentActiveMessageId);
+    }
     return { viewedDialog, activeMessageIds };
-  }
+  };
+
+  changeActiveMessageIds = (index, value) => {
+    this.setState(prevState => {
+      if (value === null) {
+        const newViewedDialog = prevState.viewedDialog.slice(0, index);
+        return {
+          isViewUnsatifiedParam: true,
+          viewedUnsatifiedDialog: newViewedDialog
+        };
+        // eslint-disable-next-line no-else-return
+      } else {
+        const newActiveMessageIds = prevState.activeMessageIds.slice(
+          0,
+          index + 1
+        );
+        newActiveMessageIds[index] = value;
+        return {
+          isViewUnsatifiedParam: false,
+          ...this.updateViewedDialog(
+            value,
+            prevState.viewedDialog.slice(0, index + 1),
+            newActiveMessageIds
+          )
+        };
+      }
+    });
+  };
 
   render() {
     const { classes } = this.props;
-    const { viewedDialog, activeMessageIds, dialogTitle } = this.state;
+    const {
+      viewedDialog,
+      activeMessageIds,
+      dialogTitle,
+      isViewUnsatifiedParam,
+      viewedUnsatifiedDialog
+    } = this.state;
+    console.log({ viewedDialog });
+    console.log({ activeMessageIds });
     const selectedMessage = 'Say name';
     return (
       <Paper className={classes.root}>
@@ -128,19 +182,49 @@ class DialogMenu extends Component {
         </Paper>
         <div className={classes.container}>
           <Scrollbar>
-            {viewedDialog.map((messages, index) =>
-              messages[0].type === 'user' ? (
-                <UserMessage
-                  messages={messages}
-                  activeMessageId={activeMessageIds[index]}
-                  activeChildMessageId={activeMessageIds[index + 1]}
-                />
-              ) : (
-                <BubbleChat type="bot">
-                  <Typography variant="h6">{messages[0].payload}</Typography>
-                </BubbleChat>
-              )
-            )}
+            {isViewUnsatifiedParam
+              ? viewedUnsatifiedDialog.map((messages, index) =>
+                  messages[0].type === 'user' ? (
+                    <UserMessage
+                      messages={messages}
+                      onChangeActiveMessage={activeMessageId => {
+                        this.changeActiveMessageIds(index, activeMessageId);
+                      }}
+                      onChangeChildActiveMessage={activeMessageId => {
+                        this.changeActiveMessageIds(index + 1, activeMessageId);
+                      }}
+                      activeMessageId={activeMessageIds[index]}
+                      activeChildMessageId={activeMessageIds[index + 1]}
+                    />
+                  ) : (
+                    <BubbleChat type="bot">
+                      <Typography variant="h6">
+                        {messages[0].payload}
+                      </Typography>
+                    </BubbleChat>
+                  )
+                )
+              : viewedDialog.map((messages, index) =>
+                  messages[0].type === 'user' ? (
+                    <UserMessage
+                      messages={messages}
+                      onChangeActiveMessage={activeMessageId => {
+                        this.changeActiveMessageIds(index, activeMessageId);
+                      }}
+                      onChangeChildActiveMessage={activeMessageId => {
+                        this.changeActiveMessageIds(index + 1, activeMessageId);
+                      }}
+                      activeMessageId={activeMessageIds[index]}
+                      activeChildMessageId={activeMessageIds[index + 1]}
+                    />
+                  ) : (
+                    <BubbleChat type="bot">
+                      <Typography variant="h6">
+                        {messages[0].payload}
+                      </Typography>
+                    </BubbleChat>
+                  )
+                )}
           </Scrollbar>
         </div>
         <Paper className={classes.footer}>
@@ -148,7 +232,7 @@ class DialogMenu extends Component {
             preview={() => (
               <Paper elevation={0} className={classes.preview}>
                 <Typography variant="overline" color="primary">
-                  User says:{' '}
+                  User says:
                 </Typography>
                 <Typography variant="caption">{selectedMessage}</Typography>
               </Paper>

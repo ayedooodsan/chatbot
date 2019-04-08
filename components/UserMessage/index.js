@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Chip from '@material-ui/core/Chip';
@@ -20,20 +20,28 @@ const UserMessage = props => {
     // onChangeEditableMessage,
     classes
   } = props;
+
+  useEffect(() => {
+    if (activeParamName !== null) {
+      onChangeChildActiveMessage(null);
+    }
+  }, [activeParamName]);
+
   const activeMessage = messages.find(
     message => message.id === activeMessageId
   );
+
   const requiredParams = activeMessage.intent.params.filter(
     param => param.required
   );
-  console.log('requiredParams', requiredParams);
+
   let activeParam;
   if (activeParamName !== null) {
     activeParam = activeMessage.intent.params.find(
       param => param.name === activeParamName
     );
-    onChangeChildActiveMessage(null);
   }
+
   return (
     <React.Fragment>
       {messages.length > 1 && (
@@ -52,6 +60,10 @@ const UserMessage = props => {
                 variant="outlined"
                 onClick={() => {
                   onChangeActiveMessage(message.id);
+                  if (setActiveParamName !== null) {
+                    onChangeChildActiveMessage(activeChildMessageId);
+                    setActiveParamName(null);
+                  }
                 }}
               />
             )
@@ -89,6 +101,7 @@ const UserMessage = props => {
                 icon={<ErrorOutline style={{ color: 'rgba(0, 0, 0, 0.87)' }} />}
                 label={param.name}
                 className={classes.chip}
+                color="primary"
               />
             ) : (
               <Chip
@@ -104,8 +117,8 @@ const UserMessage = props => {
           )}
         </div>
       )}
-      {activeParamName && (
-        <BubbleChat type="other">
+      {activeParamName && activeParam.message && (
+        <BubbleChat type="self">
           <Typography variant="caption">{activeParam.message}</Typography>
         </BubbleChat>
       )}
