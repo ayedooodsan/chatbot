@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
+import NProgress from 'next-nprogress/component';
 import getPageContext from '../libraries/getPageContext';
 
 class MyApp extends App {
@@ -24,6 +25,11 @@ class MyApp extends App {
     const { Component, pageProps } = this.props;
     return (
       <Container>
+        <NProgress
+          color="#4caf50"
+          showAfterMs={0}
+          options={{ trickleSpeed: 50 }}
+        />
         <Head>
           <title>My page</title>
         </Head>
