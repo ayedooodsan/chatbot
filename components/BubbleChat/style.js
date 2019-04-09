@@ -10,7 +10,7 @@ const style = () => ({
   bubbleContent: {
     borderRadius: '4px',
     borderTopLeftRadius: '0px',
-    backgroundColor: 'white',
+    backgroundColor: 'black',
     padding: '5px 10px',
     minWidth: '100px'
   },
@@ -31,12 +31,12 @@ const style = () => ({
     display: 'block',
     width: '40px',
     height: '40px',
-    backgroundColor: '#4c4c54'
+    backgroundColor: 'transparent'
   },
   icon: {
     fontSize: '30px',
     margin: '5px',
-    color: 'white'
+    color: '#464646'
   },
   avatarSelf: {
     width: '40px',
@@ -49,7 +49,7 @@ const style = () => ({
       left: 0,
       width: 0,
       height: 0,
-      border: '5px solid white',
+      border: 'transparent',
       borderRightColor: 'transparent',
       borderTopColor: 'transparent',
       boxShadow: '1px 1px 2px rgba(black, 0.2)'
@@ -65,25 +65,60 @@ const style = () => ({
       right: 0,
       width: 0,
       height: 0,
-      border: '5px solid white',
+      border: 'transparent',
       borderLeftColor: 'transparent',
       borderBottomColor: 'transparent'
     }
   },
   messages: {
-    background: 'white',
+    background: '#ecfffe',
     padding: '10px',
     borderRadius: '4px',
     minHeight: '40px'
   },
   otherMessages: {
-    borderTopLeftRadius: 0,
-    boxShadow: '1px 3px 3.5px 0px rgba(0,0,0,0.20)'
+    boxShadow: '1px 1px 3px 0px rgba(0,0,0,0.20)',
+    backgroundColor: 'white',
+    position: 'relative'
   },
   selfMessages: {
     order: 1,
-    borderBottomRightRadius: 0,
-    boxShadow: '-1px 3px 3.5px 0px rgba(0,0,0,0.2)'
+    boxShadow: '1px 1px 3px 0px rgba(0,0,0,0.2)',
+    position: 'relative'
+  },
+  wasekusr: {
+    color: 'white',
+    position: 'absolute',
+    left: '-13px',
+    top: '-3px',
+    width: '20px',
+    height: '20px',
+    transform: 'scaleX(-1)'
+  },
+  yeausr: {
+    color: 'rgba(0,0,0,0.1)',
+    position: 'absolute',
+    left: '-13px',
+    top: '-2px',
+    width: '20px',
+    height: '20px',
+    transform: 'scaleX(-1)'
+  },
+  wasek: {
+    color: '#ecfffe',
+    position: 'absolute',
+    right: '-13px',
+    bottom: '-2px',
+    width: '20px',
+    height: '20px'
+  },
+  yea: {
+    color: 'rgba(0,0,0,0.1)',
+    position: 'absolute',
+    right: '-13px',
+    bottom: '-3px',
+    width: '20px',
+    height: '20px'
   }
 });
 

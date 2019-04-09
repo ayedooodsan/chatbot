@@ -3,7 +3,7 @@ const style = () => ({
     display: 'flex',
     flexDirection: 'column',
     height: 'calc(100vh - 63px)',
-    backgroundColor: '#4c4c54',
+    backgroundColor: '#f5f5f5',
     borderRadius: 0
   },
   header: {

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Face from '@material-ui/icons/Face';
 import Android from '@material-ui/icons/Android';
+import PlayArrow from '@material-ui/icons/PlayArrow';
 import style from './style';
 
 const BubbleChat = props => {
@@ -16,6 +17,8 @@ const BubbleChat = props => {
       </div>
       <div className={`${classes.messages} ${classes.otherMessages}`}>
         {children}
+        <PlayArrow className={classes.yeausr} />
+        <PlayArrow className={classes.wasekusr} />
       </div>
     </div>
   ) : (
@@ -27,6 +30,8 @@ const BubbleChat = props => {
       </div>
       <div className={`${classes.messages} ${classes.selfMessages}`}>
         {children}
+        <PlayArrow className={classes.yea} />
+        <PlayArrow className={classes.wasek} />
       </div>
     </div>
   );
