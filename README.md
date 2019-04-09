@@ -1,14 +1,18 @@
-# ran
+# KalbePlatform-ChatBot
 
-## Commands
+ChatBot Front End Repository. Repo powered by :
+
+## ran
+
+### Commands
 
 Best feature of RAN! is **CL commands**. You can just run one command to create page with route! [Click here](docs/Commands.md) to see details how It works on RAN!.
 
-## Documentation
+### Documentation
 
 [Click here](https://www.rantoolkit.com/) to see all details of RAN!
 
-## Links
+### Links
 
 [RAN @ Github](https://github.com/Sly777/ran)
 [RAN @ Gitter](https://gitter.im/ran-boilerplate/Lobby)
