@@ -9,7 +9,6 @@ import Hidden from '@material-ui/core/Hidden';
 // @material-ui/icons
 import Menu from '@material-ui/icons/Menu';
 // core components
-import AdminNavbarLinks from '../HeaderLinks';
 import ProjectBar from '../../components/ProjectBar';
 
 import style from './style';
@@ -21,9 +20,9 @@ function Header({ ...props }) {
       <Toolbar className={classes.container}>
         <ProjectBar />
         <div className={classes.flex}> </div>
-        <Hidden smDown implementation="css">
+        {/* <Hidden smDown implementation="css">
           <AdminNavbarLinks />
-        </Hidden>
+        </Hidden> */}
         <Hidden mdUp implementation="css">
           <IconButton
             color="inherit"
