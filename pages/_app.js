@@ -8,6 +8,16 @@ import NProgress from 'next-nprogress/component';
 import getPageContext from '../libraries/getPageContext';
 
 class MyApp extends App {
+  static async getInitialProps({ Component, ctx }) {
+    let pageProps = {};
+
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx);
+    }
+
+    return { pageProps };
+  }
+
   constructor() {
     super();
     this.pageContext = getPageContext();

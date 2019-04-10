@@ -19,6 +19,7 @@ import { useForm, useField } from 'react-final-form-hooks';
 import { isTypeOfString } from '../../libraries/helpers';
 import CustomInput from '../CustomInput';
 import style from './style';
+import connect from './store';
 
 const onSubmit = data => {
   console.log(data);
@@ -145,4 +146,4 @@ ProjectBar.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(style)(ProjectBar);
+export default withStyles(style)(connect(ProjectBar));

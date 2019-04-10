@@ -7,6 +7,7 @@ import cookies from 'next-cookies';
 import apolloClient from './apolloClient';
 import reduxStore from './reduxStore';
 import persist from './persist';
+import redirect from './redirect';
 
 export default Component =>
   class extends React.Component {
@@ -23,7 +24,11 @@ export default Component =>
 
     constructor(props) {
       super(props);
-      this.apolloClient = apolloClient({}, '', this.props.apolloState);
+      this.apolloClient = apolloClient(
+        this.props.headers,
+        this.props.accessToken,
+        this.props.apolloState
+      );
       this.reduxStore = reduxStore(this.props.reduxState);
     }
 
@@ -33,6 +38,11 @@ export default Component =>
 
       const headers = ctx.req ? ctx.req.headers : {};
       const token = cookies(ctx)[persist.ACCESS_TOKEN_KEY];
+      const { isPublic } = Component;
+      if (!isPublic && !token) {
+        console.log('rederict');
+        redirect(ctx, '/');
+      }
 
       const props = {
         router: {
@@ -45,8 +55,7 @@ export default Component =>
 
       if (!process.browser) {
         const client = apolloClient(headers || {}, token || '', {}, ctx);
-        const store = reduxStore();
-
+        const store = reduxStore(undefined, token);
         try {
           const app = (
             <ApolloProvider client={client}>
@@ -71,6 +80,7 @@ export default Component =>
         reduxState: serverState,
         apolloState,
         headers,
+        accessToken: token,
         ...props
       };
     }

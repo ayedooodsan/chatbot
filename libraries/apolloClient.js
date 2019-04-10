@@ -7,7 +7,8 @@ import persist from './persist';
 let apolloClient = null;
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4237/graphql'
+  uri: 'http://localhost:4237/graphql',
+  credentials: 'same-origin'
 });
 
 function createClient(headers, token, initialState) {
@@ -17,11 +18,10 @@ function createClient(headers, token, initialState) {
     // eslint-disable-next-line no-param-reassign
     accessToken = token || (await persist.willGetAccessToken());
   })();
-
   const authLink = new ApolloLink((operation, forward) => {
     operation.setContext({
       headers: {
-        authorization: accessToken
+        'x-token': accessToken || ''
       }
     });
     return forward(operation);
@@ -40,8 +40,6 @@ export default (headers, token, initialState) => {
   if (!process.browser) {
     return createClient(headers, token, initialState);
   }
-  if (!apolloClient) {
-    apolloClient = createClient(headers, token, initialState);
-  }
+  apolloClient = createClient(headers, token, initialState);
   return apolloClient;
 };

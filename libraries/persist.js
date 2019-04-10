@@ -6,14 +6,19 @@ export default class persist {
   }
 
   static async willGetAccessToken() {
-    return cookies.get(persist.ACCESS_TOKEN_KEY);
+    const token = await cookies.get(persist.ACCESS_TOKEN_KEY);
+    return token;
   }
 
   static async willSetAccessToken(value) {
-    return cookies.set(persist.ACCESS_TOKEN_KEY, value);
+    const status = await cookies.set(persist.ACCESS_TOKEN_KEY, value, {
+      expires: 2
+    });
+    return status;
   }
 
   static async willRemoveAccessToken() {
-    return cookies.remove(persist.ACCESS_TOKEN_KEY);
+    const status = await cookies.remove(persist.ACCESS_TOKEN_KEY);
+    return status;
   }
 }
