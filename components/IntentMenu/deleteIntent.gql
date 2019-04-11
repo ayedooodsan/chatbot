@@ -1,0 +1,7 @@
+mutation deleteIntent (
+  $id: String!
+) {
+  deleteIntent (
+    id: $id
+  )
+}

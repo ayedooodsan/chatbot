@@ -46,7 +46,7 @@ const IntentInput = props => {
       break;
     }
     default: {
-      Element = <UserSayInput send={send} type={ADD} />;
+      Element = <UserSayInput send={send} type={ADD} payload={payload} />;
       break;
     }
   }

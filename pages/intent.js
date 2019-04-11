@@ -21,7 +21,7 @@ const Intent = props => {
     <Dashboard>
       <Grid container spacing={0}>
         <Grid item md={3}>
-          <IntentsMenu projectId={projectId} />
+          <IntentsMenu projectId={projectId} intentId={intentId} />
         </Grid>
         <Grid item md={9} className={classes.dialogGrid}>
           {intentId === undefined ? (

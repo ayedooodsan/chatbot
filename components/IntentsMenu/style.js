@@ -7,6 +7,12 @@ const style = theme => ({
       }
     }
   },
+  activeMenuItem: {
+    backgroundColor: theme.palette.primary.main,
+    '& $primary, & $icon': {
+      color: theme.palette.common.white
+    }
+  },
   primary: {},
   icon: {},
   noBorderRadius: {

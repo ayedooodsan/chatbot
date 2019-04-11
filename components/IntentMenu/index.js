@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Scrollbar from 'react-scrollbars-custom';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
-import { withRouter } from 'next/router';
 import _ from 'lodash';
 
 import UserSayMessage from '../UserSayMessage';
@@ -26,10 +25,6 @@ class IntentMenu extends Component {
     this.titleInputRef = React.createRef();
   }
 
-  componentDidMount() {
-    this.titleInputRef.current.focus();
-  }
-
   componentDidUpdate(prevProps) {
     if (!_.isEqual(this.props.intent, prevProps.intent)) {
       // eslint-disable-next-line react/no-did-update-set-state
@@ -37,6 +32,9 @@ class IntentMenu extends Component {
         title: this.props.intent.title || '',
         values: this.props.intent.values || []
       });
+      if (!this.props.intent.title) {
+        this.titleInputRef.current.focus();
+      }
     }
   }
 
@@ -75,7 +73,6 @@ class IntentMenu extends Component {
           break;
         }
       }
-      console.log({ values });
       return { values };
     }, this.onReset);
   };
@@ -101,18 +98,27 @@ class IntentMenu extends Component {
     this.setState({ intentInputProps });
   };
 
+  onDelete = async () => {
+    const { deleteIntent, intentId } = this.props;
+    const response = await deleteIntent({ id: intentId });
+    return response;
+  };
+
   render() {
     const { intentInputProps, title, errorTitle, values } = this.state;
-    const { classes } = this.props;
+    const { classes, projectId, intentId } = this.props;
     return (
       <Paper className={classes.root}>
         <Paper className={classes.header}>
           <IntentBar
+            projectId={projectId}
+            intentId={intentId}
             value={title}
             innerRef={this.titleInputRef}
             onChange={this.onChangeTitle}
             error={errorTitle}
             onSave={this.onSaveIntent}
+            onDelete={this.onDelete}
           />
         </Paper>
         <div className={classes.container}>
@@ -120,6 +126,7 @@ class IntentMenu extends Component {
             {values &&
               values.map((example, index) => (
                 <UserSayMessage
+                  key={example}
                   message={example}
                   index={index}
                   onChangeIntentInput={this.onChangeIntentInputProps}
@@ -149,8 +156,8 @@ IntentMenu.propTypes = {
   projectId: PropTypes.string.isRequired,
   createIntent: PropTypes.func.isRequired,
   updateIntent: PropTypes.func.isRequired,
-  router: PropTypes.object.isRequired,
+  deleteIntent: PropTypes.func.isRequired,
   intent: PropTypes.object
 };
 
-export default withStyles(style)(connect(withRouter(IntentMenu)));
+export default withStyles(style)(connect(IntentMenu));

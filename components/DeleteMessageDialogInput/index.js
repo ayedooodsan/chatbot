@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useForm, useField } from 'react-final-form-hooks';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -10,8 +10,12 @@ import { isTypeOfString } from '../../libraries/helpers';
 import style from './style';
 
 const onSubmit = props => {
-  return values => {
-    props.send(values);
+  return () => {
+    const {
+      send,
+      payload: { index }
+    } = props;
+    send({ index });
   };
 };
 
@@ -19,9 +23,6 @@ const validate = values => {
   const errors = {};
   if (!values.title) {
     errors.title = 'Title is required';
-  }
-  if (!values.intent) {
-    errors.intent = 'Intent is required';
   }
   return errors;
 };
@@ -31,27 +32,36 @@ const DeleteMessageDialogInput = props => {
     onSubmit: onSubmit(props),
     validate
   });
-  const message = useField('message', form);
-  const { classes, preview } = props;
+  const inputRef = useRef(null);
+  useEffect(() => {
+    inputRef.current.focus();
+  });
+  const title = useField('title', form);
+  const { classes, preview, payload } = props;
   return (
     <React.Fragment>
       {preview()}
       <form onSubmit={handleSubmit} className={classes.root}>
         <div className={`${classes.inputContainer} ${classes.margin}`}>
           <TextField
-            label="Title"
+            inputRef={inputRef}
+            label="First word"
             margin="none"
             variant="filled"
             fullWidth
-            InputProps={message.input}
-            error={message.meta.touched && isTypeOfString(message.meta.error)}
+            InputProps={title.input}
+            error={title.meta.touched && isTypeOfString(title.meta.error)}
           />
         </div>
         <div className={classes.buttonContainer}>
           <Button
             color="primary"
             type="submit"
-            disabled={prestine || submitting}
+            disabled={
+              prestine ||
+              submitting ||
+              title.input.value !== payload.message.split(' ')[0]
+            }
           >
             <Delete />
             <Send />
@@ -68,6 +78,7 @@ DeleteMessageDialogInput.defaultProps = {
 
 DeleteMessageDialogInput.propTypes = {
   classes: PropTypes.object.isRequired,
+  payload: PropTypes.object.isRequired,
   preview: PropTypes.func
 };
 

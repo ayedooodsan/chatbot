@@ -30,7 +30,7 @@ class IntentsMenu extends Component {
   };
 
   render() {
-    const { classes, myIntents, projectId } = this.props;
+    const { classes, myIntents, projectId, intentId } = this.props;
     const { pagination, keyword } = this.state;
     return (
       <Paper className={classes.root}>
@@ -51,7 +51,9 @@ class IntentsMenu extends Component {
                     key={myIntent.id}
                   >
                     <MenuItem
-                      className={`${classes.menuItem} ${classes.whiteText}`}
+                      className={`${classes.menuItem} ${classes.whiteText} ${
+                        myIntent.id === intentId ? classes.activeMenuItem : ''
+                      }`}
                     >
                       <Typography
                         variant="caption"
@@ -78,6 +80,7 @@ IntentsMenu.defaultProps = {
 IntentsMenu.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
+  intentId: PropTypes.string.isRequired,
   myIntents: PropTypes.array
 };
 

@@ -1,4 +1,4 @@
-query getIntent (
+query intent (
   $id: String!
 ) {
   intent (

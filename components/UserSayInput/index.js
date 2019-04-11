@@ -36,13 +36,21 @@ const UserSayInput = props => {
     },
     validate
   });
+
   const inputRef = useRef(null);
   useEffect(() => {
-    if (payload.index) {
+    inputRef.current.focus();
+  }, [payload]);
+
+  const message = useField('message', form);
+
+  useEffect(() => {
+    if (message.meta.submitSucceeded) {
+      form.reset();
       inputRef.current.focus();
     }
-  }, [payload]);
-  const message = useField('message', form);
+  }, [message]);
+
   return (
     <React.Fragment>
       {preview()}
@@ -57,7 +65,9 @@ const UserSayInput = props => {
             variant="filled"
             fullWidth
             InputProps={message.input}
-            error={message.meta.touched && isTypeOfString(message.meta.error)}
+            error={
+              message.meta.submitFailed && isTypeOfString(message.meta.error)
+            }
           />
         </div>
         <div className={classes.buttonContainer}>

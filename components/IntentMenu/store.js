@@ -1,9 +1,10 @@
 import { graphql, compose } from 'react-apollo';
-import getIntentGql from './getIntent.gql';
+import intentGql from './intent.gql';
 import createIntentGql from './createIntent.gql';
 import updateIntentGql from './updateIntent.gql';
+import deleteIntentGql from './deleteIntent.gql';
 
-const withGetIntent = graphql(getIntentGql, {
+const withIntent = graphql(intentGql, {
   name: 'intent',
   options: props => ({
     variables: {
@@ -42,14 +43,26 @@ const withUpdateIntent = graphql(updateIntentGql, {
     updateIntent: ({ id, title, values }) =>
       updateIntent({
         variables: { id, title, values },
-        refetchQueries: ['getMyIntents']
+        refetchQueries: ['getMyIntents', 'intent']
+      })
+  })
+});
+
+const withDeleteIntent = graphql(deleteIntentGql, {
+  name: 'deleteIntent',
+  props: ({ deleteIntent }) => ({
+    deleteIntent: ({ id }) =>
+      deleteIntent({
+        variables: { id },
+        refetchQueries: ['getMyIntents', 'intent']
       })
   })
 });
 
 export default comp =>
   compose(
-    withGetIntent,
+    withIntent,
     withCreateIntent,
-    withUpdateIntent
+    withUpdateIntent,
+    withDeleteIntent
   )(comp);
