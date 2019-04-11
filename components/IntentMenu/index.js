@@ -3,75 +3,154 @@ import PropTypes from 'prop-types';
 import Scrollbar from 'react-scrollbars-custom';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
+import { withRouter } from 'next/router';
+import _ from 'lodash';
 
 import UserSayMessage from '../UserSayMessage';
 import IntentBar from '../IntentBar';
 import IntentInput from '../IntentInput';
 import style from './style';
+import connect from './store';
+import redirect from '../../libraries/redirect';
+import { EDIT, DELETE } from '../IntentInput/constant';
 
 class IntentMenu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      intent: {
-        id: 1,
-        name: 'Say name',
-        examples: [
-          'Hai my name is Aditio',
-          'I am susan sines',
-          "It's joko",
-          'You can tell me elvis',
-          'Call me juan'
-        ],
-        params: [
-          {
-            name: 'first',
-            required: true,
-            message: 'Please tell me your first name'
-          },
-          {
-            name: 'last',
-            required: false
-          }
-        ]
-      },
-      intentInputProps: {}
+      errorTitle: '',
+      intentInputProps: {},
+      title: '',
+      values: []
     };
+    this.titleInputRef = React.createRef();
   }
+
+  componentDidMount() {
+    this.titleInputRef.current.focus();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!_.isEqual(this.props.intent, prevProps.intent)) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({
+        title: this.props.intent.title || '',
+        values: this.props.intent.values || []
+      });
+    }
+  }
+
+  onSaveIntent = async () => {
+    const { title, values } = this.state;
+    const { intentId, createIntent, updateIntent, projectId } = this.props;
+    if (!title) {
+      this.setState({ errorTitle: 'Title is required' });
+    } else if (intentId === '0') {
+      const response = await createIntent({ title, values, projectId });
+      const newIntentId = response.data.createIntent.id;
+      redirect({}, `/${projectId}/intent/${newIntentId}`);
+    } else {
+      console.log({ intentId });
+      updateIntent({ id: intentId, title, values });
+    }
+  };
+
+  onSend = ({ value, index }) => {
+    const {
+      intentInputProps: { type }
+    } = this.state;
+    this.setState(prevState => {
+      const values = [...prevState.values];
+      switch (type) {
+        case EDIT: {
+          values[index] = value;
+          break;
+        }
+        case DELETE: {
+          values.splice(index, 1);
+          break;
+        }
+        default: {
+          values.push(value);
+          break;
+        }
+      }
+      console.log({ values });
+      return { values };
+    }, this.onReset);
+  };
+
+  onReset = () => {
+    this.setState({ intentInputProps: {} });
+  };
+
+  onChangeTitle = event => {
+    if (!event.target.value) {
+      this.setState({
+        title: event.target.value,
+        errorTitle: 'Title is required'
+      });
+    } else {
+      this.setState({
+        title: event.target.value
+      });
+    }
+  };
 
   onChangeIntentInputProps = intentInputProps => {
     this.setState({ intentInputProps });
   };
 
   render() {
-    const { intent, intentInputProps } = this.state;
+    const { intentInputProps, title, errorTitle, values } = this.state;
     const { classes } = this.props;
     return (
       <Paper className={classes.root}>
         <Paper className={classes.header}>
-          <IntentBar values={intent.name} />
+          <IntentBar
+            value={title}
+            innerRef={this.titleInputRef}
+            onChange={this.onChangeTitle}
+            error={errorTitle}
+            onSave={this.onSaveIntent}
+          />
         </Paper>
         <div className={classes.container}>
           <Scrollbar>
-            {intent.examples.map((example, index) => (
-              <UserSayMessage
-                message={example}
-                index={index}
-                onChangeIntentInput={this.onChangeIntentInputProps}
-              />
-            ))}
+            {values &&
+              values.map((example, index) => (
+                <UserSayMessage
+                  message={example}
+                  index={index}
+                  onChangeIntentInput={this.onChangeIntentInputProps}
+                />
+              ))}
           </Scrollbar>
         </div>
         <Paper className={classes.footer}>
-          <IntentInput {...intentInputProps} />
+          <IntentInput
+            {...intentInputProps}
+            send={this.onSend}
+            reset={this.onReset}
+          />
         </Paper>
       </Paper>
     );
   }
 }
 
-IntentMenu.propTypes = {
-  classes: PropTypes.object.isRequired
+IntentMenu.defaultProps = {
+  intent: {}
 };
 
-export default withStyles(style)(IntentMenu);
+IntentMenu.propTypes = {
+  classes: PropTypes.object.isRequired,
+  intentId: PropTypes.string.isRequired,
+  projectId: PropTypes.string.isRequired,
+  createIntent: PropTypes.func.isRequired,
+  updateIntent: PropTypes.func.isRequired,
+  router: PropTypes.object.isRequired,
+  intent: PropTypes.object
+};
+
+export default withStyles(style)(connect(withRouter(IntentMenu)));

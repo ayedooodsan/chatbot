@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useForm, useField } from 'react-final-form-hooks';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -11,7 +11,11 @@ import style from './style';
 
 const onSubmit = props => {
   return values => {
-    props.send(values);
+    const {
+      send,
+      payload: { index }
+    } = props;
+    send({ value: values.message, index });
   };
 };
 
@@ -24,18 +28,28 @@ const validate = values => {
 };
 
 const UserSayInput = props => {
+  const { classes, preview, payload } = props;
   const { form, handleSubmit, prestine, submitting } = useForm({
     onSubmit: onSubmit(props),
+    initialValues: {
+      message: payload.message
+    },
     validate
   });
+  const inputRef = useRef(null);
+  useEffect(() => {
+    if (payload.index) {
+      inputRef.current.focus();
+    }
+  }, [payload]);
   const message = useField('message', form);
-  const { classes, preview } = props;
   return (
     <React.Fragment>
       {preview()}
       <form onSubmit={handleSubmit} className={classes.root}>
         <div className={`${classes.inputContainer} ${classes.margin}`}>
           <TextField
+            inputRef={inputRef}
             multiline
             rowsMax="4"
             label="Message"
@@ -62,11 +76,13 @@ const UserSayInput = props => {
 };
 
 UserSayInput.defaultProps = {
-  preview: () => null
+  preview: () => null,
+  payload: { message: '', index: 0 }
 };
 
 UserSayInput.propTypes = {
   classes: PropTypes.object.isRequired,
+  payload: PropTypes.object,
   preview: PropTypes.func
 };
 

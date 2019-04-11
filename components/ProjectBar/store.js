@@ -1,32 +1,27 @@
 import { graphql, compose } from 'react-apollo';
-import { connect } from 'react-redux';
-import { dispatchers } from '../../redux/auth';
 import getMyProjects from './getMyProjects.gql';
-// import createProject from './createProject.gql';
+import createProject from './createProject.gql';
 
 const withData = graphql(getMyProjects, {
-  props: ({ data: { loading, myProject, error } }) => ({
+  props: ({ data: { loading, myProjects, error } }) => ({
     loading,
-    myProject,
+    myProjects,
     error
   })
 });
 
-const mapDispatchToProps = dispatch => ({
-  actions: {
-    signIn(token) {
-      dispatch(dispatchers.signIn(token));
+const withMutation = graphql(createProject, {
+  props: ({ mutate }) => ({
+    mutations: {
+      getMyProjects: () => mutate()
     }
-  }
+  })
 });
 
 export default comp => {
   const compWithApollo = compose(
-    withData
-    // withMutation
+    withData,
+    withMutation
   )(comp);
-  return connect(
-    null,
-    mapDispatchToProps
-  )(compWithApollo);
+  return compWithApollo;
 };

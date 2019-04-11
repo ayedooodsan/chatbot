@@ -30,7 +30,8 @@ const onSubmit = props => {
     props.mutations.signIn(values).then(response => {
       if (response.data.signIn.token) {
         props.actions.signIn(response.data.signIn.token);
-        redirect({}, '/dialog');
+        const projectId = response.data.signIn.me.activeProject.id;
+        redirect({}, `/${projectId}/dialog`);
       }
     });
   };

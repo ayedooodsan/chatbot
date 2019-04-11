@@ -20,6 +20,7 @@ import sideBarRoutes from './routes';
 const Sidebar = ({ ...props }) => {
   // verifies if routeName is the one active (in browser input)
   const { router } = props;
+  const { projectId } = router.query;
   function activeRoute(route) {
     return router.route === route;
   }
@@ -34,7 +35,7 @@ const Sidebar = ({ ...props }) => {
           [` ${classes.whiteFont}`]: activeRoute(prop.route)
         });
         return (
-          <Link route={prop.route} key={prop.route}>
+          <Link route={`/${projectId}${prop.route}`} key={prop.route}>
             <div className={classes.item}>
               <ListItem button className={classes.itemLink + listItemClasses}>
                 {typeof prop.icon === 'string' ? (

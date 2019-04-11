@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'next/router';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -7,14 +8,20 @@ import Search from '@material-ui/icons/Search';
 import Clear from '@material-ui/icons/Clear';
 import Add from '@material-ui/icons/Add';
 import Pagination from 'material-ui-flat-pagination';
+import { Link } from '../../routes';
 import CustomInput from '../CustomInput';
 
 import style from './style';
 
 const IntentsBar = props => {
   const [openSearch, setOpenSearch] = useState(false);
-  const { pagination, classes, handleClickPagination, setKeyword } = props;
-  console.log('ceeeek');
+  const {
+    pagination,
+    classes,
+    handleClickPagination,
+    projectId,
+    setKeyword
+  } = props;
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -50,9 +57,11 @@ const IntentsBar = props => {
           INTENT CATALOG
         </Typography>
         <div>
-          <IconButton color="primary" size="medium">
-            <Add />
-          </IconButton>
+          <Link route={`/${projectId}/intent/0`}>
+            <IconButton color="primary" size="medium">
+              <Add />
+            </IconButton>
+          </Link>
           <IconButton color="primary" onClick={toggleSearch} size="medium">
             {openSearch ? <Clear /> : <Search />}
           </IconButton>
@@ -91,7 +100,8 @@ IntentsBar.propTypes = {
   pagination: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   handleClickPagination: PropTypes.func.isRequired,
-  setKeyword: PropTypes.func.isRequired
+  setKeyword: PropTypes.func.isRequired,
+  projectId: PropTypes.string.isRequired
 };
 
-export default withStyles(style)(IntentsBar);
+export default withStyles(style)(withRouter(IntentsBar));

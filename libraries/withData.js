@@ -40,7 +40,6 @@ export default Component =>
       const token = cookies(ctx)[persist.ACCESS_TOKEN_KEY];
       const { isPublic } = Component;
       if (!isPublic && !token) {
-        console.log('rederict');
         redirect(ctx, '/');
       }
 

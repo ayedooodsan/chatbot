@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
@@ -6,6 +6,7 @@ import withData from '../libraries/withData';
 import Dashboard from '../containers/Dashboard';
 import IntentsMenu from '../components/IntentsMenu';
 import IntentMenu from '../components/IntentMenu';
+import IntentInfo from '../components/IntentInfo';
 
 const style = () => ({
   dialogGrid: {
@@ -13,31 +14,30 @@ const style = () => ({
   }
 });
 
-class Dialog extends Component {
-  constructor(props) {
-    super(props);
-    this.dialogList = React.createRef();
-  }
-
-  render() {
-    const { classes } = this.props;
-    return (
-      <Dashboard>
-        <Grid container spacing={0}>
-          <Grid item md={3}>
-            <IntentsMenu />
-          </Grid>
-          <Grid item md={9} className={classes.dialogGrid}>
-            <IntentMenu />
-          </Grid>
+const Intent = props => {
+  const { classes, router } = props;
+  const { intentId, projectId } = router.url.query;
+  return (
+    <Dashboard>
+      <Grid container spacing={0}>
+        <Grid item md={3}>
+          <IntentsMenu projectId={projectId} />
         </Grid>
-      </Dashboard>
-    );
-  }
-}
-
-Dialog.propTypes = {
-  classes: PropTypes.object.isRequired
+        <Grid item md={9} className={classes.dialogGrid}>
+          {intentId === undefined ? (
+            <IntentInfo />
+          ) : (
+            <IntentMenu intentId={intentId} projectId={projectId} />
+          )}
+        </Grid>
+      </Grid>
+    </Dashboard>
+  );
 };
 
-export default withStyles(style)(withData(Dialog));
+Intent.propTypes = {
+  classes: PropTypes.object.isRequired,
+  router: PropTypes.object.isRequired
+};
+
+export default withStyles(style)(withData(Intent));

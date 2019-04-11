@@ -9,20 +9,17 @@ import { withStyles } from '@material-ui/core/styles';
 
 import IntentsBar from '../IntentsBar';
 import style from './style';
+import connect from './store';
+import { Link } from '../../routes';
 
 class IntentsMenu extends Component {
-  constructor(props) {
-    super(props);
-    this.container = React.createRef();
-    this.state = {
-      dialogs: [{ id: 1, title: 'Say name' }, { id: 2, title: 'Say hai' }],
-      pagination: {
-        limit: 10,
-        offset: 3
-      },
-      keyword: ''
-    };
-  }
+  state = {
+    pagination: {
+      limit: 10,
+      offset: 3
+    },
+    keyword: ''
+  };
 
   handleClickPagination = offset => {
     this.setState(offset);
@@ -33,33 +30,40 @@ class IntentsMenu extends Component {
   };
 
   render() {
-    const { classes } = this.props;
-    const { dialogs, pagination, keyword } = this.state;
+    const { classes, myIntents, projectId } = this.props;
+    const { pagination, keyword } = this.state;
     return (
       <Paper className={classes.root}>
         <Paper className={classes.header}>
           <IntentsBar
+            projectId={projectId}
             setKeyword={this.setKeyword}
-            pagination={{ ...pagination, dataLength: dialogs.length }}
+            pagination={{ ...pagination, dataLength: myIntents.length }}
           />
         </Paper>
         <div className={classes.container}>
           <Scrollbar>
-            <MenuList>
-              {dialogs.map(dialog => (
-                <MenuItem
-                  key={dialog.id}
-                  className={`${classes.menuItem} ${classes.whiteText}`}
-                >
-                  <Typography
-                    variant="caption"
-                    className={`${classes.menuTitle} ${classes.whiteText}`}
+            {myIntents && (
+              <MenuList>
+                {myIntents.map(myIntent => (
+                  <Link
+                    route={`/${projectId}/intent/${myIntent.id}`}
+                    key={myIntent.id}
                   >
-                    {dialog.title} {keyword}
-                  </Typography>
-                </MenuItem>
-              ))}
-            </MenuList>
+                    <MenuItem
+                      className={`${classes.menuItem} ${classes.whiteText}`}
+                    >
+                      <Typography
+                        variant="caption"
+                        className={`${classes.menuTitle} ${classes.whiteText}`}
+                      >
+                        {myIntent.title} {keyword}
+                      </Typography>
+                    </MenuItem>
+                  </Link>
+                ))}
+              </MenuList>
+            )}
           </Scrollbar>
         </div>
       </Paper>
@@ -67,8 +71,14 @@ class IntentsMenu extends Component {
   }
 }
 
-IntentsMenu.propTypes = {
-  classes: PropTypes.object.isRequired
+IntentsMenu.defaultProps = {
+  myIntents: []
 };
 
-export default withStyles(style)(IntentsMenu);
+IntentsMenu.propTypes = {
+  classes: PropTypes.object.isRequired,
+  projectId: PropTypes.string.isRequired,
+  myIntents: PropTypes.array
+};
+
+export default withStyles(style)(connect(IntentsMenu));

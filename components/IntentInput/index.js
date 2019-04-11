@@ -13,6 +13,7 @@ const IntentInput = props => {
     case EDIT: {
       Element = (
         <UserSayInput
+          payload={payload}
           preview={() => (
             <PreviewMessage
               title="EDIT USER SAYS:"

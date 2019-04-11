@@ -15,6 +15,7 @@ import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import Clear from '@material-ui/icons/Clear';
 import Send from '@material-ui/icons/Send';
 import { useForm, useField } from 'react-final-form-hooks';
+import { withRouter } from 'next/router';
 
 import { isTypeOfString } from '../../libraries/helpers';
 import CustomInput from '../CustomInput';
@@ -41,7 +42,7 @@ const ProjectBar = props => {
     validate
   });
   const newAgent = useField('newAgent', form);
-  const { classes } = props;
+  const { classes, router, myProjects } = props;
 
   const handleClose = () => {
     form.reset();
@@ -52,6 +53,10 @@ const ProjectBar = props => {
     setOpen(true);
   };
 
+  const { projectId } = router.query;
+  const activeProject =
+    myProjects.find(myProject => myProject.id === projectId) || {};
+  const projects = myProjects.filter(myProject => myProject.id !== projectId);
   const toglleOpen = () => {
     if (open) {
       handleClose();
@@ -63,7 +68,7 @@ const ProjectBar = props => {
     <div>
       <div className={classes.container} ref={anchorEl}>
         <Typography variant="subtitle2" color="inherit">
-          KS Agent
+          {activeProject.title}
         </Typography>
         <IconButton onClick={toglleOpen} color="primary" size="medium">
           {open ? <Clear /> : <KeyboardArrowDown />}
@@ -90,18 +95,16 @@ const ProjectBar = props => {
                       SWITCH PROJECT
                     </Typography>
                     <MenuList role="menu" className={classes.resetPaddingTop}>
-                      <MenuItem
-                        onClick={handleClose}
-                        className={classes.dropdownItem}
-                      >
-                        <Typography variant="caption">KN Agent</Typography>
-                      </MenuItem>
-                      <MenuItem
-                        onClick={handleClose}
-                        className={classes.dropdownItem}
-                      >
-                        <Typography variant="caption">Kalcare Agent</Typography>
-                      </MenuItem>
+                      {projects.map(project => (
+                        <MenuItem
+                          onClick={handleClose}
+                          className={classes.dropdownItem}
+                        >
+                          <Typography variant="caption">
+                            {project.title}
+                          </Typography>
+                        </MenuItem>
+                      ))}
                     </MenuList>
                     <Divider light />
                     <form
@@ -142,8 +145,14 @@ const ProjectBar = props => {
   );
 };
 
-ProjectBar.propTypes = {
-  classes: PropTypes.object.isRequired
+ProjectBar.defaultProps = {
+  myProjects: []
 };
 
-export default withStyles(style)(connect(ProjectBar));
+ProjectBar.propTypes = {
+  classes: PropTypes.object.isRequired,
+  myProjects: PropTypes.object,
+  router: PropTypes.object.isRequired
+};
+
+export default withStyles(style)(connect(withRouter(ProjectBar)));

@@ -46,7 +46,7 @@ const UserSayMessage = props => {
 };
 
 UserSayMessage.propTypes = {
-  message: PropTypes.array.isRequired,
+  message: PropTypes.object.isRequired,
   index: PropTypes.number.isRequired,
   onChangeIntentInput: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
