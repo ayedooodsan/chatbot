@@ -9,21 +9,16 @@ import { withStyles } from '@material-ui/core/styles';
 
 import DialogsBar from '../DialogsBar';
 import style from './style';
+import connect from './store';
 
 class DialogsMenu extends Component {
   constructor(props) {
     super(props);
-    this.container = React.createRef();
     this.state = {
-      dialogs: [
-        { id: 1, title: 'Introduction' },
-        { id: 2, title: 'FAQ product' }
-      ],
       pagination: {
         limit: 10,
         offset: 3
-      },
-      keyword: ''
+      }
     };
   }
 
@@ -36,20 +31,22 @@ class DialogsMenu extends Component {
   };
 
   render() {
-    const { classes } = this.props;
-    const { dialogs, pagination, keyword } = this.state;
+    const { classes, myDialogs, projectId, dialogId } = this.props;
+    const { pagination, keyword } = this.state;
     return (
       <Paper className={classes.root}>
         <Paper className={classes.header}>
           <DialogsBar
+            projectId={projectId}
+            dialogId={dialogId}
             setKeyword={this.setKeyword}
-            pagination={{ ...pagination, dataLength: dialogs.length }}
+            pagination={{ ...pagination, dataLength: myDialogs.length }}
           />
         </Paper>
         <div className={classes.container}>
           <Scrollbar>
             <MenuList>
-              {dialogs.map(dialog => (
+              {myDialogs.map(dialog => (
                 <MenuItem
                   key={dialog.id}
                   className={`${classes.menuItem} ${classes.whiteText}`}
@@ -70,8 +67,16 @@ class DialogsMenu extends Component {
   }
 }
 
-DialogsMenu.propTypes = {
-  classes: PropTypes.object.isRequired
+DialogsMenu.defaultProps = {
+  myDialogs: [],
+  dialogId: null
 };
 
-export default withStyles(style)(DialogsMenu);
+DialogsMenu.propTypes = {
+  classes: PropTypes.object.isRequired,
+  projectId: PropTypes.string.isRequired,
+  dialogId: PropTypes.string,
+  myDialogs: PropTypes.array
+};
+
+export default withStyles(style)(connect(DialogsMenu));

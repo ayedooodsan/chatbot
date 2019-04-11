@@ -6,6 +6,7 @@ import withData from '../libraries/withData';
 import Dashboard from '../containers/Dashboard';
 import DialogsMenu from '../components/DialogsMenu';
 import DialogMenu from '../components/DialogMenu';
+import DialogInfo from '../components/DialogInfo';
 
 const style = () => ({
   dialogGrid: {
@@ -20,15 +21,20 @@ class Dialog extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, router } = this.props;
+    const { dialogId, projectId } = router.url.query;
     return (
       <Dashboard>
         <Grid container spacing={0}>
           <Grid item md={3}>
-            <DialogsMenu />
+            <DialogsMenu projectId={projectId} dialogId={dialogId} />
           </Grid>
           <Grid item md={9} className={classes.dialogGrid}>
-            <DialogMenu />
+            {dialogId === undefined ? (
+              <DialogInfo />
+            ) : (
+              <DialogMenu projectId={projectId} dialogId={dialogId} />
+            )}
           </Grid>
         </Grid>
       </Dashboard>
@@ -37,7 +43,8 @@ class Dialog extends Component {
 }
 
 Dialog.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  router: PropTypes.object.isRequired
 };
 
 export default withStyles(style)(withData(Dialog));

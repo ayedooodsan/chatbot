@@ -9,11 +9,18 @@ import Add from '@material-ui/icons/Add';
 import Pagination from 'material-ui-flat-pagination';
 import CustomInput from '../CustomInput';
 
+import { Link } from '../../routes';
 import style from './style';
 
 const DialogsBar = props => {
   const [openSearch, setOpenSearch] = useState(false);
-  const { pagination, classes, handleClickPagination, setKeyword } = props;
+  const {
+    pagination,
+    classes,
+    handleClickPagination,
+    setKeyword,
+    projectId
+  } = props;
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -49,9 +56,11 @@ const DialogsBar = props => {
           DIALOG
         </Typography>
         <div>
-          <IconButton color="primary" size="medium">
-            <Add />
-          </IconButton>
+          <Link route={`/${projectId}/dialog/0`}>
+            <IconButton color="primary" size="medium">
+              <Add />
+            </IconButton>
+          </Link>
           <IconButton color="primary" onClick={toggleSearch} size="medium">
             {openSearch ? <Clear /> : <Search />}
           </IconButton>
@@ -90,7 +99,8 @@ DialogsBar.propTypes = {
   pagination: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   handleClickPagination: PropTypes.func.isRequired,
-  setKeyword: PropTypes.func.isRequired
+  setKeyword: PropTypes.func.isRequired,
+  projectId: PropTypes.string.isRequired
 };
 
 export default withStyles(style)(DialogsBar);
