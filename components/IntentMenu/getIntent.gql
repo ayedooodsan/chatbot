@@ -1,0 +1,10 @@
+query getIntent (
+  $id: String!
+) {
+  intent (
+    id: $id
+  ) {
+    title
+    values
+  }
+}

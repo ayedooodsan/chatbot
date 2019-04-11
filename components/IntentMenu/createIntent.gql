@@ -1,0 +1,15 @@
+mutation createIntent (
+  $title: String!
+  $values: [String!],
+  $projectId: String!
+) {
+  createIntent (
+    title: $title
+    values: $values
+    projectId: $projectId
+  ) {
+    id
+    title
+    values
+  }
+}
