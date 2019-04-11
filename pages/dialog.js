@@ -6,7 +6,6 @@ import withData from '../libraries/withData';
 import Dashboard from '../containers/Dashboard';
 import DialogsMenu from '../components/DialogsMenu';
 import DialogMenu from '../components/DialogMenu';
-import DialogInfo from '../components/DialogInfo';
 
 const style = () => ({
   dialogGrid: {
@@ -30,9 +29,7 @@ class Dialog extends Component {
             <DialogsMenu projectId={projectId} dialogId={dialogId} />
           </Grid>
           <Grid item md={9} className={classes.dialogGrid}>
-            {dialogId === undefined ? (
-              <DialogInfo />
-            ) : (
+            {dialogId === undefined ? null : (
               <DialogMenu projectId={projectId} dialogId={dialogId} />
             )}
           </Grid>
