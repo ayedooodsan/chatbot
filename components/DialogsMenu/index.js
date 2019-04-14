@@ -9,6 +9,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import DialogsBar from '../DialogsBar';
 import style from './style';
+import connect from './store';
 
 class DialogsMenu extends Component {
   constructor(props) {
@@ -78,4 +79,4 @@ DialogsMenu.propTypes = {
   myDialogs: PropTypes.array
 };
 
-export default withStyles(style)(DialogsMenu);
+export default withStyles(style)(connect(DialogsMenu));
