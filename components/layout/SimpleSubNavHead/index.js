@@ -7,20 +7,21 @@ import IconButton from '@material-ui/core/IconButton';
 import Search from '@material-ui/icons/Search';
 import Clear from '@material-ui/icons/Clear';
 import Add from '@material-ui/icons/Add';
+import Input from '@material-ui/core/Input';
 import Pagination from 'material-ui-flat-pagination';
-import { Link } from '../../routes';
-import CustomInput from '../CustomInput';
 
 import style from './style';
 
-const IntentsBar = props => {
+const SimpleSubNavHead = props => {
   const [openSearch, setOpenSearch] = useState(false);
   const {
     pagination,
     classes,
     handleClickPagination,
-    projectId,
-    setKeyword
+    setKeyword,
+    keyword,
+    onAddItem,
+    title
   } = props;
   const searchInputRef = useRef(null);
 
@@ -50,34 +51,29 @@ const IntentsBar = props => {
   return (
     <React.Fragment>
       <div className={classes.title}>
-        <Typography
-          variant="overline"
-          className={`${classes.menuTitle} ${classes.whiteText}`}
-        >
-          INTENT CATALOG
+        <Typography variant="h6" className={classes.menuTitle}>
+          {title}
         </Typography>
         <div>
-          <Link route={`/${projectId}/intent/0`}>
-            <IconButton color="primary" size="medium">
-              <Add />
-            </IconButton>
-          </Link>
+          <IconButton color="primary" size="medium" onClick={onAddItem}>
+            <Add />
+          </IconButton>
           <IconButton color="primary" onClick={toggleSearch} size="medium">
             {openSearch ? <Clear /> : <Search />}
           </IconButton>
         </div>
       </div>
       {openSearch && (
-        <CustomInput
-          justInput
+        <Input
+          inputRef={searchInputRef}
+          placeholder="Keyword"
+          value={keyword}
+          onChange={setKeyword}
+          className={classes.searchInput}
           inputProps={{
-            inputRef: searchInputRef,
-            className: classes.searchInput,
-            placeholder: 'Keyword'
+            'aria-label': 'Description'
           }}
-          formControlProps={{
-            fullWidth: true
-          }}
+          fullWidth
         />
       )}
       {pagination.limit < pagination.dataLength && (
@@ -96,12 +92,14 @@ const IntentsBar = props => {
   );
 };
 
-IntentsBar.propTypes = {
+SimpleSubNavHead.propTypes = {
   pagination: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
   handleClickPagination: PropTypes.func.isRequired,
   setKeyword: PropTypes.func.isRequired,
-  projectId: PropTypes.string.isRequired
+  onAddItem: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  keyword: PropTypes.string.isRequired
 };
 
-export default withStyles(style)(withRouter(IntentsBar));
+export default withStyles(style)(withRouter(SimpleSubNavHead));

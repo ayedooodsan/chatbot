@@ -17,7 +17,6 @@ const style = () => ({
     alignItems: 'center'
   },
   searchInput: {
-    color: 'white',
     marginBottom: '10px'
   }
 });

@@ -1,4 +1,4 @@
-import { whiteColor } from '../../libraries/materialDashboardReactStyle';
+import { whiteColor } from '../../../libraries/materialDashboardReactStyle';
 
 const style = () => ({
   root: {

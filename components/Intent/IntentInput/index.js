@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import PreviewMessage from '../PreviewMessage';
-import UserSayInput from '../UserSayInput';
-import DeleteMessageDialogInput from '../DeleteMessageDialogInput';
+import PreviewMessage from '../../PreviewMessage';
+import UserSayInput from '../../UserSayInput';
+import DeleteMessageDialogInput from '../../DeleteMessageDialogInput';
 import { EDIT, DELETE, ADD } from './constant';
 
 const IntentInput = props => {

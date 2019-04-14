@@ -1,7 +1,7 @@
 mutation createIntent (
   $title: String!
-  $values: [String!],
   $projectId: String!
+  $values: [String!]
 ) {
   createIntent (
     title: $title

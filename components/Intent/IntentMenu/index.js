@@ -5,12 +5,12 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
 import _ from 'lodash';
 
-import UserSayMessage from '../UserSayMessage';
+import UserSayMessage from '../../UserSayMessage';
 import IntentBar from '../IntentBar';
 import IntentInput from '../IntentInput';
 import style from './style';
 import connect from './store';
-import redirect from '../../libraries/redirect';
+import redirect from '../../../libraries/redirect';
 import { EDIT, DELETE } from '../IntentInput/constant';
 
 class IntentMenu extends Component {
