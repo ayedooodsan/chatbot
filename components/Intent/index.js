@@ -84,7 +84,6 @@ class Intent extends Component {
           />
         )}
       >
-        Cek
         <CreateItemDialog
           placeholder="Intent Name"
           message="Add new Itent"

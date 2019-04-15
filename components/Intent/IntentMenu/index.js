@@ -48,7 +48,6 @@ class IntentMenu extends Component {
       const newIntentId = response.data.createIntent.id;
       redirect({}, `/${projectId}/intent/${newIntentId}`);
     } else {
-      console.log({ intentId });
       updateIntent({ id: intentId, title, values });
     }
   };
