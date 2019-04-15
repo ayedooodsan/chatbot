@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Search from '@material-ui/icons/Search';
 import Clear from '@material-ui/icons/Clear';
 import Add from '@material-ui/icons/Add';
-import Input from '@material-ui/core/Input';
+import TextField from '@material-ui/core/TextField';
 import Pagination from 'material-ui-flat-pagination';
 
 import style from './style';
@@ -64,15 +64,14 @@ const SimpleSubNavHead = props => {
         </div>
       </div>
       {openSearch && (
-        <Input
-          inputRef={searchInputRef}
-          placeholder="Keyword"
+        <TextField
           value={keyword}
           onChange={setKeyword}
-          className={classes.searchInput}
-          inputProps={{
-            'aria-label': 'Description'
-          }}
+          inputRef={searchInputRef}
+          autoFocus
+          placeholder="Keyword"
+          margin="dense"
+          variant="outlined"
           fullWidth
         />
       )}

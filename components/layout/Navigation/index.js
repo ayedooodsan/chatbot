@@ -70,10 +70,9 @@ class Navigation extends React.Component {
         </div>
         <List>
           {routes.map(route => (
-            <Link route={`/${projectId}${route.route}`}>
+            <Link route={`/${projectId}${route.route}`} key={route.name}>
               <ListItem
                 button
-                key={route.name}
                 className={classNames({
                   [classes.listItemActive]: activeRoute(route.route)
                 })}

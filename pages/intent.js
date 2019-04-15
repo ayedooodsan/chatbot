@@ -4,8 +4,8 @@ import withData from '../libraries/withData';
 
 const intent = props => {
   const { router } = props;
-  const { inetntId, projectId } = router.url.query;
-  return <Intent inetntId={inetntId} projectId={projectId} />;
+  const { intentId, projectId } = router.url.query;
+  return <Intent intentId={intentId} projectId={projectId} />;
 };
 
 intent.propTypes = {

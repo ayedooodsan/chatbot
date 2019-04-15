@@ -3,13 +3,18 @@ import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import withStyles from '@material-ui/core/styles/withStyles';
+import classNames from 'classnames';
 import LayoutProvider from '../layout/LayoutProvider';
 import Navigation from '../layout/Navigation';
 import SubNavigation from '../layout/SubNavigation';
 import SimpleHeader from '../layout/SimpleSubNavHead';
-import CreateItemDialog from '../common/CreateItemDialog';
+import CreateProductDialog from '../common/CreateProductDialog';
+import IntentProduct from './IntentProduct';
 import connect from './store';
 import { Link } from '../../routes';
+import style from './style';
+import redirect from '../../libraries/redirect';
 
 class Intent extends Component {
   state = {
@@ -30,10 +35,11 @@ class Intent extends Component {
   };
 
   createItem = title => {
-    console.log({ title });
     const { createIntent, projectId } = this.props;
-    createIntent({ title, values: [], projectId }).then(() => {
+    createIntent({ title, values: [], projectId }).then(response => {
       this.closeCreateItemDialog();
+      const intentId = response.data.createIntent.id;
+      redirect({}, `/${projectId}/intent/${intentId}`);
     });
   };
 
@@ -47,9 +53,11 @@ class Intent extends Component {
     }));
   };
 
+  activeIntent = currentIntentId => currentIntentId === this.props.intentId;
+
   render() {
     const { keyword, pagination, createItemDialogStatus } = this.state;
-    const { myIntents, projectId } = this.props;
+    const { myIntents, projectId, intentId, classes } = this.props;
     return (
       <LayoutProvider
         navigation={() => <Navigation />}
@@ -67,14 +75,30 @@ class Intent extends Component {
             )}
             body={() =>
               myIntents && (
-                <List component="nav" dense>
+                <List component="nav">
                   {myIntents.map(myIntent => (
                     <Link
                       route={`/${projectId}/intent/${myIntent.id}`}
                       key={myIntent.id}
                     >
-                      <ListItem button>
-                        <ListItemText primary={myIntent.title} />
+                      <ListItem
+                        className={classNames({
+                          [classes.listItemActive]: this.activeIntent(
+                            myIntent.id
+                          )
+                        })}
+                        button
+                      >
+                        <ListItemText
+                          primary={myIntent.title}
+                          primaryTypographyProps={{
+                            className: classNames({
+                              [classes.listItemTextActive]: this.activeIntent(
+                                myIntent.id
+                              )
+                            })
+                          }}
+                        />
                       </ListItem>
                     </Link>
                   ))}
@@ -84,7 +108,10 @@ class Intent extends Component {
           />
         )}
       >
-        <CreateItemDialog
+        {intentId && (
+          <IntentProduct intentId={intentId} projectId={projectId} />
+        )}
+        <CreateProductDialog
           placeholder="Intent Name"
           message="Add new Itent"
           open={createItemDialogStatus}
@@ -101,9 +128,11 @@ Intent.defaultProps = {
 };
 
 Intent.propTypes = {
+  classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
+  intentId: PropTypes.string.isRequired,
   createIntent: PropTypes.func.isRequired,
   myIntents: PropTypes.array
 };
 
-export default connect(Intent);
+export default withStyles(style)(connect(Intent));

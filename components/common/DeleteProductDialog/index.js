@@ -1,25 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
-import Input from '@material-ui/core/Input';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
-const CreateItemDialog = props => {
-  const [newItemName, setNewItemName] = useState('');
-  const { open, handleClose, handleConfirm, message, placeholder } = props;
+const DeleteProductDialog = props => {
+  const [firstWord, setFirstWord] = useState('');
+  const {
+    open,
+    handleClose,
+    handleConfirm,
+    message,
+    productName,
+    subMessage
+  } = props;
   const onChange = event => {
-    setNewItemName(event.target.value);
-  };
-  const onSave = () => {
-    handleConfirm(newItemName);
+    setFirstWord(event.target.value);
   };
   useEffect(
     function onOpenChange() {
       if (open) {
-        setNewItemName('');
+        setFirstWord('');
       }
     },
     [open]
@@ -30,14 +35,16 @@ const CreateItemDialog = props => {
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
+      <DialogTitle id="form-dialog-title">{message}</DialogTitle>
       <DialogContent>
-        <DialogContentText>{message}</DialogContentText>
-        <Input
-          value={newItemName}
+        <DialogContentText>{subMessage}</DialogContentText>
+        <TextField
+          value={firstWord}
           onChange={onChange}
           autoFocus
+          placeholder="The First Word"
           margin="dense"
-          placeholder={placeholder}
+          variant="outlined"
           fullWidth
         />
       </DialogContent>
@@ -45,20 +52,29 @@ const CreateItemDialog = props => {
         <Button onClick={handleClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={onSave} color="primary">
-          Create
+        <Button
+          disabled={firstWord !== productName.split(' ')[0]}
+          onClick={handleConfirm}
+          color="primary"
+        >
+          Delete
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-CreateItemDialog.propTypes = {
+DeleteProductDialog.defaultProps = {
+  productName: ''
+};
+
+DeleteProductDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   handleConfirm: PropTypes.func.isRequired,
   message: PropTypes.string.isRequired,
-  placeholder: PropTypes.string.isRequired
+  subMessage: PropTypes.string.isRequired,
+  productName: PropTypes.string
 };
 
-export default CreateItemDialog;
+export default DeleteProductDialog;

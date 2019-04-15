@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
+import InputBase from '@material-ui/core/InputBase';
 import Delete from '@material-ui/icons/Delete';
-import DeleteItemDialog from '../../common/DeleteItemDialog';
+import DeleteProductDialog from '../../common/DeleteProductDialog';
 
 import redirect from '../../../libraries/redirect';
 import style from './style';
 
-class ProductBar extends Component {
+class ProductHead extends Component {
   constructor(props) {
     super(props);
     this.inputRef = React.createRef();
@@ -21,6 +22,15 @@ class ProductBar extends Component {
 
   componentDidMount() {
     if (this.props.autoFocus) {
+      this.inputRef.current.focus();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.autoFocus &&
+      prevProps.productName !== this.props.productName
+    ) {
       this.inputRef.current.focus();
     }
   }
@@ -42,7 +52,7 @@ class ProductBar extends Component {
 
   render() {
     const {
-      itemName,
+      productName,
       classes,
       onChange,
       onSave,
@@ -51,23 +61,19 @@ class ProductBar extends Component {
     } = this.props;
     const { open } = this.state;
     return (
-      <div className={classes.root}>
-        <TextField
-          className={`${classes.whiteColor} ${classes.input}`}
+      <Paper className={classes.root}>
+        <InputBase
+          className={classes.input}
           inputRef={this.inputRef}
           onChange={onChange}
-          value={itemName}
+          value={productName}
           rowsMax="4"
           placeholder="Untitled Intent"
           margin="none"
           fullWidth
         />
         <div>
-          <IconButton
-            onClick={this.handleOpen}
-            color="inherit"
-            className={classes.whiteColor}
-          >
+          <IconButton onClick={this.handleOpen} color="primary">
             <Delete />
           </IconButton>
           <Button
@@ -79,25 +85,25 @@ class ProductBar extends Component {
             Save
           </Button>
         </div>
-        <DeleteItemDialog
+        <DeleteProductDialog
           open={open}
           handleClose={this.handleClose}
           handleConfirm={this.confirmDelete}
           message={deleteMessage}
           subMessage={deleteSubMessage}
-          itemName={itemName}
+          productName={productName}
         />
-      </div>
+      </Paper>
     );
   }
 }
 
-ProductBar.defaultProps = {
+ProductHead.defaultProps = {
   autoFocus: false
 };
 
-ProductBar.propTypes = {
-  itemName: PropTypes.string.isRequired,
+ProductHead.propTypes = {
+  productName: PropTypes.string.isRequired,
   deleteMessage: PropTypes.string.isRequired,
   deleteSubMessage: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
@@ -108,4 +114,4 @@ ProductBar.propTypes = {
   autoFocus: PropTypes.bool
 };
 
-export default withStyles(style)(ProductBar);
+export default withStyles(style)(ProductHead);
