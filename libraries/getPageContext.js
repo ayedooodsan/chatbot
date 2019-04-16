@@ -9,9 +9,9 @@ import {
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: '#66bb6a',
+      light: '#04c3bb',
       main: '#00a19a',
-      dark: '#43a047'
+      dark: '#01948e'
     },
     secondary: {
       light: '#ffa726',

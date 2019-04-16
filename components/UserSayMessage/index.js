@@ -8,7 +8,7 @@ import Edit from '@material-ui/icons/Edit';
 import BubbleChat from '../BubbleChat';
 
 import style from './style';
-import { EDIT, DELETE } from '../IntentInput/constant';
+import { EDIT, DELETE } from '../Intent/IntentInput/constant';
 
 const UserSayMessage = props => {
   const { classes, onChangeIntentInput, message, index } = props;

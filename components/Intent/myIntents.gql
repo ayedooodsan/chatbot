@@ -1,4 +1,4 @@
-query getMyIntents (
+query myIntents (
   $projectId: String!
 ) {
   myIntents (
