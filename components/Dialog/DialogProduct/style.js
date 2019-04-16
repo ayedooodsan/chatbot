@@ -9,7 +9,7 @@ const style = () => ({
     postion: 'relative',
     display: 'flex',
     flex: 1,
-    paddingTop: '10px'
+    padding: '10px 0'
   },
   footer: {
     margin: '0 -5px -10px -5px',

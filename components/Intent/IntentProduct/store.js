@@ -42,7 +42,7 @@ const withDeleteIntent = graphql(deleteIntentGql, {
     deleteIntent: ({ id }) =>
       deleteIntent({
         variables: { id },
-        refetchQueries: ['getMyIntents', 'intent']
+        refetchQueries: ['getMyIntents']
       })
   })
 });

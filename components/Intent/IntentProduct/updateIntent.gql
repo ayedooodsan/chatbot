@@ -1,4 +1,4 @@
-mutation createIntent (
+mutation updateIntent (
   $id: String!
   $title: String
   $values: [String!]
