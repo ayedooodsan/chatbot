@@ -15,6 +15,9 @@ const style = () => ({
     margin: '0 -5px -10px -5px',
     padding: '5px 15px 15px',
     borderRadius: 0
+  },
+  startContainer: {
+    padding: '10px 20px'
   }
 });
 

@@ -46,6 +46,7 @@ const RobotDialogInput = props => {
         <div className={`${classes.inputContainer} ${classes.margin}`}>
           {preview()}
           <TextField
+            autoFocus
             multiline
             rowsMax="4"
             label="Message"

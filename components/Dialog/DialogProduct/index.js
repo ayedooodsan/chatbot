@@ -4,19 +4,16 @@ import PropTypes from 'prop-types';
 import Scrollbar from 'react-scrollbars-custom';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
 import _ from 'lodash';
 import ProductHead from '../../layout/ProductHead';
 import style from './style';
 import DialogInput from '../DialogInput';
 import RobotMessage from '../RobotMessage';
 import UserMessage from '../UserMessage';
-import {
-  REPLY_USER,
-  REPLY_USER_PARAM,
-  EDIT_USER,
-  DELETE_USER
-} from '../DialogInput/constant';
 import connect from './store';
+import sendAction from './action';
+import { START_MESSAGE } from '../DialogInput/constant';
 
 class DialogProduct extends Component {
   constructor(props) {
@@ -131,49 +128,8 @@ class DialogProduct extends Component {
   send = values => {
     this.setState(prevState => {
       const { dialogInputProps, rawMessages } = prevState;
-      switch (dialogInputProps.type) {
-        case REPLY_USER: {
-          rawMessages.push({
-            id: rawMessages.length,
-            parentId: values.id,
-            type: 'bot',
-            templateName: 'text',
-            payload: values.message,
-            depth: values.depth + 1
-          });
-          break;
-        }
-        case REPLY_USER_PARAM: {
-          const selectedMessage = rawMessages.find(
-            message => message.id === values.id
-          );
-          const selectedParam = selectedMessage.intent.params.find(
-            param => param.name === values.paramName
-          );
-          selectedParam.message = values.message;
-          break;
-        }
-        case EDIT_USER: {
-          const selectedMessage = rawMessages.find(
-            message => message.id === values.id
-          );
-          selectedMessage.title = values.title;
-          selectedMessage.intentId = values.intentId;
-          selectedMessage.intent = values.intent;
-          break;
-        }
-        case DELETE_USER: {
-          const selectedMessageIndex = rawMessages.findIndex(
-            message => message.id === values.id
-          );
-          rawMessages.splice(selectedMessageIndex, 1);
-          break;
-        }
-        default: {
-          break;
-        }
-      }
-      return { rawMessages };
+      const newRawMessages = sendAction(rawMessages, dialogInputProps, values);
+      return { rawMessages: newRawMessages };
     });
   };
 
@@ -203,7 +159,19 @@ class DialogProduct extends Component {
           />
         </div>
         <div className={classes.body}>
-          {rawMessages.length === 0 && null}
+          {rawMessages.length === 0 && _.isEqual(dialogInputProps, {}) && (
+            <div className={classes.startContainer}>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() =>
+                  this.onChangeDialogInputProps({ type: START_MESSAGE })
+                }
+              >
+                Start Dialog
+              </Button>
+            </div>
+          )}
           {rawMessages.length > 0 && (
             <Scrollbar>
               {isViewUnsatifiedParam
@@ -261,7 +229,10 @@ class DialogProduct extends Component {
           )}
         </div>
         <Paper className={classes.footer}>
-          <DialogInput {...dialogInputProps} />
+          <DialogInput
+            {...dialogInputProps}
+            reset={() => this.onChangeDialogInputProps({})}
+          />
         </Paper>
       </div>
     );

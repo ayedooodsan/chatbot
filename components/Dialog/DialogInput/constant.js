@@ -1,3 +1,4 @@
+export const START_MESSAGE = 'START_MESSAGE';
 export const REPLY_USER = 'REPLY_USER';
 export const REPLY_USER_PARAM = 'REPLY_USER_PARAM';
 export const EDIT_USER = 'EDIT_USER';

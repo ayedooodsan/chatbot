@@ -10,6 +10,7 @@ import UserDialogInput from '../UserDialogInput';
 import DeleteMessageDialogInput from '../DeleteMessageDialogInput';
 import style from './style';
 import {
+  START_MESSAGE,
   REPLY_USER,
   REPLY_USER_PARAM,
   EDIT_USER,
@@ -34,6 +35,19 @@ const DialogInput = props => {
               subtitle={payload.payload}
               reset={reset}
             />
+          )}
+          send={send}
+          type={REPLY_ROBOT}
+          payload={payload}
+        />
+      );
+      break;
+    }
+    case START_MESSAGE: {
+      Element = (
+        <UserDialogInput
+          preview={() => (
+            <PreviewMessage title="START WITH USER SAYS:" reset={reset} />
           )}
           send={send}
           type={REPLY_ROBOT}

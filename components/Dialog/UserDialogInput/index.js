@@ -53,6 +53,7 @@ const UserDialogInput = props => {
               className={`${classes.margin} ${classes.noRightMargin}`}
             >
               <TextField
+                autoFocus
                 label="Title"
                 margin="dense"
                 variant="outlined"
