@@ -1,9 +1,0 @@
-mutation createProject (
-  $title: String!
-) {
-  createProject(
-    title: $title
-  ) {
-    title
-  }
-}

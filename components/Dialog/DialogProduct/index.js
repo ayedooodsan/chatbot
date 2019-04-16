@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import Scrollbar from 'react-scrollbars-custom';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
+import ProductHead from '../../layout/ProductHead';
 import style from './style';
-import DialogBar from '../DialogBar';
 import DialogInput from '../DialogInput';
 import RobotMessage from '../RobotMessage';
 import UserMessage from '../UserMessage';
@@ -89,7 +89,7 @@ const dialog = [
   }
 ];
 
-class DialogMenu extends Component {
+class DialogProduct extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -109,6 +109,10 @@ class DialogMenu extends Component {
 
   onChangeDialogInputProps = dialogInputProps => {
     this.setState({ dialogInputProps });
+  };
+
+  onChangeTitle = event => {
+    this.setState({ dialogTitle: event.target.value });
   };
 
   updateViewedDialog = (
@@ -219,7 +223,7 @@ class DialogMenu extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, projectId } = this.props;
     const {
       viewedDialog,
       activeMessageIds,
@@ -229,11 +233,20 @@ class DialogMenu extends Component {
       dialogInputProps
     } = this.state;
     return (
-      <Paper className={classes.root}>
-        <Paper className={classes.header}>
-          <DialogBar values={dialogTitle} />
-        </Paper>
-        <div className={classes.container}>
+      <div className={classes.root}>
+        <div className={classes.header}>
+          <ProductHead
+            productName={dialogTitle}
+            deleteMessage={`Delete ${dialogTitle} Dialog`}
+            deleteSubMessage="To delete this dialog, please enter the first word on dialog title."
+            onChange={this.onChangeTitle}
+            onSave={this.onSave}
+            onDelete={this.onDelete}
+            projectId={projectId}
+            autoFocus
+          />
+        </div>
+        <div className={classes.body}>
           <Scrollbar>
             {isViewUnsatifiedParam
               ? viewedUnsatifiedDialog.map((messages, index) =>
@@ -285,13 +298,14 @@ class DialogMenu extends Component {
         <Paper className={classes.footer}>
           <DialogInput {...dialogInputProps} />
         </Paper>
-      </Paper>
+      </div>
     );
   }
 }
 
-DialogMenu.propTypes = {
-  classes: PropTypes.object.isRequired
+DialogProduct.propTypes = {
+  classes: PropTypes.object.isRequired,
+  projectId: PropTypes.object.isRequired
 };
 
-export default withStyles(style)(DialogMenu);
+export default withStyles(style)(DialogProduct);

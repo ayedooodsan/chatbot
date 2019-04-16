@@ -1,7 +1,0 @@
-query getDialog (
-  $id: String!
-) {
-  dialog (id: $id){
-    
-  }
-}

@@ -10,13 +10,13 @@ import Navigation from '../layout/Navigation';
 import SubNavigation from '../layout/SubNavigation';
 import SimpleHeader from '../layout/SimpleSubNavHead';
 import CreateProductDialog from '../common/CreateProductDialog';
-import IntentProduct from './IntentProduct';
+import DialogProduct from './DialogProduct';
 import connect from './store';
 import { Link } from '../../routes';
 import style from './style';
 import redirect from '../../libraries/redirect';
 
-class Intent extends Component {
+class Dialog extends Component {
   state = {
     keyword: '',
     pagination: {
@@ -35,11 +35,11 @@ class Intent extends Component {
   };
 
   createItem = title => {
-    const { createIntent, projectId } = this.props;
-    createIntent({ title, values: [], projectId }).then(response => {
+    const { createDialog, projectId } = this.props;
+    createDialog({ title, values: [], projectId }).then(response => {
       this.closeCreateItemDialog();
-      const intentId = response.data.createIntent.id;
-      redirect({}, `/${projectId}/intent/${intentId}`);
+      const dialogId = response.data.createDialog.id;
+      redirect({}, `/${projectId}/dialog/${dialogId}`);
     });
   };
 
@@ -53,11 +53,11 @@ class Intent extends Component {
     }));
   };
 
-  activeIntent = currentIntentId => currentIntentId === this.props.intentId;
+  activeDialog = currentDialogId => currentDialogId === this.props.dialogId;
 
   render() {
     const { keyword, pagination, createItemDialogStatus } = this.state;
-    const { myIntents, projectId, intentId, classes } = this.props;
+    const { myDialogs, projectId, dialogId, classes } = this.props;
     return (
       <LayoutProvider
         navigation={() => <Navigation />}
@@ -65,36 +65,36 @@ class Intent extends Component {
           <SubNavigation
             header={() => (
               <SimpleHeader
-                title="Intents"
+                title="Dialogs"
                 onAddItem={this.openCreateItemDialog}
                 handleClickPagination={this.setOffsetPagination}
-                pagination={{ ...pagination, dataLength: myIntents.length }}
+                pagination={{ ...pagination, dataLength: myDialogs.length }}
                 keyword={keyword}
                 setKeyword={this.setKeyword}
               />
             )}
             body={() =>
-              myIntents && (
+              myDialogs && (
                 <List component="nav">
-                  {myIntents.map(myIntent => (
+                  {myDialogs.map(myDialog => (
                     <Link
-                      route={`/${projectId}/intent/${myIntent.id}`}
-                      key={myIntent.id}
+                      route={`/${projectId}/dialog/${myDialog.id}`}
+                      key={myDialog.id}
                     >
                       <ListItem
                         className={classNames({
-                          [classes.listItemActive]: this.activeIntent(
-                            myIntent.id
+                          [classes.listItemActive]: this.activeDialog(
+                            myDialog.id
                           )
                         })}
                         button
                       >
                         <ListItemText
-                          primary={myIntent.title}
+                          primary={myDialog.title}
                           primaryTypographyProps={{
                             className: classNames({
-                              [classes.listItemTextActive]: this.activeIntent(
-                                myIntent.id
+                              [classes.listItemTextActive]: this.activeDialog(
+                                myDialog.id
                               )
                             })
                           }}
@@ -108,12 +108,12 @@ class Intent extends Component {
           />
         )}
       >
-        {intentId && (
-          <IntentProduct intentId={intentId} projectId={projectId} />
+        {dialogId && (
+          <DialogProduct dialogId={dialogId} projectId={projectId} />
         )}
         <CreateProductDialog
-          placeholder="Intent Name"
-          message="Add new intent"
+          placeholder="Dialog Name"
+          message="Add new dialog"
           open={createItemDialogStatus}
           handleClose={this.closeCreateItemDialog}
           handleConfirm={this.createItem}
@@ -123,17 +123,17 @@ class Intent extends Component {
   }
 }
 
-Intent.defaultProps = {
-  myIntents: [],
-  intentId: null
+Dialog.defaultProps = {
+  myDialogs: [],
+  dialogId: null
 };
 
-Intent.propTypes = {
+Dialog.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
-  createIntent: PropTypes.func.isRequired,
-  intentId: PropTypes.string,
-  myIntents: PropTypes.array
+  createDialog: PropTypes.func.isRequired,
+  dialogId: PropTypes.string,
+  myDialogs: PropTypes.array
 };
 
-export default withStyles(style)(connect(Intent));
+export default withStyles(style)(connect(Dialog));

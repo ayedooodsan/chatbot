@@ -5,9 +5,9 @@ import createIntentGql from './createIntent.gql';
 const withCreateIntent = graphql(createIntentGql, {
   name: 'createIntent',
   props: ({ createIntent }) => ({
-    createIntent: ({ title, values, projectId }) =>
+    createIntent: ({ title, projectId }) =>
       createIntent({
-        variables: { title, values, projectId },
+        variables: { title, projectId },
         refetchQueries: ['myIntents']
       })
   })

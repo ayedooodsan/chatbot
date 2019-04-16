@@ -1,0 +1,10 @@
+query myDialogs (
+  $projectId: String!
+) {
+  myDialogs (
+    projectId: $projectId
+  ) {
+    id
+    title
+  } 
+}

@@ -18,11 +18,8 @@ class ProductLayoutProvider extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { values, title } = this.props;
-    if (
-      !_.isEqual(values, prevProps.values) ||
-      !_.isEqual(title, prevProps.title)
-    ) {
+    const { id } = this.props;
+    if (!_.isEqual(id, prevProps.id)) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
         values: this.props.values,
@@ -93,13 +90,15 @@ class ProductLayoutProvider extends Component {
 
 ProductLayoutProvider.defaultProps = {
   values: [],
-  title: ''
+  title: '',
+  id: null
 };
 
 ProductLayoutProvider.propTypes = {
   header: PropTypes.func.isRequired,
   body: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
+  id: PropTypes.string,
   values: PropTypes.array,
   title: PropTypes.string
 };

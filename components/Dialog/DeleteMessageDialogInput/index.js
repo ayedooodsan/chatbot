@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Send from '@material-ui/icons/Send';
 import Delete from '@material-ui/icons/Delete';
-import { isTypeOfString } from '../../libraries/helpers';
+import { isTypeOfString } from '../../../libraries/helpers';
 import style from './style';
 
 const onSubmit = props => {

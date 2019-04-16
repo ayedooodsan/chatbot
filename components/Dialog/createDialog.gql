@@ -1,8 +1,8 @@
-mutation createIntent (
+mutation createDialog (
   $title: String!
   $projectId: String!
 ) {
-  createIntent (
+  createDialog (
     title: $title
     projectId: $projectId
   ) {

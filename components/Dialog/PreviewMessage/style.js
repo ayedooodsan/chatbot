@@ -12,11 +12,13 @@ const style = () => ({
   },
   preview: {
     backgroundColor: '#e8e8e8',
-    padding: '5px 15px'
-  },
-  buttonContainer: {
+    padding: '5px 15px',
     display: 'flex',
-    alignItems: 'flex-end'
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  text: {
+    flex: 1
   },
   margin: {
     margin: '0px 10px'

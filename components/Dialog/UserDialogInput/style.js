@@ -12,13 +12,17 @@ const style = () => ({
   },
   buttonContainer: {
     display: 'flex',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
+    marginBottom: '4px'
   },
   margin: {
     margin: '0px 10px'
   },
   noRightMargin: {
     marginRight: 0
+  },
+  preview: {
+    margin: '0 10px'
   }
 });
 

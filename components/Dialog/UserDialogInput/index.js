@@ -7,8 +7,8 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Send from '@material-ui/icons/Send';
 import Face from '@material-ui/icons/Face';
-import redirect from '../../libraries/redirect';
-import { isTypeOfString } from '../../libraries/helpers';
+import redirect from '../../../libraries/redirect';
+import { isTypeOfString } from '../../../libraries/helpers';
 import style from './style';
 
 const onSubmit = props => {
@@ -43,9 +43,9 @@ const UserDialogInput = props => {
   const { classes, preview } = props;
   return (
     <React.Fragment>
-      {preview()}
       <form onSubmit={handleSubmit} className={classes.root}>
         <div className={classes.inputContainer}>
+          <div className={classes.preview}>{preview()}</div>
           <Grid container spacing={6}>
             <Grid
               item
@@ -54,8 +54,8 @@ const UserDialogInput = props => {
             >
               <TextField
                 label="Title"
-                margin="none"
-                variant="filled"
+                margin="dense"
+                variant="outlined"
                 fullWidth
                 InputProps={title.input}
                 error={title.meta.touched && isTypeOfString(title.meta.error)}
@@ -64,8 +64,8 @@ const UserDialogInput = props => {
             <Grid item xs className={classes.margin}>
               <TextField
                 label="Intent"
-                margin="none"
-                variant="filled"
+                margin="dense"
+                variant="outlined"
                 fullWidth
                 InputProps={intent.input}
                 error={intent.meta.touched && isTypeOfString(intent.meta.error)}
@@ -76,6 +76,7 @@ const UserDialogInput = props => {
         <div className={classes.buttonContainer}>
           <Button
             color="primary"
+            variant="contained"
             type="submit"
             disabled={prestine || submitting}
           >
