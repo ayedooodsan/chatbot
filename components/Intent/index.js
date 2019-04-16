@@ -124,14 +124,15 @@ class Intent extends Component {
 }
 
 Intent.defaultProps = {
-  myIntents: []
+  myIntents: [],
+  intentId: null
 };
 
 Intent.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
-  intentId: PropTypes.string.isRequired,
   createIntent: PropTypes.func.isRequired,
+  intentId: PropTypes.string,
   myIntents: PropTypes.array
 };
 
