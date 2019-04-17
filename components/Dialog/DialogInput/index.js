@@ -200,7 +200,7 @@ const DialogInput = props => {
             {"DIALOG INPUT DOESN'T SHOW"}
           </Typography>
           <Typography variant="caption" color="primary">
-            Please click the reply / edit / delete button.
+            Please click the reply / edit / delete / start button.
           </Typography>
         </Paper>
       );

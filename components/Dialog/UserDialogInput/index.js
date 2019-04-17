@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Send from '@material-ui/icons/Send';
 import Face from '@material-ui/icons/Face';
+import SimpleAutoComplete from '../SimpleAutoComplete';
 import redirect from '../../../libraries/redirect';
 import { isTypeOfString } from '../../../libraries/helpers';
 import style from './style';
@@ -36,6 +37,9 @@ const validate = values => {
 const UserDialogInput = props => {
   const { form, handleSubmit, prestine, submitting } = useForm({
     onSubmit: onSubmit(props),
+    initialValues: {
+      intent: 'Albania'
+    },
     validate
   });
   const title = useField('title', form);
@@ -63,12 +67,10 @@ const UserDialogInput = props => {
               />
             </Grid>
             <Grid item xs className={classes.margin}>
-              <TextField
+              <SimpleAutoComplete
+                input={intent.input}
+                initialValue="Albania"
                 label="Intent"
-                margin="dense"
-                variant="outlined"
-                fullWidth
-                InputProps={intent.input}
                 error={intent.meta.touched && isTypeOfString(intent.meta.error)}
               />
             </Grid>
