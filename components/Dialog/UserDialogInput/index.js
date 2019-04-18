@@ -7,6 +7,8 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Send from '@material-ui/icons/Send';
 import Face from '@material-ui/icons/Face';
+import { withRouter } from 'next/router';
+import IntentSuggestions from '../IntentSuggestions';
 import SimpleAutoComplete from '../SimpleAutoComplete';
 import redirect from '../../../libraries/redirect';
 import { isTypeOfString } from '../../../libraries/helpers';
@@ -38,13 +40,14 @@ const UserDialogInput = props => {
   const { form, handleSubmit, prestine, submitting } = useForm({
     onSubmit: onSubmit(props),
     initialValues: {
-      intent: 'Albania'
+      intent: ''
     },
     validate
   });
   const title = useField('title', form);
   const intent = useField('intent', form);
-  const { classes, preview } = props;
+  const { classes, preview, router } = props;
+  const { projectId } = router.query;
   return (
     <React.Fragment>
       <form onSubmit={handleSubmit} className={classes.root}>
@@ -69,9 +72,18 @@ const UserDialogInput = props => {
             <Grid item xs className={classes.margin}>
               <SimpleAutoComplete
                 input={intent.input}
-                initialValue="Albania"
                 label="Intent"
                 error={intent.meta.touched && isTypeOfString(intent.meta.error)}
+                suggestions={(inputValue, children) => {
+                  return (
+                    <IntentSuggestions
+                      projectId={projectId}
+                      keyword={inputValue}
+                    >
+                      {children}
+                    </IntentSuggestions>
+                  );
+                }}
               />
             </Grid>
           </Grid>
@@ -98,7 +110,8 @@ UserDialogInput.defaultProps = {
 
 UserDialogInput.propTypes = {
   classes: PropTypes.object.isRequired,
+  router: PropTypes.object.isRequired,
   preview: PropTypes.func
 };
 
-export default withStyles(style)(UserDialogInput);
+export default withStyles(style)(withRouter(UserDialogInput));

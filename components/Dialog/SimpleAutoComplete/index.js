@@ -1,49 +1,11 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import deburr from 'lodash/deburr';
 import Downshift from 'downshift';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
-
-const suggestions = [
-  { label: 'Afghanistan' },
-  { label: 'Aland Islands' },
-  { label: 'Albania' },
-  { label: 'Algeria' },
-  { label: 'American Samoa' },
-  { label: 'Andorra' },
-  { label: 'Angola' },
-  { label: 'Anguilla' },
-  { label: 'Antarctica' },
-  { label: 'Antigua and Barbuda' },
-  { label: 'Argentina' },
-  { label: 'Armenia' },
-  { label: 'Aruba' },
-  { label: 'Australia' },
-  { label: 'Austria' },
-  { label: 'Azerbaijan' },
-  { label: 'Bahamas' },
-  { label: 'Bahrain' },
-  { label: 'Bangladesh' },
-  { label: 'Barbados' },
-  { label: 'Belarus' },
-  { label: 'Belgium' },
-  { label: 'Belize' },
-  { label: 'Benin' },
-  { label: 'Bermuda' },
-  { label: 'Bhutan' },
-  { label: 'Bolivia, Plurinational State of' },
-  { label: 'Bonaire, Sint Eustatius and Saba' },
-  { label: 'Bosnia and Herzegovina' },
-  { label: 'Botswana' },
-  { label: 'Bouvet Island' },
-  { label: 'Brazil' },
-  { label: 'British Indian Ocean Territory' },
-  { label: 'Brunei Darussalam' }
-];
 
 function renderInput(inputProps) {
   const { InputProps, classes, ref, ...other } = inputProps;
@@ -70,19 +32,19 @@ function renderSuggestion({
   inputValue
 }) {
   const isHighlighted = highlightedIndex === index;
-  const isSelected = (inputValue || '').indexOf(suggestion.label) > -1;
+  const isSelected = (inputValue || '').indexOf(suggestion.title) > -1;
 
   return (
     <MenuItem
       {...itemProps}
-      key={suggestion.label}
+      key={suggestion.id}
       selected={isHighlighted}
       component="div"
       style={{
         fontWeight: isSelected ? 500 : 400
       }}
     >
-      {suggestion.label}
+      {suggestion.title}
     </MenuItem>
   );
 }
@@ -99,28 +61,8 @@ renderSuggestion.propTypes = {
   index: PropTypes.number,
   itemProps: PropTypes.object,
   inputValue: PropTypes.string,
-  suggestion: PropTypes.shape({ label: PropTypes.string }).isRequired
+  suggestion: PropTypes.shape({ title: PropTypes.string }).isRequired
 };
-
-function getSuggestions(value) {
-  const inputValue = deburr(value.trim()).toLowerCase();
-  const inputLength = inputValue.length;
-  let count = 0;
-
-  return inputLength === 0
-    ? []
-    : suggestions.filter(suggestion => {
-        const keep =
-          count < 5 &&
-          suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
-
-        if (keep) {
-          count += 1;
-        }
-
-        return keep;
-      });
-}
 
 const styles = () => ({
   inputRoot: {
@@ -133,16 +75,16 @@ const styles = () => ({
 });
 
 function SimpleAutoComplete(props) {
-  const { classes, input, label, error, initialValue } = props;
+  const { classes, input, label, error, initialValue, suggestions } = props;
   // eslint-disable-next-line no-unused-vars
   const { onChange, value, ...otherInputProps } = input;
   const popperRef = useRef(null);
   return (
     <Downshift
       onChange={selectedItem => {
-        onChange(selectedItem.label);
+        onChange(selectedItem.id);
       }}
-      itemToString={item => (item ? item.label : '')}
+      itemToString={item => (item ? item.title : '')}
       initialInputValue={initialValue}
     >
       {({
@@ -194,15 +136,17 @@ function SimpleAutoComplete(props) {
                     : null
                 }}
               >
-                {getSuggestions(inputValue).map((suggestion, index) =>
-                  renderSuggestion({
-                    suggestion,
-                    index,
-                    itemProps: getItemProps({ item: suggestion }),
-                    highlightedIndex,
-                    selectedItem
-                  })
-                )}
+                {suggestions(inputValue, result => {
+                  return result.map((suggestion, index) =>
+                    renderSuggestion({
+                      suggestion,
+                      index,
+                      itemProps: getItemProps({ item: suggestion }),
+                      highlightedIndex,
+                      selectedItem
+                    })
+                  );
+                })}
               </Paper>
             </div>
           </Popper>
@@ -219,7 +163,7 @@ SimpleAutoComplete.defaultProps = {
 
 SimpleAutoComplete.propTypes = {
   classes: PropTypes.object.isRequired,
-  getSuggestions: PropTypes.object.isRequired,
+  suggestions: PropTypes.func.isRequired,
   input: PropTypes.object.isRequired,
   label: PropTypes.string.isRequired,
   error: PropTypes.bool,
