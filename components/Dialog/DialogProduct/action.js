@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {
   REPLY_USER,
   REPLY_USER_PARAM,
@@ -10,11 +11,19 @@ import {
   EDIT_ROBOT,
   DELETE_ROBOT
 } from '../DialogInput/constant';
+import { findLastIndex } from '../../../libraries/helpers';
 
-const sendAction = (currentState, { type, payload }, values) => {
+const sendAction = (
+  { rawMessages, viewedDialog, activeMessageIds },
+  { type, payload },
+  values
+) => {
+  const computedRawMessages = _.cloneDeep(rawMessages);
+  let computedViewedDialog = _.cloneDeep(viewedDialog);
+  let computedActiveMessageIds = _.cloneDeep(activeMessageIds);
   switch (type) {
     case START_MESSAGE: {
-      currentState.push({
+      computedRawMessages.push({
         id: 0,
         parentId: null,
         type: 'USER',
@@ -23,14 +32,17 @@ const sendAction = (currentState, { type, payload }, values) => {
         intent: values.intent,
         depth: -1
       });
+      computedViewedDialog = [];
+      computedActiveMessageIds = [];
       break;
     }
     case REPLY_ROBOT: {
-      const index = currentState.findIndex(
-        message => message.depth === payload.depth + 1
+      const index = findLastIndex(
+        computedRawMessages,
+        message => message.depth === payload.depth
       );
-      currentState.splice(index, 0, {
-        id: currentState.length,
+      computedRawMessages.splice(index + 1, 0, {
+        id: computedRawMessages.length,
         parentId: payload.id,
         type: 'USER',
         title: values.title,
@@ -38,10 +50,21 @@ const sendAction = (currentState, { type, payload }, values) => {
         intent: values.intent,
         depth: payload.depth + 1
       });
+      const activeMessageIdIndex = computedActiveMessageIds.findIndex(
+        computedActiveMessageId => computedActiveMessageId === payload.id
+      );
+      computedActiveMessageIds.splice(
+        activeMessageIdIndex + 1,
+        computedActiveMessageIds.length - activeMessageIdIndex - 1
+      );
+      computedViewedDialog.splice(
+        activeMessageIdIndex + 1,
+        computedViewedDialog.length - activeMessageIdIndex - 1
+      );
       break;
     }
     case EDIT_ROBOT: {
-      const selectedMessage = currentState.find(
+      const selectedMessage = computedRawMessages.find(
         message => message.id === payload.id
       );
       selectedMessage.templateName = values.templateName;
@@ -49,14 +72,14 @@ const sendAction = (currentState, { type, payload }, values) => {
       break;
     }
     case DELETE_ROBOT: {
-      const selectedMessageIndex = currentState.findIndex(
+      const selectedMessageIndex = computedRawMessages.findIndex(
         message => message.id === payload.id
       );
-      currentState.splice(selectedMessageIndex, 1);
+      computedRawMessages.splice(selectedMessageIndex, 1);
       break;
     }
     case REPLY_USER_PARAM: {
-      const selectedMessage = currentState.find(
+      const selectedMessage = computedRawMessages.find(
         message => message.id === payload.message.id
       );
       const selectedParam = selectedMessage.intent.params.find(
@@ -66,7 +89,7 @@ const sendAction = (currentState, { type, payload }, values) => {
       break;
     }
     case EDIT_USER_PARAM: {
-      const selectedMessage = currentState.find(
+      const selectedMessage = computedRawMessages.find(
         message => message.id === payload.message.id
       );
       const selectedParam = selectedMessage.intent.params.find(
@@ -76,7 +99,7 @@ const sendAction = (currentState, { type, payload }, values) => {
       break;
     }
     case DELETE_USER_PARAM: {
-      const selectedMessage = currentState.find(
+      const selectedMessage = computedRawMessages.find(
         message => message.id === payload.message.id
       );
       const selectedParam = selectedMessage.intent.params.find(
@@ -86,21 +109,33 @@ const sendAction = (currentState, { type, payload }, values) => {
       break;
     }
     case REPLY_USER: {
-      const index = currentState.findIndex(
-        message => message.depth === payload.depth + 1
+      const index = findLastIndex(
+        computedRawMessages,
+        message => message.depth === payload.depth
       );
-      currentState.splice(index, 0, {
-        id: currentState.length,
+      computedRawMessages.splice(index + 1, 0, {
+        id: computedRawMessages.length,
         parentId: payload.id,
         type: 'BOT',
         templateName: 'text',
         payload: values.message,
         depth: payload.depth + 1
       });
+      const activeMessageIdIndex = computedActiveMessageIds.findIndex(
+        computedActiveMessageId => computedActiveMessageId === payload.id
+      );
+      computedActiveMessageIds.splice(
+        activeMessageIdIndex + 1,
+        computedActiveMessageIds.length - activeMessageIdIndex - 1
+      );
+      computedViewedDialog.splice(
+        activeMessageIdIndex + 1,
+        computedViewedDialog.length - activeMessageIdIndex - 1
+      );
       break;
     }
     case EDIT_USER: {
-      const selectedMessage = currentState.find(
+      const selectedMessage = computedRawMessages.find(
         message => message.id === payload.id
       );
       selectedMessage.title = values.title;
@@ -109,17 +144,21 @@ const sendAction = (currentState, { type, payload }, values) => {
       break;
     }
     case DELETE_USER: {
-      const selectedMessageIndex = currentState.findIndex(
+      const selectedMessageIndex = computedRawMessages.findIndex(
         message => message.id === payload.id
       );
-      currentState.splice(selectedMessageIndex, 1);
+      computedRawMessages.splice(selectedMessageIndex, 1);
       break;
     }
     default: {
       break;
     }
   }
-  return currentState;
+  return {
+    computedRawMessages,
+    computedViewedDialog,
+    computedActiveMessageIds
+  };
 };
 
 export default sendAction;

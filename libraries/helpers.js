@@ -42,4 +42,17 @@ export function isTypeOfString(value) {
   return typeof value === 'string';
 }
 
+export function findLastIndex(array, compare) {
+  let found = false;
+  let index = array.length - 1;
+  while (index >= 0 && !found) {
+    if (compare(array[index])) {
+      found = true;
+    } else {
+      index -= 1;
+    }
+  }
+  return index;
+}
+
 /* eslint-enable no-restricted-syntax */

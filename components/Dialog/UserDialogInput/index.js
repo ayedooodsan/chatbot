@@ -12,6 +12,7 @@ import IntentSuggestions from '../IntentSuggestions';
 import SimpleAutoComplete from '../SimpleAutoComplete';
 import { isTypeOfString } from '../../../libraries/helpers';
 import style from './style';
+import { EDIT_USER } from '../DialogInput/constant';
 
 const onSubmit = props => {
   return values => {
@@ -31,17 +32,18 @@ const validate = values => {
 };
 
 const UserDialogInput = props => {
+  const { classes, preview, router, payload, type } = props;
+  const { projectId } = router.query;
   const { form, handleSubmit, prestine, submitting } = useForm({
     onSubmit: onSubmit(props),
     initialValues: {
-      intent: ''
+      intent: type === EDIT_USER ? payload.intent : null,
+      title: type === EDIT_USER ? payload.title : null
     },
     validate
   });
   const title = useField('title', form);
   const intent = useField('intent', form);
-  const { classes, preview, router } = props;
-  const { projectId } = router.query;
   return (
     <React.Fragment>
       <form onSubmit={handleSubmit} className={classes.root}>
@@ -67,6 +69,7 @@ const UserDialogInput = props => {
               <SimpleAutoComplete
                 input={intent.input}
                 label="Intent"
+                initialValue={type === EDIT_USER ? payload.intent.title : null}
                 error={intent.meta.touched && isTypeOfString(intent.meta.error)}
                 suggestions={(inputValue, children) => {
                   return (
@@ -105,7 +108,9 @@ UserDialogInput.defaultProps = {
 UserDialogInput.propTypes = {
   classes: PropTypes.object.isRequired,
   router: PropTypes.object.isRequired,
+  payload: PropTypes.object.isRequired,
   send: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired,
   preview: PropTypes.func
 };
 

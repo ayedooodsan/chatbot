@@ -85,7 +85,7 @@ const DialogInput = props => {
           )}
           send={send}
           type={DELETE_ROBOT}
-          payload={payload}
+          message={payload.payload}
         />
       );
       break;
@@ -164,13 +164,13 @@ const DialogInput = props => {
             <PreviewMessage
               title={`DELETE ROBOT SAYS ABOUT "${payload.param.name.toUpperCase()}" PARAMETER DOESN'T APPEAR:`}
               subtitle={payload.param.message}
-              footTitle="Type the first and click the send button."
+              footTitle="Type the first word and click the send button."
               reset={reset}
             />
           )}
           send={send}
           type={DELETE_USER_PARAM}
-          payload={payload}
+          message={payload.param.message}
         />
       );
       break;
@@ -188,7 +188,7 @@ const DialogInput = props => {
           )}
           send={send}
           type={DELETE_USER}
-          payload={payload}
+          message={payload.title}
         />
       );
       break;

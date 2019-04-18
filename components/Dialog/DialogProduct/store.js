@@ -28,9 +28,9 @@ const withDialog = graphql(dialogGql, {
 const withUpdateDialog = graphql(updateDialogGql, {
   name: 'updateDialog',
   props: ({ updateDialog }) => ({
-    updateDialog: ({ id }) =>
+    updateDialog: ({ id, rootMessageId, messages, title }) =>
       updateDialog({
-        variables: { id },
+        variables: { id, rootMessageId, messages, title },
         refetchQueries: ['getMyDialogs', 'dialog']
       })
   })

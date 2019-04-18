@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useForm, useField } from 'react-final-form-hooks';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -11,11 +11,7 @@ import style from './style';
 
 const onSubmit = props => {
   return () => {
-    const {
-      send,
-      payload: { index }
-    } = props;
-    send({ index });
+    props.send();
   };
 };
 
@@ -32,22 +28,18 @@ const DeleteMessageDialogInput = props => {
     onSubmit: onSubmit(props),
     validate
   });
-  const inputRef = useRef(null);
-  useEffect(() => {
-    inputRef.current.focus();
-  });
   const title = useField('title', form);
-  const { classes, preview, payload } = props;
+  const { classes, preview, message } = props;
   return (
     <React.Fragment>
-      {preview()}
       <form onSubmit={handleSubmit} className={classes.root}>
         <div className={`${classes.inputContainer} ${classes.margin}`}>
+          {preview()}
           <TextField
-            inputRef={inputRef}
+            autoFocus
             label="First word"
-            margin="none"
-            variant="filled"
+            margin="dense"
+            variant="outlined"
             fullWidth
             InputProps={title.input}
             error={title.meta.touched && isTypeOfString(title.meta.error)}
@@ -57,10 +49,11 @@ const DeleteMessageDialogInput = props => {
           <Button
             color="primary"
             type="submit"
+            variant="contained"
             disabled={
               prestine ||
               submitting ||
-              title.input.value !== payload.message.split(' ')[0]
+              title.input.value !== message.split(' ')[0]
             }
           >
             <Delete />
@@ -78,7 +71,7 @@ DeleteMessageDialogInput.defaultProps = {
 
 DeleteMessageDialogInput.propTypes = {
   classes: PropTypes.object.isRequired,
-  payload: PropTypes.object.isRequired,
+  message: PropTypes.object.isRequired,
   preview: PropTypes.func
 };
 

@@ -11,31 +11,24 @@ import style from './style';
 import { REPLY_ROBOT, EDIT_ROBOT, DELETE_ROBOT } from '../DialogInput/constant';
 
 const RobotMessage = props => {
-  const {
-    classes,
-    onChangeDialogInput,
-    messages,
-    activeChildMessageId
-  } = props;
+  const { classes, onChangeDialogInput, messages } = props;
   const activeMessage = messages[0];
   return (
     <BubbleChat type="self">
       <div className={classes.headerBubble}>
         <Typography variant="subtitle2">{activeMessage.payload}</Typography>
         <div className={classes.buttons}>
-          {!activeChildMessageId && (
-            <IconButton
-              className={classes.iconButton}
-              onClick={() => {
-                onChangeDialogInput({
-                  type: REPLY_ROBOT,
-                  payload: activeMessage
-                });
-              }}
-            >
-              <Reply className={classes.miniIcon} />
-            </IconButton>
-          )}
+          <IconButton
+            className={classes.iconButton}
+            onClick={() => {
+              onChangeDialogInput({
+                type: REPLY_ROBOT,
+                payload: activeMessage
+              });
+            }}
+          >
+            <Reply className={classes.miniIcon} />
+          </IconButton>
           <IconButton
             className={classes.iconButton}
             onClick={() => {
@@ -66,7 +59,6 @@ const RobotMessage = props => {
 
 RobotMessage.propTypes = {
   messages: PropTypes.array.isRequired,
-  activeChildMessageId: PropTypes.number.isRequired,
   onChangeDialogInput: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 };

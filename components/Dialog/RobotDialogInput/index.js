@@ -19,11 +19,8 @@ const onSubmit = props => {
 
 const validate = values => {
   const errors = {};
-  if (!values.title) {
-    errors.title = 'Title is required';
-  }
-  if (!values.intent) {
-    errors.intent = 'Intent is required';
+  if (!values.message) {
+    errors.message = 'Message is required';
   }
   return errors;
 };

@@ -19,9 +19,7 @@ class DialogProduct extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // dialogId: 1,
       title: '',
-      // rootMessageId: '',
       rawMessages: [],
       activeMessageIds: [],
       isViewUnsatifiedParam: false,
@@ -111,13 +109,14 @@ class DialogProduct extends Component {
           0,
           index + 1
         );
+        const newViewedDialog = prevState.viewedDialog.slice(0, index + 1);
         newActiveMessageIds[index] = value;
         return {
           isViewUnsatifiedParam: false,
           ...this.updateViewedDialog(
             prevState.rawMessages,
             value,
-            prevState.viewedDialog.slice(0, index + 1),
+            newViewedDialog,
             newActiveMessageIds
           )
         };
@@ -129,17 +128,63 @@ class DialogProduct extends Component {
 
   send = values => {
     this.setState(prevState => {
-      const { dialogInputProps, rawMessages } = prevState;
-      const newRawMessages = sendAction(rawMessages, dialogInputProps, values);
-      const { viewedDialog, activeMessageIds } = this.updateViewedDialog(
-        newRawMessages,
-        dialogInputProps.payload.id,
-        prevState.viewedDialog,
-        prevState.activeMessageIds
+      const {
+        dialogInputProps,
+        rawMessages,
+        viewedDialog,
+        activeMessageIds
+      } = prevState;
+      const {
+        computedViewedDialog,
+        computedActiveMessageIds,
+        computedRawMessages
+      } = sendAction(
+        { rawMessages, viewedDialog, activeMessageIds },
+        dialogInputProps,
+        values
       );
-      console.log(values);
-      return { viewedDialog, activeMessageIds, rawMessages: newRawMessages };
+      console.log('id:', dialogInputProps.payload.id);
+      const result = this.updateViewedDialog(
+        computedRawMessages,
+        dialogInputProps.payload.id,
+        computedViewedDialog,
+        computedActiveMessageIds
+      );
+      const newViewedDialog = result.viewedDialog;
+      const newActiveMessageIds = result.activeMessageIds;
+      return {
+        viewedDialog: newViewedDialog,
+        activeMessageIds: newActiveMessageIds,
+        rawMessages: computedRawMessages
+      };
     }, this.reset);
+  };
+
+  onSave = () => {
+    const { title, rawMessages } = this.state;
+    const { updateDialog, dialogId } = this.props;
+    const messages = rawMessages.map(rawMessage => ({
+      id: String(rawMessage.id),
+      parentId:
+        rawMessage.parentId === null ? null : String(rawMessage.parentId),
+      intentId: rawMessage.intentId,
+      title: rawMessage.title,
+      type: rawMessage.type,
+      depth: rawMessage.depth,
+      payload: rawMessage.payload
+    }));
+    updateDialog({
+      id: dialogId,
+      title,
+      messages: messages.length === 0 ? null : messages,
+      rootMessageId: messages.length === 0 ? null : messages[0].id
+    });
+  };
+
+  onDelete = async () => {
+    const { deleteDialog, dialogId } = this.props;
+    const response = await deleteDialog({ id: dialogId });
+    return response;
   };
 
   render() {
@@ -208,7 +253,6 @@ class DialogProduct extends Component {
                       <RobotMessage
                         messages={messages}
                         onChangeDialogInput={this.onChangeDialogInputProps}
-                        activeChildMessageId={activeMessageIds[index + 1]}
                       />
                     )
                   )
@@ -233,7 +277,6 @@ class DialogProduct extends Component {
                       <RobotMessage
                         messages={messages}
                         onChangeDialogInput={this.onChangeDialogInputProps}
-                        activeChildMessageId={activeMessageIds[index + 1]}
                       />
                     )
                   )}
@@ -253,12 +296,16 @@ class DialogProduct extends Component {
 }
 
 DialogProduct.defaultProps = {
-  dialog: { messages: [] }
+  dialog: { messages: [] },
+  dialogId: null
 };
 
 DialogProduct.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.object.isRequired,
+  deleteDialog: PropTypes.func.isRequired,
+  updateDialog: PropTypes.func.isRequired,
+  dialogId: PropTypes.string,
   dialog: PropTypes.object
 };
 
