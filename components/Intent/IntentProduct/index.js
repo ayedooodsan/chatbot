@@ -10,6 +10,7 @@ import ProductHead from '../../layout/ProductHead';
 import ProductBody from '../../layout/ProductBody';
 import connect from './store';
 import style from './style';
+import redirect from '../../../libraries/redirect';
 
 const IntentProduct = props => {
   const {
@@ -29,6 +30,7 @@ const IntentProduct = props => {
 
   const onDelete = async () => {
     const response = await deleteIntent({ id: intentId });
+    redirect({}, `/${projectId}/intent`);
     return response;
   };
 

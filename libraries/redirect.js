@@ -7,6 +7,6 @@ export default (context, target) => {
     context.res.writeHead(303, { Location: target });
     context.res.end();
   } else {
-    Router.replaceRoute(target);
+    Router.pushRoute(target);
   }
 };

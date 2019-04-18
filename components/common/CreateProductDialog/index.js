@@ -16,6 +16,10 @@ const CreateProductDialog = props => {
   const onSave = () => {
     handleConfirm(newProductName);
   };
+  const handleSubmit = event => {
+    event.preventDefault();
+    onSave();
+  };
   useEffect(
     function onOpenChange() {
       if (open) {
@@ -30,26 +34,28 @@ const CreateProductDialog = props => {
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
-      <DialogContent>
-        <DialogContentText>{message}</DialogContentText>
-        <TextField
-          value={newProductName}
-          onChange={onChange}
-          autoFocus
-          placeholder={placeholder}
-          margin="dense"
-          variant="outlined"
-          fullWidth
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
-          Cancel
-        </Button>
-        <Button onClick={onSave} color="primary">
-          Create
-        </Button>
-      </DialogActions>
+      <form onSubmit={handleSubmit}>
+        <DialogContent>
+          <DialogContentText>{message}</DialogContentText>
+          <TextField
+            value={newProductName}
+            onChange={onChange}
+            autoFocus
+            placeholder={placeholder}
+            margin="dense"
+            variant="outlined"
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button type="submit" color="primary" disabled={!newProductName}>
+            Create
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 };

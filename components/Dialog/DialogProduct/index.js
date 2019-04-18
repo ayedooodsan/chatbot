@@ -14,6 +14,7 @@ import UserMessage from '../UserMessage';
 import connect from './store';
 import sendAction from './action';
 import { START_MESSAGE } from '../DialogInput/constant';
+import redirect from '../../../libraries/redirect';
 
 class DialogProduct extends Component {
   constructor(props) {
@@ -181,8 +182,9 @@ class DialogProduct extends Component {
   };
 
   onDelete = async () => {
-    const { deleteDialog, dialogId } = this.props;
+    const { deleteDialog, dialogId, projectId } = this.props;
     const response = await deleteDialog({ id: dialogId });
+    redirect({}, `/${projectId}/dialog`);
     return response;
   };
 
