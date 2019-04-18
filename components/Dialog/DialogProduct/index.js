@@ -125,12 +125,21 @@ class DialogProduct extends Component {
     });
   };
 
+  reset = () => this.onChangeDialogInputProps({});
+
   send = values => {
     this.setState(prevState => {
       const { dialogInputProps, rawMessages } = prevState;
       const newRawMessages = sendAction(rawMessages, dialogInputProps, values);
-      return { rawMessages: newRawMessages };
-    });
+      const { viewedDialog, activeMessageIds } = this.updateViewedDialog(
+        newRawMessages,
+        dialogInputProps.payload.id,
+        prevState.viewedDialog,
+        prevState.activeMessageIds
+      );
+      console.log(values);
+      return { viewedDialog, activeMessageIds, rawMessages: newRawMessages };
+    }, this.reset);
   };
 
   render() {
@@ -165,7 +174,10 @@ class DialogProduct extends Component {
                 color="primary"
                 variant="contained"
                 onClick={() =>
-                  this.onChangeDialogInputProps({ type: START_MESSAGE })
+                  this.onChangeDialogInputProps({
+                    type: START_MESSAGE,
+                    payload: { id: null }
+                  })
                 }
               >
                 Start Dialog
@@ -176,7 +188,7 @@ class DialogProduct extends Component {
             <Scrollbar>
               {isViewUnsatifiedParam
                 ? viewedUnsatifiedDialog.map((messages, index) =>
-                    messages[0].type === 'user' ? (
+                    messages[0].type === 'USER' ? (
                       <UserMessage
                         messages={messages}
                         onChangeDialogInput={this.onChangeDialogInputProps}
@@ -201,7 +213,7 @@ class DialogProduct extends Component {
                     )
                   )
                 : viewedDialog.map((messages, index) =>
-                    messages[0].type === 'user' ? (
+                    messages[0].type === 'USER' ? (
                       <UserMessage
                         messages={messages}
                         onChangeDialogInput={this.onChangeDialogInputProps}
@@ -231,7 +243,8 @@ class DialogProduct extends Component {
         <Paper className={classes.footer}>
           <DialogInput
             {...dialogInputProps}
-            reset={() => this.onChangeDialogInputProps({})}
+            reset={this.reset}
+            send={this.send}
           />
         </Paper>
       </div>

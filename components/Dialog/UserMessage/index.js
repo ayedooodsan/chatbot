@@ -142,7 +142,7 @@ const UserMessage = props => {
           </div>
         </div>
         <Typography variant="subtitle2">
-          {activeMessage.intent.name} INTENT
+          {activeMessage.intent.title} INTENT
         </Typography>
         {activeMessage.intent.values && (
           <ul className={classes.intentValues}>

@@ -8,5 +8,10 @@ query intentSuggestions(
   ){
     id
     title
+    values
+    params {
+      name
+      required
+    }
   }
 }

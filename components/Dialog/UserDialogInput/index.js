@@ -10,18 +10,12 @@ import Face from '@material-ui/icons/Face';
 import { withRouter } from 'next/router';
 import IntentSuggestions from '../IntentSuggestions';
 import SimpleAutoComplete from '../SimpleAutoComplete';
-import redirect from '../../../libraries/redirect';
 import { isTypeOfString } from '../../../libraries/helpers';
 import style from './style';
 
 const onSubmit = props => {
   return values => {
-    props.mutations.signIn(values).then(response => {
-      if (response.data.signIn.token) {
-        props.actions.signIn(response.data.signIn.token);
-        redirect({}, '/dialog');
-      }
-    });
+    props.send(values);
   };
 };
 
@@ -111,6 +105,7 @@ UserDialogInput.defaultProps = {
 UserDialogInput.propTypes = {
   classes: PropTypes.object.isRequired,
   router: PropTypes.object.isRequired,
+  send: PropTypes.func.isRequired,
   preview: PropTypes.func
 };
 

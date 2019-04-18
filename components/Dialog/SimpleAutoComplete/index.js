@@ -82,7 +82,7 @@ function SimpleAutoComplete(props) {
   return (
     <Downshift
       onChange={selectedItem => {
-        onChange(selectedItem.id);
+        onChange(selectedItem);
       }}
       itemToString={item => (item ? item.title : '')}
       initialInputValue={initialValue}

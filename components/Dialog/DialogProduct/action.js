@@ -19,19 +19,22 @@ const sendAction = (currentState, { type, payload }, values) => {
         parentId: null,
         type: 'USER',
         title: values.title,
-        intentId: values.intentId,
+        intentId: values.intent.id,
         intent: values.intent,
         depth: -1
       });
       break;
     }
     case REPLY_ROBOT: {
-      currentState.push({
+      const index = currentState.findIndex(
+        message => message.depth === payload.depth + 1
+      );
+      currentState.splice(index, 0, {
         id: currentState.length,
         parentId: payload.id,
         type: 'USER',
         title: values.title,
-        intentId: values.intentId,
+        intentId: values.intent.id,
         intent: values.intent,
         depth: payload.depth + 1
       });
@@ -83,7 +86,10 @@ const sendAction = (currentState, { type, payload }, values) => {
       break;
     }
     case REPLY_USER: {
-      currentState.push({
+      const index = currentState.findIndex(
+        message => message.depth === payload.depth + 1
+      );
+      currentState.splice(index, 0, {
         id: currentState.length,
         parentId: payload.id,
         type: 'BOT',
