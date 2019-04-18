@@ -99,11 +99,11 @@ class ProductHead extends Component {
 }
 
 ProductHead.defaultProps = {
-  autoFocus: false
+  autoFocus: false,
+  productName: ''
 };
 
 ProductHead.propTypes = {
-  productName: PropTypes.string.isRequired,
   deleteMessage: PropTypes.string.isRequired,
   deleteSubMessage: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
@@ -111,6 +111,7 @@ ProductHead.propTypes = {
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   projectId: PropTypes.string.isRequired,
+  productName: PropTypes.string,
   autoFocus: PropTypes.bool
 };
 

@@ -58,8 +58,8 @@ class ProductLayoutProvider extends Component {
     });
   };
 
-  onChangeTitle = value => {
-    this.setState({ title: value });
+  onChangeTitle = event => {
+    this.setState({ title: event.target.value });
   };
 
   getProduct = () => {

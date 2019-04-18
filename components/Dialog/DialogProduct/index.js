@@ -143,7 +143,6 @@ class DialogProduct extends Component {
         dialogInputProps,
         values
       );
-      console.log('id:', dialogInputProps.payload.id);
       const result = this.updateViewedDialog(
         computedRawMessages,
         dialogInputProps.payload.id,
