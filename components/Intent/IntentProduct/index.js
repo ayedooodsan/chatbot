@@ -46,7 +46,6 @@ const IntentProduct = props => {
       title={intent.title}
       values={intent.values}
       header={(onChangeTitle, intentTitle, getIntentProduct) => {
-        console.log({ intentTitle });
         return (
           <ProductHead
             productName={intentTitle}
