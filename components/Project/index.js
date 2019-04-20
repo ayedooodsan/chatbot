@@ -8,7 +8,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Popper from '@material-ui/core/Popper';
 import Grow from '@material-ui/core/Grow';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
@@ -30,9 +29,6 @@ const Project = props => {
   const getInitialProject = title =>
     title.split(' ').reduce((initial, word) => initial + word.charAt(0), '');
   const [open, setOpen] = useState(false);
-  const handleClose = () => {
-    setOpen(false);
-  };
   useEffect(() => {
     setOpen(false);
   }, [projectId]);
@@ -90,47 +86,42 @@ const Project = props => {
           {({ TransitionProps }) => (
             <Grow {...TransitionProps}>
               <Paper className={classes.menuContainer}>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <React.Fragment>
-                    <Typography
-                      variant="overline"
-                      className={classes.menuTitle}
-                    >
-                      Switch Project
-                    </Typography>
-                    <Divider />
-                    <List component="nav" dense>
-                      {myProjects.map(myProject => (
-                        <Link
-                          key={myProject.id}
-                          route={`/${myProject.id}/dialog`}
-                        >
-                          <ListItem button>
-                            <ListItemIcon className={classes.listItemIcon}>
-                              <Avatar className={classes.avatar}>
-                                {getInitialProject(myProject.title)}
-                              </Avatar>
-                            </ListItemIcon>
-                            <ListItemText primary={myProject.title} />
-                          </ListItem>
-                        </Link>
-                      ))}
-                    </List>
-                    <Divider />
-                    <Button
-                      fullWidth
-                      size="small"
-                      color="primary"
-                      onClick={() => {
-                        setOpen(false);
-                        setOpenCreateDialog(true);
-                      }}
-                      className={classes.button}
-                    >
-                      Add Project
-                    </Button>
-                  </React.Fragment>
-                </ClickAwayListener>
+                <React.Fragment>
+                  <Typography variant="overline" className={classes.menuTitle}>
+                    Switch Project
+                  </Typography>
+                  <Divider />
+                  <List component="nav" dense>
+                    {myProjects.map(myProject => (
+                      <Link
+                        key={myProject.id}
+                        route={`/${myProject.id}/dialog`}
+                      >
+                        <ListItem button>
+                          <ListItemIcon className={classes.listItemIcon}>
+                            <Avatar className={classes.avatar}>
+                              {getInitialProject(myProject.title)}
+                            </Avatar>
+                          </ListItemIcon>
+                          <ListItemText primary={myProject.title} />
+                        </ListItem>
+                      </Link>
+                    ))}
+                  </List>
+                  <Divider />
+                  <Button
+                    fullWidth
+                    size="small"
+                    color="primary"
+                    onClick={() => {
+                      setOpen(false);
+                      setOpenCreateDialog(true);
+                    }}
+                    className={classes.button}
+                  >
+                    Add Project
+                  </Button>
+                </React.Fragment>
               </Paper>
             </Grow>
           )}
