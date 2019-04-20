@@ -21,6 +21,10 @@ const DeleteProductDialog = props => {
   const onChange = event => {
     setFirstWord(event.target.value);
   };
+  const handleSubmit = event => {
+    event.preventDefault();
+    handleConfirm();
+  };
   useEffect(
     function onOpenChange() {
       if (open) {
@@ -35,31 +39,33 @@ const DeleteProductDialog = props => {
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">{message}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>{subMessage}</DialogContentText>
-        <TextField
-          value={firstWord}
-          onChange={onChange}
-          autoFocus
-          placeholder="The First Word"
-          margin="dense"
-          variant="outlined"
-          fullWidth
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
-          Cancel
-        </Button>
-        <Button
-          disabled={firstWord !== productName.split(' ')[0]}
-          onClick={handleConfirm}
-          color="primary"
-        >
-          Delete
-        </Button>
-      </DialogActions>
+      <form onSubmit={handleSubmit}>
+        <DialogTitle id="form-dialog-title">{message}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{subMessage}</DialogContentText>
+          <TextField
+            value={firstWord}
+            onChange={onChange}
+            autoFocus
+            placeholder="The First Word"
+            margin="dense"
+            variant="outlined"
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button
+            disabled={firstWord !== productName.split(' ')[0]}
+            type="submit"
+            color="primary"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 };

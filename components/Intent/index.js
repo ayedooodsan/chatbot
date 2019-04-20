@@ -113,7 +113,7 @@ class Intent extends Component {
         )}
         <CreateProductDialog
           placeholder="Intent Name"
-          message="Add new Itent"
+          message="Add new intent"
           open={createItemDialogStatus}
           handleClose={this.closeCreateItemDialog}
           handleConfirm={this.createItem}

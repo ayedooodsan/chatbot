@@ -18,11 +18,10 @@ class ProductLayoutProvider extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { values, title } = this.props;
-    if (
-      !_.isEqual(values, prevProps.values) ||
-      !_.isEqual(title, prevProps.title)
-    ) {
+    const { title, values } = this.props;
+    const isTitleEqual = _.isEqual(title, prevProps.title);
+    const isValuesEqual = _.isEqual(values, prevProps.values);
+    if (!isTitleEqual || !isValuesEqual) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
         values: this.props.values,
@@ -59,8 +58,8 @@ class ProductLayoutProvider extends Component {
     });
   };
 
-  onChangeTitle = value => {
-    this.setState({ title: value });
+  onChangeTitle = event => {
+    this.setState({ title: event.target.value });
   };
 
   getProduct = () => {
@@ -93,13 +92,15 @@ class ProductLayoutProvider extends Component {
 
 ProductLayoutProvider.defaultProps = {
   values: [],
-  title: ''
+  title: '',
+  id: null
 };
 
 ProductLayoutProvider.propTypes = {
   header: PropTypes.func.isRequired,
   body: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
+  id: PropTypes.string,
   values: PropTypes.array,
   title: PropTypes.string
 };

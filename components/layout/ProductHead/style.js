@@ -1,5 +1,3 @@
-import { whiteColor } from '../../../libraries/materialDashboardReactStyle';
-
 const style = () => ({
   root: {
     display: 'flex',
@@ -11,7 +9,7 @@ const style = () => ({
     backgroundColor: '#fafafa'
   },
   whiteColor: {
-    color: whiteColor
+    color: 'white'
   },
   input: {
     width: '40%'

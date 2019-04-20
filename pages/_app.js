@@ -36,7 +36,7 @@ class MyApp extends App {
     return (
       <Container>
         <NProgress
-          color="#4caf50"
+          color="#00a19a"
           showAfterMs={0}
           options={{ trickleSpeed: 50 }}
         />

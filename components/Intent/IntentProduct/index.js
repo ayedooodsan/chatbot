@@ -10,6 +10,7 @@ import ProductHead from '../../layout/ProductHead';
 import ProductBody from '../../layout/ProductBody';
 import connect from './store';
 import style from './style';
+import redirect from '../../../libraries/redirect';
 
 const IntentProduct = props => {
   const {
@@ -29,6 +30,7 @@ const IntentProduct = props => {
 
   const onDelete = async () => {
     const response = await deleteIntent({ id: intentId });
+    redirect({}, `/${projectId}/intent`);
     return response;
   };
 
@@ -40,6 +42,7 @@ const IntentProduct = props => {
 
   return (
     <ProductLayoutProvider
+      id={intentId}
       title={intent.title}
       values={intent.values}
       header={(onChangeTitle, intentTitle, getIntentProduct) => {
@@ -47,7 +50,7 @@ const IntentProduct = props => {
           <ProductHead
             productName={intentTitle}
             deleteMessage={`Delete ${intentTitle} Intent`}
-            deleteSubMessage="To delete this intent, please enter the first word on title intent."
+            deleteSubMessage="To delete this intent, please enter the first word on intent title."
             onChange={onChangeTitle}
             onSave={onSave(getIntentProduct)}
             onDelete={onDelete}

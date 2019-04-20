@@ -42,7 +42,6 @@ export default (headers, token, initialState) => {
   }
   if (apolloClient) {
     const currentState = apolloClient.cache.extract();
-    console.log({ currentState });
     apolloClient = createClient(headers, token, currentState);
   } else {
     apolloClient = createClient(headers, token, initialState);

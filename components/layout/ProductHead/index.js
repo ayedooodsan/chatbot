@@ -8,7 +8,6 @@ import InputBase from '@material-ui/core/InputBase';
 import Delete from '@material-ui/icons/Delete';
 import DeleteProductDialog from '../../common/DeleteProductDialog';
 
-import redirect from '../../../libraries/redirect';
 import style from './style';
 
 class ProductHead extends Component {
@@ -44,10 +43,9 @@ class ProductHead extends Component {
   };
 
   confirmDelete = async () => {
-    const { onDelete, projectId } = this.props;
+    const { onDelete } = this.props;
     await onDelete();
     this.handleClose();
-    redirect({}, `/${projectId}/intent`);
   };
 
   render() {
@@ -99,11 +97,11 @@ class ProductHead extends Component {
 }
 
 ProductHead.defaultProps = {
-  autoFocus: false
+  autoFocus: false,
+  productName: ''
 };
 
 ProductHead.propTypes = {
-  productName: PropTypes.string.isRequired,
   deleteMessage: PropTypes.string.isRequired,
   deleteSubMessage: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
@@ -111,6 +109,7 @@ ProductHead.propTypes = {
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   projectId: PropTypes.string.isRequired,
+  productName: PropTypes.string,
   autoFocus: PropTypes.bool
 };
 

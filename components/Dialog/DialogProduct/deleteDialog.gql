@@ -1,0 +1,7 @@
+mutation deleteDialog (
+  $id: String!
+) {
+  deleteDialog (
+    id: $id
+  )
+}

@@ -13,6 +13,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import { withRouter } from 'next/router';
+import Project from '../../Project';
 import style from './style';
 import routes from './routes';
 import { Link } from '../../../routes';
@@ -68,6 +69,7 @@ class Navigation extends React.Component {
             </IconButton>
           )}
         </div>
+        <Project projectId={projectId} collapse={this.state.open} />
         <List>
           {routes.map(route => (
             <Link route={`/${projectId}${route.route}`} key={route.name}>
@@ -83,7 +85,7 @@ class Navigation extends React.Component {
                 <ListItemText
                   primary={route.name}
                   primaryTypographyProps={{
-                    className: classNames(classes.listItemIcon, {
+                    className: classNames(classes.listItemText, {
                       [classes.listItemTextClose]: !this.state.open
                     })
                   }}

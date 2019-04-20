@@ -1,8 +1,0 @@
-query getMyDialogs (
-  $projectId: String!
-) {
-  myDialogs (projectId: $projectId) {
-    id
-    title
-  }
-}

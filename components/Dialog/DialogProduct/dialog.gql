@@ -1,0 +1,26 @@
+query dialog (
+  $id: String!
+) {
+  dialog (
+    id: $id
+  ) {
+    title
+    messages {
+      id
+      parentId
+      type
+      title
+      intent {
+        id
+        title
+        values
+        params {
+          name
+          required
+        }
+      }
+      payload
+      depth
+    }
+  }
+}
