@@ -29,7 +29,7 @@ export default Component =>
         this.props.accessToken,
         this.props.apolloState
       );
-      this.reduxStore = reduxStore(this.props.reduxState);
+      this.reduxStore = reduxStore(this.props.reduxState, {});
     }
 
     static async getInitialProps(ctx) {
@@ -37,7 +37,11 @@ export default Component =>
       let serverState = {};
 
       const headers = ctx.req ? ctx.req.headers : {};
-      const token = cookies(ctx)[persist.ACCESS_TOKEN_KEY];
+      const tokenCookies = cookies(ctx)[persist.ACCESS_TOKEN_KEY];
+      let token = {};
+      if (tokenCookies) {
+        token = JSON.parse(tokenCookies);
+      }
       const { isPublic } = Component;
       if (!isPublic && !token) {
         redirect(ctx, '/');
@@ -53,7 +57,7 @@ export default Component =>
       };
 
       if (!process.browser) {
-        const client = apolloClient(headers || {}, token || '', {}, ctx);
+        const client = apolloClient(headers || {}, token, {}, ctx);
         const store = reduxStore(undefined, token);
         try {
           const app = (

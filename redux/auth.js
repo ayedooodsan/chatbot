@@ -9,6 +9,7 @@ export const AUTH_SERVERERROR = 'AUTH/SERVERERROR';
 const initialState = {
   authenticated: false,
   token: null,
+  refreshToken: null,
   error: null
 };
 
@@ -20,6 +21,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         authenticated: true,
         token: action.token,
+        refreshToken: action.refreshToken,
         error: null
       };
     case AUTH_SIGNOUT:
@@ -34,14 +36,18 @@ const reducer = (state = initialState, action) => {
 // Action creators
 const actionCreators = {};
 
-actionCreators.signIn = token => ({ type: AUTH_SIGNIN, token });
+actionCreators.signIn = (token, refreshToken) => ({
+  type: AUTH_SIGNIN,
+  token,
+  refreshToken
+});
 actionCreators.signOut = () => ({ type: AUTH_SIGNOUT });
 
 // Discpatchers
 const dispatchers = {};
 
-dispatchers.signIn = token => {
-  persist.willSetAccessToken(token);
+dispatchers.signIn = (token, refreshToken) => {
+  persist.willSetAccessToken(JSON.stringify({ token, refreshToken }));
   return actionCreators.signIn(token);
 };
 

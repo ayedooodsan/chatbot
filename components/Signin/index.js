@@ -18,8 +18,9 @@ const onSubmit = props => {
   return values => {
     props.mutations.signIn(values).then(response => {
       if (response.data.signIn.token) {
-        props.actions.signIn(response.data.signIn.token);
-        const projectId = response.data.signIn.me.activeProject.id;
+        const { token, refreshToken, me } = response.data.signIn;
+        props.actions.signIn(token, refreshToken);
+        const projectId = me.activeProject.id;
         redirect({}, `/${projectId}/dialog`);
       }
     });
