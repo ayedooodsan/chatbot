@@ -63,6 +63,7 @@ const Signin = props => {
             label="Password"
             margin="dense"
             variant="outlined"
+            type="password"
             fullWidth
             helperText={password.meta.touched && password.meta.error}
             {...password.input}
