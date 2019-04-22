@@ -236,6 +236,7 @@ class DialogProduct extends Component {
                 ? viewedUnsatifiedDialog.map((messages, index) =>
                     messages[0].type === 'USER' ? (
                       <UserMessage
+                        key={messages[0].id}
                         messages={messages}
                         onChangeDialogInput={this.onChangeDialogInputProps}
                         onChangeActiveMessage={activeMessageId => {
@@ -252,6 +253,7 @@ class DialogProduct extends Component {
                       />
                     ) : (
                       <RobotMessage
+                        key={messages[0].id}
                         messages={messages}
                         onChangeDialogInput={this.onChangeDialogInputProps}
                       />
@@ -260,6 +262,7 @@ class DialogProduct extends Component {
                 : viewedDialog.map((messages, index) =>
                     messages[0].type === 'USER' ? (
                       <UserMessage
+                        key={messages[0].id}
                         messages={messages}
                         onChangeDialogInput={this.onChangeDialogInputProps}
                         onChangeActiveMessage={activeMessageId => {
@@ -276,6 +279,7 @@ class DialogProduct extends Component {
                       />
                     ) : (
                       <RobotMessage
+                        key={messages[0].id}
                         messages={messages}
                         onChangeDialogInput={this.onChangeDialogInputProps}
                       />
@@ -303,7 +307,7 @@ DialogProduct.defaultProps = {
 
 DialogProduct.propTypes = {
   classes: PropTypes.object.isRequired,
-  projectId: PropTypes.object.isRequired,
+  projectId: PropTypes.string.isRequired,
   deleteDialog: PropTypes.func.isRequired,
   updateDialog: PropTypes.func.isRequired,
   dialogId: PropTypes.string,

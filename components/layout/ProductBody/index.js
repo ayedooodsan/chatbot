@@ -7,14 +7,32 @@ import Scrollbar from 'react-scrollbars-custom';
 import style from './style';
 
 const ProductBody = props => {
-  const { classes, generateFormList, addFormList } = props;
-
+  const {
+    classes,
+    generateForm,
+    onChangeValues,
+    onDeleteValue,
+    addFormList,
+    values
+  } = props;
   return (
     <div className={classes.root}>
       <div className={classes.formList}>
         <Scrollbar>
           <div className={classes.inScrollbar}>
-            {generateFormList()}
+            {values.map((value, index) => (
+              <div key={JSON.stringify(value)}>
+                {generateForm(
+                  value,
+                  (newValue, key) => {
+                    onChangeValues(newValue, index, key);
+                  },
+                  () => {
+                    onDeleteValue(index);
+                  }
+                )}
+              </div>
+            ))}
             <Button
               fullWidth
               variant="contained"
@@ -30,10 +48,17 @@ const ProductBody = props => {
   );
 };
 
+ProductBody.defaultProps = {
+  values: []
+};
+
 ProductBody.propTypes = {
   classes: PropTypes.object.isRequired,
-  generateFormList: PropTypes.func.isRequired,
-  addFormList: PropTypes.func.isRequired
+  generateForm: PropTypes.func.isRequired,
+  addFormList: PropTypes.func.isRequired,
+  onChangeValues: PropTypes.func.isRequired,
+  onDeleteValue: PropTypes.func.isRequired,
+  values: PropTypes.array
 };
 
 export default withStyles(style)(ProductBody);
