@@ -12,7 +12,7 @@ export default class persist {
 
   static async willSetAccessToken(value) {
     const status = await cookies.set(persist.ACCESS_TOKEN_KEY, value, {
-      expires: 2
+      expires: 4
     });
     return status;
   }

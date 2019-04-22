@@ -16,8 +16,8 @@ const withMutation = graphql(signin, {
 
 const mapDispatchToProps = dispatch => ({
   actions: {
-    signIn(token) {
-      dispatch(dispatchers.signIn(token));
+    signIn(token, refreshToken) {
+      dispatch(dispatchers.signIn(token, refreshToken));
     }
   }
 });

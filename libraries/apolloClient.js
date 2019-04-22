@@ -16,15 +16,34 @@ function createClient(headers, token, initialState) {
 
   (async () => {
     // eslint-disable-next-line no-param-reassign
-    accessToken = token || (await persist.willGetAccessToken());
+    const tokenCookies = await persist.willGetAccessToken();
+    if (tokenCookies) {
+      accessToken = JSON.parse(tokenCookies);
+    }
   })();
   const authLink = new ApolloLink((operation, forward) => {
     operation.setContext({
       headers: {
-        'x-token': accessToken || ''
+        'x-token': accessToken.token || '',
+        'x-refresh-token': accessToken.refreshToken || ''
       }
     });
-    return forward(operation);
+    return forward(operation).map(response => {
+      const context = operation.getContext();
+      const responseHeaders = context.response.headers;
+
+      if (responseHeaders) {
+        const newToken = responseHeaders.get('x-token');
+        const newRefreshToken = responseHeaders.get('x-refresh-token');
+        if (newToken !== null && newRefreshToken !== null) {
+          persist.willSetAccessToken(
+            JSON.stringify({ token: newToken, refreshToken: newRefreshToken })
+          );
+        }
+      }
+
+      return response;
+    });
   }).concat(httpLink);
 
   return new ApolloClient({
