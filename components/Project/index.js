@@ -37,7 +37,7 @@ const Project = props => {
     createProject({ title }).then(response => {
       setOpenCreateDialog(false);
       const { id } = response.data.createProject;
-      redirect({}, `/${id}/dialog`);
+      redirect({}, `/${id}/intent`);
     });
   };
   return (
