@@ -4,20 +4,20 @@ import ProductLayoutProvider from '../../layout/ProductLayoutProvider';
 import ProductHead from '../../layout/ProductHead';
 import ProductBody from '../../layout/ProductBody';
 import connect from './store';
-import IntentField from '../IntentField';
+import EntityField from '../EntityField';
 import redirect from '../../../libraries/redirect';
 
-const IntentProduct = props => {
-  const { projectId, intentId, updateIntent, deleteIntent, intent } = props;
-  const onSave = getIntentProduct => {
+const EntityProduct = props => {
+  const { projectId, entityId, updateEntity, deleteEntity, entity } = props;
+  const onSave = getEntityProduct => {
     return () => {
-      const { title, values } = getIntentProduct();
-      updateIntent({ id: intentId, title, values });
+      const { title, values } = getEntityProduct();
+      updateEntity({ id: entityId, title, values });
     };
   };
 
   const onDelete = async () => {
-    const response = await deleteIntent({ id: intentId });
+    const response = await deleteEntity({ id: entityId });
     redirect({}, `/${projectId}/entity`);
     return response;
   };
@@ -30,17 +30,17 @@ const IntentProduct = props => {
 
   return (
     <ProductLayoutProvider
-      id={intentId}
-      title={intent.title}
-      values={intent.values}
-      header={(onChangeTitle, intentTitle, getIntentProduct) => {
+      id={entityId}
+      title={entity.title}
+      values={entity.values}
+      header={(onChangeTitle, entityTitle, getEntityProduct) => {
         return (
           <ProductHead
-            productName={intentTitle}
-            deleteMessage={`Delete ${intentTitle} Intent`}
-            deleteSubMessage="To delete this intent, please enter the first word on intent title."
+            productName={entityTitle}
+            deleteMessage={`Delete ${entityTitle} Entity`}
+            deleteSubMessage="To delete this entity, please enter the first word on entity title."
             onChange={onChangeTitle}
-            onSave={onSave(getIntentProduct)}
+            onSave={onSave(getEntityProduct)}
             onDelete={onDelete}
             projectId={projectId}
             autoFocus
@@ -58,7 +58,7 @@ const IntentProduct = props => {
               onChangeCurrentValue,
               onDeleteCurrentValue
             ) => (
-              <IntentField
+              <EntityField
                 intialValue={value}
                 onChange={onChangeCurrentValue}
                 onDelete={onDeleteCurrentValue}
@@ -72,16 +72,16 @@ const IntentProduct = props => {
   );
 };
 
-IntentProduct.defaultProps = {
-  intent: {}
+EntityProduct.defaultProps = {
+  entity: {}
 };
 
-IntentProduct.propTypes = {
+EntityProduct.propTypes = {
   projectId: PropTypes.string.isRequired,
-  intentId: PropTypes.string.isRequired,
-  updateIntent: PropTypes.func.isRequired,
-  deleteIntent: PropTypes.func.isRequired,
-  intent: PropTypes.object
+  entityId: PropTypes.string.isRequired,
+  updateEntity: PropTypes.func.isRequired,
+  deleteEntity: PropTypes.func.isRequired,
+  entity: PropTypes.object
 };
 
-export default connect(IntentProduct);
+export default connect(EntityProduct);

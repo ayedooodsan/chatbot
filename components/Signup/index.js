@@ -21,7 +21,7 @@ const onSubmit = props => {
         const { token, refreshToken, me } = response.data.signUp;
         props.actions.signIn(token, refreshToken);
         const projectId = me.activeProject.id;
-        redirect({}, `/${projectId}/intent`);
+        redirect({}, `/${projectId}/entity`);
       }
     });
   };

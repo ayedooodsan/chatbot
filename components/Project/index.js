@@ -37,7 +37,7 @@ const Project = props => {
     createProject({ title }).then(response => {
       setOpenCreateDialog(false);
       const { id } = response.data.createProject;
-      redirect({}, `/${id}/intent`);
+      redirect({}, `/${id}/entity`);
     });
   };
   return (
@@ -95,7 +95,7 @@ const Project = props => {
                     {myProjects.map(myProject => (
                       <Link
                         key={myProject.id}
-                        route={`/${myProject.id}/dialog`}
+                        route={`/${myProject.id}/entity`}
                       >
                         <ListItem button>
                           <ListItemIcon className={classes.listItemIcon}>

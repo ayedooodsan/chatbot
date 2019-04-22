@@ -1,0 +1,11 @@
+mutation createEntity (
+  $projectId: String!
+  $title: String!
+) {
+  createEntity (
+    projectId: $projectId
+    title: $title
+  ) {
+    id
+  }
+}
