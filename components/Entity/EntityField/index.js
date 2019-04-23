@@ -28,8 +28,8 @@ const EntityField = props => {
     setSynonyms(synonyms);
   };
   const handleDeleteSynonym = (synonym, index) => {
-    synonyms.slice(index, 1);
-    setSynonyms(synonyms);
+    synonyms.splice(index, 1);
+    setSynonyms([...synonyms]);
   };
   const handleSynonymsBlur = () => {
     if (intialValue.synonyms !== synonyms) {
@@ -38,7 +38,7 @@ const EntityField = props => {
   };
   return (
     <Paper className={classes.root} elevation={1}>
-      <Grid container>
+      <Grid container alignItems="center">
         <Grid item md={3}>
           <InputBase
             value={keyword}
@@ -54,7 +54,13 @@ const EntityField = props => {
         </Grid>
         <Grid item md={9}>
           <ChipInput
-            className={classes.input}
+            classes={{
+              inputRoot: classes.inputRoot,
+              chip: classes.chip,
+              chipContainer: classes.chipContainer
+            }}
+            disableUnderline
+            fullWidth
             value={synonyms}
             onAdd={handleAddSynonym}
             onDelete={handleDeleteSynonym}
@@ -75,7 +81,7 @@ const EntityField = props => {
 };
 
 EntityField.propTypes = {
-  intialValue: PropTypes.string.isRequired,
+  intialValue: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired

@@ -12,7 +12,14 @@ const EntityProduct = props => {
   const onSave = getEntityProduct => {
     return () => {
       const { title, values } = getEntityProduct();
-      updateEntity({ id: entityId, title, values });
+      updateEntity({
+        id: entityId,
+        title,
+        values: values.map(value => ({
+          keyword: value.keyword,
+          synonyms: value.synonyms
+        }))
+      });
     };
   };
 
@@ -24,7 +31,10 @@ const EntityProduct = props => {
 
   const onAdd = onAddIntialValue => {
     return () => {
-      onAddIntialValue('');
+      onAddIntialValue({
+        keyword: '',
+        synonyms: []
+      });
     };
   };
 

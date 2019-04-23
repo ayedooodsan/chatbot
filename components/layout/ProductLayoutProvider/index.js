@@ -12,7 +12,7 @@ class ProductLayoutProvider extends Component {
 
   componentDidMount() {
     this.setState({
-      values: this.props.values,
+      values: _.cloneDeep(this.props.values),
       title: this.props.title
     });
   }
@@ -24,7 +24,7 @@ class ProductLayoutProvider extends Component {
     if (!isTitleEqual || !isValuesEqual) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
-        values: this.props.values,
+        values: _.cloneDeep(this.props.values),
         title: this.props.title
       });
     }
