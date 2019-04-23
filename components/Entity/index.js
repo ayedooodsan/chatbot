@@ -10,13 +10,13 @@ import Navigation from '../layout/Navigation';
 import SubNavigation from '../layout/SubNavigation';
 import SimpleHeader from '../layout/SimpleSubNavHead';
 import CreateProductDialog from '../common/CreateProductDialog';
-import DialogProduct from './DialogProduct';
+import EntityProduct from './EntityProduct';
 import connect from './store';
 import { Link } from '../../routes';
 import style from './style';
 import redirect from '../../libraries/redirect';
 
-class Dialog extends Component {
+class Entity extends Component {
   state = {
     keyword: '',
     pagination: {
@@ -35,11 +35,11 @@ class Dialog extends Component {
   };
 
   createItem = title => {
-    const { createDialog, projectId } = this.props;
-    createDialog({ title, values: [], projectId }).then(response => {
+    const { createEntity, projectId } = this.props;
+    createEntity({ title, values: [], projectId }).then(response => {
       this.closeCreateItemDialog();
-      const dialogId = response.data.createDialog.id;
-      redirect({}, `/${projectId}/dialog/${dialogId}`);
+      const entityId = response.data.createEntity.id;
+      redirect({}, `/${projectId}/entity/${entityId}`);
     });
   };
 
@@ -53,11 +53,11 @@ class Dialog extends Component {
     }));
   };
 
-  activeDialog = currentDialogId => currentDialogId === this.props.dialogId;
+  activeEntity = currentEntityId => currentEntityId === this.props.entityId;
 
   render() {
     const { keyword, pagination, createItemDialogStatus } = this.state;
-    const { myDialogs, projectId, dialogId, classes } = this.props;
+    const { myEntities, projectId, entityId, classes } = this.props;
     return (
       <LayoutProvider
         navigation={() => <Navigation />}
@@ -65,36 +65,36 @@ class Dialog extends Component {
           <SubNavigation
             header={() => (
               <SimpleHeader
-                title="Dialogs"
+                title="Entities"
                 onAddItem={this.openCreateItemDialog}
                 handleClickPagination={this.setOffsetPagination}
-                pagination={{ ...pagination, dataLength: myDialogs.length }}
+                pagination={{ ...pagination, dataLength: myEntities.length }}
                 keyword={keyword}
                 setKeyword={this.setKeyword}
               />
             )}
             body={() =>
-              myDialogs && (
+              myEntities && (
                 <List component="nav">
-                  {myDialogs.map(myDialog => (
+                  {myEntities.map(myEntity => (
                     <Link
-                      route={`/${projectId}/dialog/${myDialog.id}`}
-                      key={myDialog.id}
+                      route={`/${projectId}/entity/${myEntity.id}`}
+                      key={myEntity.id}
                     >
                       <ListItem
                         className={classNames({
-                          [classes.listItemActive]: this.activeDialog(
-                            myDialog.id
+                          [classes.listItemActive]: this.activeEntity(
+                            myEntity.id
                           )
                         })}
                         button
                       >
                         <ListItemText
-                          primary={myDialog.title}
+                          primary={myEntity.title}
                           primaryTypographyProps={{
                             className: classNames({
-                              [classes.listItemTextActive]: this.activeDialog(
-                                myDialog.id
+                              [classes.listItemTextActive]: this.activeEntity(
+                                myEntity.id
                               )
                             })
                           }}
@@ -108,12 +108,12 @@ class Dialog extends Component {
           />
         )}
       >
-        {dialogId && (
-          <DialogProduct dialogId={dialogId} projectId={projectId} />
+        {entityId && (
+          <EntityProduct entityId={entityId} projectId={projectId} />
         )}
         <CreateProductDialog
-          placeholder="Dialog Name"
-          message="Add new dialog"
+          placeholder="Entity Name"
+          message="Add new entity"
           open={createItemDialogStatus}
           handleClose={this.closeCreateItemDialog}
           handleConfirm={this.createItem}
@@ -123,17 +123,17 @@ class Dialog extends Component {
   }
 }
 
-Dialog.defaultProps = {
-  myDialogs: [],
-  dialogId: null
+Entity.defaultProps = {
+  myEntities: [],
+  entityId: null
 };
 
-Dialog.propTypes = {
+Entity.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
-  createDialog: PropTypes.func.isRequired,
-  dialogId: PropTypes.string,
-  myDialogs: PropTypes.array
+  createEntity: PropTypes.func.isRequired,
+  entityId: PropTypes.string,
+  myEntities: PropTypes.array
 };
 
-export default withStyles(style)(connect(Dialog));
+export default withStyles(style)(connect(Entity));
