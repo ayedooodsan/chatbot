@@ -13,10 +13,8 @@ query dialog (
       intent {
         id
         title
-        values
-        params {
-          name
-          required
+        values {
+          text
         }
       }
       payload

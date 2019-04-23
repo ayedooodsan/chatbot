@@ -11,11 +11,13 @@ const EntityProduct = props => {
   const { projectId, entityId, updateEntity, deleteEntity, entity } = props;
   const onSave = getEntityProduct => {
     return () => {
-      const { title, values } = getEntityProduct();
+      const entityFilter = entityEntry =>
+        entityEntry.keyword !== '' && entityEntry.synonyms.length !== 0;
+      const { title, productValues } = getEntityProduct(entityFilter);
       updateEntity({
         id: entityId,
         title,
-        values: values.map(value => ({
+        values: productValues.map(value => ({
           keyword: value.keyword,
           synonyms: value.synonyms
         }))
@@ -42,7 +44,7 @@ const EntityProduct = props => {
     <ProductLayoutProvider
       id={entityId}
       title={entity.title}
-      values={entity.values}
+      productValues={entity.values}
       header={(onChangeTitle, entityTitle, getEntityProduct) => {
         return (
           <ProductHead
@@ -57,7 +59,7 @@ const EntityProduct = props => {
           />
         );
       }}
-      body={(values, onChangeValues, onAddIntialValue, onDeleteValue) => {
+      product={(values, onChangeValues, onAddIntialValue, onDeleteValue) => {
         return (
           <ProductBody
             values={values}

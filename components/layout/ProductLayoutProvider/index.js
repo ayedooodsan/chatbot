@@ -7,52 +7,83 @@ import style from './style';
 class ProductLayoutProvider extends Component {
   state = {
     title: '',
-    values: []
+    productValues: [],
+    subProductValues: []
   };
 
   componentDidMount() {
+    const { productValues, subProductValues } = this.props;
     this.setState({
-      values: _.cloneDeep(this.props.values),
+      productValues: _.cloneDeep(productValues),
+      subProductValues: _.cloneDeep(subProductValues),
       title: this.props.title
     });
   }
 
   componentDidUpdate(prevProps) {
-    const { title, values } = this.props;
+    const { title, productValues, subProductValues } = this.props;
     const isTitleEqual = _.isEqual(title, prevProps.title);
-    const isValuesEqual = _.isEqual(values, prevProps.values);
-    if (!isTitleEqual || !isValuesEqual) {
+    if (!isTitleEqual) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
-        values: _.cloneDeep(this.props.values),
+        productValues: _.cloneDeep(productValues),
+        subProductValues: _.cloneDeep(subProductValues),
         title: this.props.title
       });
     }
   }
 
-  onChangeValues = (value, index, key) => {
+  onChangeProductValues = (value, index, key) => {
     this.setState(prevState => {
-      const newValues = prevState.values;
+      const newValues = prevState.productValues;
       if (key === undefined) {
         newValues[index] = value;
       } else {
         newValues[index][key] = value;
       }
-      return { values: newValues };
+      return { productValues: newValues };
     });
   };
 
-  onDeleteValue = index => {
+  onDeleteProductValue = index => {
     this.setState(prevState => {
-      const newValues = prevState.values;
+      const newValues = prevState.productValues;
       newValues.splice(index, 1);
-      return { values: newValues };
+      return { productValues: newValues };
     });
   };
 
-  onAddValue = initialValue => {
+  onAddProductValue = initialValue => {
     this.setState(prevState => {
-      const newValues = prevState.values;
+      const newValues = prevState.productValues;
+      newValues.push(initialValue);
+      return newValues;
+    });
+  };
+
+  onChangeSubProductValues = (value, index, key) => {
+    this.setState(prevState => {
+      const newValues = prevState.subProductValues;
+      if (key === undefined) {
+        newValues[index] = value;
+      } else {
+        newValues[index][key] = value;
+      }
+      return { subProductValues: newValues };
+    });
+  };
+
+  onDeleteSubProductValue = index => {
+    this.setState(prevState => {
+      const newValues = prevState.subProductValues;
+      newValues.splice(index, 1);
+      return { subProductValues: newValues };
+    });
+  };
+
+  onAddSubProductValue = initialValue => {
+    this.setState(prevState => {
+      const newValues = prevState.subProductValues;
       newValues.push(initialValue);
       return newValues;
     });
@@ -62,27 +93,45 @@ class ProductLayoutProvider extends Component {
     this.setState({ title: event.target.value });
   };
 
-  getProduct = () => {
+  getProduct = (productFilter, subProductFilter) => {
+    const { title, productValues, subProductValues } = this.state;
     return {
-      title: this.state.title,
-      values: this.state.values.filter(value => value !== '')
+      title,
+      productValues: productFilter
+        ? productValues.filter(productFilter)
+        : productValues,
+      subProductValues: subProductFilter
+        ? subProductValues.filter(subProductFilter)
+        : subProductValues
     };
   };
 
   render() {
-    const { header, body, classes } = this.props;
-    const { title, values } = this.state;
+    const { header, product, subProduct, classes } = this.props;
+    const { title, productValues, subProductValues } = this.state;
     return (
       <div className={classes.root}>
         <div className={classes.header}>
           {header(this.onChangeTitle, title, this.getProduct)}
         </div>
         <div className={classes.body}>
-          {body(
-            values,
-            this.onChangeValues,
-            this.onAddValue,
-            this.onDeleteValue
+          <div className={classes.product}>
+            {product(
+              productValues,
+              this.onChangeProductValues,
+              this.onAddProductValue,
+              this.onDeleteProductValue
+            )}
+          </div>
+          {subProductValues.length !== 0 && (
+            <div className={classes.subProduct}>
+              {subProduct(
+                subProductValues,
+                this.onChangeSubProductValues,
+                this.onAddSubProductValue,
+                this.onSubDeleteProductValue
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -91,17 +140,20 @@ class ProductLayoutProvider extends Component {
 }
 
 ProductLayoutProvider.defaultProps = {
-  values: [],
+  productValues: [],
+  subProductValues: [],
   title: '',
   id: null
 };
 
 ProductLayoutProvider.propTypes = {
   header: PropTypes.func.isRequired,
-  body: PropTypes.func.isRequired,
+  product: PropTypes.func.isRequired,
+  subProduct: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   id: PropTypes.string,
-  values: PropTypes.array,
+  productValues: PropTypes.array,
+  subProductValues: PropTypes.array,
   title: PropTypes.string
 };
 
