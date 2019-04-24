@@ -1,7 +1,7 @@
 import withData from '../libraries/withData';
 import Signup from '../components/Signup';
 
-const signup = withData(() => (
+const signup = () => (
   <div className="full-screen">
     <div className="signup-section">
       <Signup />
@@ -19,6 +19,8 @@ const signup = withData(() => (
       }
     `}</style>
   </div>
-));
+);
 
-export default signup;
+signup.isPublic = true;
+
+export default withData(signup);

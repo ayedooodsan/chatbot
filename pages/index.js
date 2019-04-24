@@ -1,7 +1,7 @@
 import withData from '../libraries/withData';
 import SignIn from '../components/Signin';
 
-export default withData(() => (
+const index = () => (
   <div className="full-screen">
     <div className="login-section">
       <SignIn />
@@ -19,4 +19,8 @@ export default withData(() => (
       }
     `}</style>
   </div>
-));
+);
+
+index.isPublic = true;
+
+export default withData(index);

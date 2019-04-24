@@ -13,5 +13,11 @@ mutation signup(
     lastName: $lastName
   ) {
     token
+    refreshToken
+    me {
+      activeProject {
+        id
+      }
+    }
   } 
 }

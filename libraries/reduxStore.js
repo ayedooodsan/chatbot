@@ -9,21 +9,30 @@ import persist from './persist';
 let reduxStore = null;
 const middleware = createMiddleware(thunkMiddleware);
 
-export default (initialState, token) => {
+export default (initialState, tokenObj) => {
   let store;
   if (!process.browser || !reduxStore) {
     store = createStore(rootReducer(), initialState, middleware);
-
     let tokenInStore = store.getState().auth.token;
-
+    let refreshTokenInStore = store.getState().auth.refreshToken;
     if (!tokenInStore) {
       (async () => {
-        tokenInStore =
-          token || (await Promise.resolve(persist.willGetAccessToken()));
-
-        if (typeof token === 'string' && !token.includes('Error')) {
-          if (token.length) {
-            store.dispatch(dispatchers.signIn(token));
+        const tokenCookies = await persist.willGetAccessToken();
+        if (tokenCookies) {
+          tokenInStore = tokenCookies.token;
+          refreshTokenInStore = tokenCookies.refreshToken;
+        } else {
+          tokenInStore = tokenObj.token;
+          refreshTokenInStore = tokenObj.refreshToken;
+        }
+        if (
+          typeof tokenInStore === 'string' &&
+          !tokenInStore.includes('Error')
+        ) {
+          if (tokenInStore.length) {
+            store.dispatch(
+              dispatchers.signIn(tokenInStore, refreshTokenInStore)
+            );
           } else {
             store.dispatch(dispatchers.signOut());
           }

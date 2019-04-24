@@ -8,6 +8,16 @@ import NProgress from 'next-nprogress/component';
 import getPageContext from '../libraries/getPageContext';
 
 class MyApp extends App {
+  static async getInitialProps({ Component, ctx }) {
+    let pageProps = {};
+
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx);
+    }
+
+    return { pageProps };
+  }
+
   constructor() {
     super();
     this.pageContext = getPageContext();
@@ -26,7 +36,7 @@ class MyApp extends App {
     return (
       <Container>
         <NProgress
-          color="#4caf50"
+          color="#00a19a"
           showAfterMs={0}
           options={{ trickleSpeed: 50 }}
         />

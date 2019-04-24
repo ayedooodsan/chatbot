@@ -7,6 +7,7 @@ import cookies from 'next-cookies';
 import apolloClient from './apolloClient';
 import reduxStore from './reduxStore';
 import persist from './persist';
+import redirect from './redirect';
 
 export default Component =>
   class extends React.Component {
@@ -23,8 +24,12 @@ export default Component =>
 
     constructor(props) {
       super(props);
-      this.apolloClient = apolloClient({}, '', this.props.apolloState);
-      this.reduxStore = reduxStore(this.props.reduxState);
+      this.apolloClient = apolloClient(
+        this.props.headers,
+        this.props.accessToken,
+        this.props.apolloState
+      );
+      this.reduxStore = reduxStore(this.props.reduxState, {});
     }
 
     static async getInitialProps(ctx) {
@@ -32,7 +37,15 @@ export default Component =>
       let serverState = {};
 
       const headers = ctx.req ? ctx.req.headers : {};
-      const token = cookies(ctx)[persist.ACCESS_TOKEN_KEY];
+      const tokenCookies = cookies(ctx)[persist.ACCESS_TOKEN_KEY];
+      let token = {};
+      if (tokenCookies) {
+        token = JSON.parse(tokenCookies);
+      }
+      const { isPublic } = Component;
+      if (!isPublic && !token) {
+        redirect(ctx, '/');
+      }
 
       const props = {
         router: {
@@ -44,9 +57,8 @@ export default Component =>
       };
 
       if (!process.browser) {
-        const client = apolloClient(headers || {}, token || '', {}, ctx);
-        const store = reduxStore();
-
+        const client = apolloClient(headers || {}, token, {}, ctx);
+        const store = reduxStore(undefined, token);
         try {
           const app = (
             <ApolloProvider client={client}>
@@ -71,6 +83,7 @@ export default Component =>
         reduxState: serverState,
         apolloState,
         headers,
+        accessToken: token,
         ...props
       };
     }

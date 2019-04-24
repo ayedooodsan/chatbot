@@ -1,0 +1,10 @@
+query myIntents (
+  $projectId: String!
+) {
+  myIntents (
+    projectId: $projectId
+  ) {
+    id
+    title
+  } 
+}

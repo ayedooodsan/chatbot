@@ -7,5 +7,11 @@ mutation signup(
     password: $password
   ) {
     token
+    refreshToken
+    me {
+      activeProject {
+        id
+      }
+    }
   } 
 }

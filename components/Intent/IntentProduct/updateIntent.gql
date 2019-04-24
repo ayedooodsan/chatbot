@@ -1,0 +1,15 @@
+mutation updateIntent (
+  $id: String!
+  $title: String
+  $values: [String!]
+) {
+  updateIntent (
+    id: $id
+    title: $title
+    values: $values
+  ) {
+    id
+    title
+    values
+  }
+}

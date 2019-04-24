@@ -2,35 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useForm, useField } from 'react-final-form-hooks';
 import { withStyles } from '@material-ui/core/styles';
-import Button from 'material-dashboard-react/dist/components/CustomButtons/Button';
-import Card from 'material-dashboard-react/dist/components/Card/Card';
-import CardHeader from 'material-dashboard-react/dist/components/Card/CardHeader';
-import CardBody from 'material-dashboard-react/dist/components/Card/CardBody';
-import CardFooter from 'material-dashboard-react/dist/components/Card/CardFooter';
-import CustomInput from '../CustomInput';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import TextField from '@material-ui/core/TextField';
 import redirect from '../../libraries/redirect';
 import { isTypeOfString } from '../../libraries/helpers';
 import { Link } from '../../routes';
 import connect from './store';
-
-const styles = {
-  cardTitleWhite: {
-    color: '#FFFFFF',
-    marginTop: '0px',
-    minHeight: 'auto',
-    fontWeight: '300',
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-    marginBottom: '3px',
-    textDecoration: 'none'
-  }
-};
+import style from './style';
 
 const onSubmit = props => {
   return values => {
     props.mutations.signIn(values).then(response => {
       if (response.data.signIn.token) {
-        props.actions.signIn(response.data.signIn.token);
-        redirect({}, '/dialog');
+        const { token, refreshToken, me } = response.data.signIn;
+        props.actions.signIn(token, refreshToken);
+        const projectId = me.activeProject.id;
+        redirect({}, `/${projectId}/dialog`);
       }
     });
   };
@@ -58,51 +49,41 @@ const Signin = props => {
   return (
     <form onSubmit={handleSubmit}>
       <Card>
-        <CardHeader color="success">
-          <h3 className={classes.cardTitleWhite}>SIGN IN</h3>
-        </CardHeader>
-        <CardBody>
-          <CustomInput
-            labelText="Username"
+        <CardHeader color="success" title="SIGN IN" />
+        <CardContent className={classes.cardContent}>
+          <TextField
+            label="Username"
+            margin="dense"
+            variant="outlined"
+            fullWidth
             helperText={login.meta.touched && login.meta.error}
-            formControlProps={{
-              fullWidth: true,
-              error: login.meta.touched && isTypeOfString(login.meta.error)
-            }}
-            inputProps={login.input}
+            {...login.input}
             error={login.meta.touched && isTypeOfString(login.meta.error)}
-            success={login.meta.touched && !isTypeOfString(login.meta.error)}
           />
-          <CustomInput
-            labelText="Password"
+          <TextField
+            label="Password"
+            margin="dense"
+            variant="outlined"
+            type="password"
+            fullWidth
             helperText={password.meta.touched && password.meta.error}
-            id="password"
-            formControlProps={{
-              fullWidth: true,
-              error:
-                password.meta.touched && isTypeOfString(password.meta.error)
-            }}
-            inputProps={{ ...password.input, type: 'password' }}
+            {...password.input}
             error={password.meta.touched && isTypeOfString(password.meta.error)}
-            success={
-              password.meta.touched && !isTypeOfString(password.meta.error)
-            }
           />
-        </CardBody>
-        <CardFooter>
+        </CardContent>
+        <CardActions className={classes.cardActions}>
           <Button
-            color="success"
+            color="primary"
+            variant="contained"
             type="submit"
             disabled={prestine || submitting}
           >
             Sign in
           </Button>
           <Link route="/sign-up">
-            <Button color="success" link>
-              Sign up
-            </Button>
+            <Button color="primary">Sign up</Button>
           </Link>
-        </CardFooter>
+        </CardActions>
       </Card>
     </form>
   );
@@ -112,4 +93,4 @@ Signin.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(connect(Signin));
+export default withStyles(style)(connect(Signin));

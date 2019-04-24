@@ -1,0 +1,47 @@
+const style = () => ({
+  listItem: {
+    paddingLeft: '14px',
+    paddingRight: '14px'
+  },
+  avatar: {
+    width: 30,
+    height: 30,
+    backgroundColor: '#007974',
+    fontSize: '.75rem',
+    fontWeight: 500
+  },
+  listItemIcon: {
+    color: 'white',
+    marginRight: 0
+  },
+  listItemText: {
+    paddingLeft: 14
+  },
+  listItemTextTyp: {
+    color: 'white',
+    opacity: 1,
+    visibility: 'visible',
+    '-webkit-transition': 'opacity 2000ms, visibility 2000ms',
+    transition: 'opacity 2000ms, visibility 2000ms'
+  },
+  listItemTextTypClose: {
+    opacity: 0,
+    visibility: 'hidden'
+  },
+  listItemTextTypSecondary: {
+    fontSize: '.75rem'
+  },
+  menuContainer: {
+    marginLeft: 10,
+    marginTop: 8
+  },
+  menuTitle: {
+    padding: '12px 16px 8px'
+  },
+  button: {
+    paddingTop: 10,
+    paddingBottom: 10
+  }
+});
+
+export default style;

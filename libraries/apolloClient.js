@@ -7,7 +7,8 @@ import persist from './persist';
 let apolloClient = null;
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4237/graphql'
+  uri: 'http://localhost:4237/graphql',
+  credentials: 'same-origin'
 });
 
 function createClient(headers, token, initialState) {
@@ -15,16 +16,34 @@ function createClient(headers, token, initialState) {
 
   (async () => {
     // eslint-disable-next-line no-param-reassign
-    accessToken = token || (await persist.willGetAccessToken());
+    const tokenCookies = await persist.willGetAccessToken();
+    if (tokenCookies) {
+      accessToken = JSON.parse(tokenCookies);
+    }
   })();
-
   const authLink = new ApolloLink((operation, forward) => {
     operation.setContext({
       headers: {
-        authorization: accessToken
+        'x-token': accessToken.token || '',
+        'x-refresh-token': accessToken.refreshToken || ''
       }
     });
-    return forward(operation);
+    return forward(operation).map(response => {
+      const context = operation.getContext();
+      const responseHeaders = context.response.headers;
+
+      if (responseHeaders) {
+        const newToken = responseHeaders.get('x-token');
+        const newRefreshToken = responseHeaders.get('x-refresh-token');
+        if (newToken !== null && newRefreshToken !== null) {
+          persist.willSetAccessToken(
+            JSON.stringify({ token: newToken, refreshToken: newRefreshToken })
+          );
+        }
+      }
+
+      return response;
+    });
   }).concat(httpLink);
 
   return new ApolloClient({
@@ -40,7 +59,10 @@ export default (headers, token, initialState) => {
   if (!process.browser) {
     return createClient(headers, token, initialState);
   }
-  if (!apolloClient) {
+  if (apolloClient) {
+    const currentState = apolloClient.cache.extract();
+    apolloClient = createClient(headers, token, currentState);
+  } else {
     apolloClient = createClient(headers, token, initialState);
   }
   return apolloClient;

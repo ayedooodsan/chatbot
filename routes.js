@@ -3,7 +3,8 @@ const routes = require('next-routes')();
 //
 // ------------ ROUTES ---------------
 // @RANStartRoutes
-routes.add('dialog');
+routes.add('dialog', '/:projectId/dialog/:dialogId?', 'dialog');
+routes.add('intent', '/:projectId/intent/:intentId?', 'intent');
 routes.add('signup', '/sign-up');
 // @RANEndRoutes
 // ------------ ROUTES ---------------
