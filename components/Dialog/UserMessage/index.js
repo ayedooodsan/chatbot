@@ -89,70 +89,72 @@ const UserMessage = props => {
         </div>
       )}
       <BubbleChat type="other">
-        <div className={classes.headerBubble}>
-          <Typography variant="subtitle2" color="primary">
-            {activeMessage.title}
-          </Typography>
-          <div className={classes.buttons}>
-            {replyable() && (
+        <React.Fragment>
+          <div className={classes.headerBubble}>
+            <Typography variant="subtitle2" color="primary">
+              {activeMessage.title}
+            </Typography>
+            <div className={classes.buttons}>
+              {replyable() && (
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={() => {
+                    if (activeParamName === null) {
+                      onChangeDialogInput({
+                        type: REPLY_USER,
+                        payload: activeMessage
+                      });
+                    } else {
+                      onChangeDialogInput({
+                        type: REPLY_USER_PARAM,
+                        payload: {
+                          message: activeMessage,
+                          param: activeParam
+                        }
+                      });
+                    }
+                  }}
+                >
+                  <Reply className={classes.miniIcon} />
+                </IconButton>
+              )}
               <IconButton
                 className={classes.iconButton}
                 onClick={() => {
-                  if (activeParamName === null) {
-                    onChangeDialogInput({
-                      type: REPLY_USER,
-                      payload: activeMessage
-                    });
-                  } else {
-                    onChangeDialogInput({
-                      type: REPLY_USER_PARAM,
-                      payload: {
-                        message: activeMessage,
-                        param: activeParam
-                      }
-                    });
-                  }
+                  onChangeDialogInput({
+                    type: EDIT_USER,
+                    payload: activeMessage
+                  });
                 }}
               >
-                <Reply className={classes.miniIcon} />
+                <Edit className={classes.miniIcon} />
               </IconButton>
-            )}
-            <IconButton
-              className={classes.iconButton}
-              onClick={() => {
-                onChangeDialogInput({
-                  type: EDIT_USER,
-                  payload: activeMessage
-                });
-              }}
-            >
-              <Edit className={classes.miniIcon} />
-            </IconButton>
-            <IconButton
-              className={classes.iconButton}
-              onClick={() => {
-                onChangeDialogInput({
-                  type: DELETE_USER,
-                  payload: activeMessage
-                });
-              }}
-            >
-              <Delete className={classes.miniIcon} />
-            </IconButton>
+              <IconButton
+                className={classes.iconButton}
+                onClick={() => {
+                  onChangeDialogInput({
+                    type: DELETE_USER,
+                    payload: activeMessage
+                  });
+                }}
+              >
+                <Delete className={classes.miniIcon} />
+              </IconButton>
+            </div>
           </div>
-        </div>
-        <Typography variant="subtitle2">
-          {activeMessage.intent.title} INTENT
-        </Typography>
-        {activeMessage.intent.values && (
-          <ul className={classes.intentValues}>
-            {activeMessage.intent.values.map(value => (
-              <li>
-                <Typography variant="caption">{value}</Typography>
-              </li>
-            ))}
-          </ul>
-        )}
+          <Typography variant="subtitle2">
+            {activeMessage.intent.title} INTENT
+          </Typography>
+          {activeMessage.intent.values && (
+            <ul className={classes.intentValues}>
+              {activeMessage.intent.values.map(value => (
+                <li key={value}>
+                  <Typography variant="caption">{value}</Typography>
+                </li>
+              ))}
+            </ul>
+          )}
+        </React.Fragment>
       </BubbleChat>
       {requiredParams.length > 0 && (
         <div className={classes.chipContainer}>
@@ -240,13 +242,18 @@ const UserMessage = props => {
   );
 };
 
+UserMessage.defaultProps = {
+  activeMessageId: null,
+  activeChildMessageId: null
+};
+
 UserMessage.propTypes = {
   messages: PropTypes.array.isRequired,
-  activeMessageId: PropTypes.number.isRequired,
-  activeChildMessageId: PropTypes.number.isRequired,
   onChangeActiveMessage: PropTypes.func.isRequired,
   onChangeChildActiveMessage: PropTypes.func.isRequired,
   onChangeDialogInput: PropTypes.func.isRequired,
+  activeMessageId: PropTypes.string,
+  activeChildMessageId: PropTypes.string,
   classes: PropTypes.object.isRequired
 };
 

@@ -15,11 +15,11 @@ export default Component =>
       apolloState: PropTypes.object.isRequired,
       reduxState: PropTypes.object.isRequired,
       headers: PropTypes.object.isRequired,
-      accessToken: PropTypes.string
+      accessToken: PropTypes.object
     };
 
     static defaultProps = {
-      accessToken: ''
+      accessToken: {}
     };
 
     constructor(props) {

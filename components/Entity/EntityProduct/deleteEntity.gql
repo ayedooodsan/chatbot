@@ -1,0 +1,7 @@
+mutation deleteEntity (
+  $id: String!
+) {
+  deleteEntity (
+    id: $id
+  )
+}

@@ -5,6 +5,7 @@ const routes = require('next-routes')();
 // @RANStartRoutes
 routes.add('dialog', '/:projectId/dialog/:dialogId?', 'dialog');
 routes.add('intent', '/:projectId/intent/:intentId?', 'intent');
+routes.add('entity', '/:projectId/entity/:entityId?', 'entity');
 routes.add('signup', '/sign-up');
 // @RANEndRoutes
 // ------------ ROUTES ---------------
