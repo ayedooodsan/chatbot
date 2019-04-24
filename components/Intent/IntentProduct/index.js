@@ -32,7 +32,7 @@ const IntentProduct = props => {
     <ProductLayoutProvider
       id={intentId}
       title={intent.title}
-      values={intent.values}
+      productValues={intent.values}
       header={(onChangeTitle, intentTitle, getIntentProduct) => {
         return (
           <ProductHead
@@ -47,7 +47,7 @@ const IntentProduct = props => {
           />
         );
       }}
-      body={(values, onChangeValues, onAddIntialValue, onDeleteValue) => {
+      product={(values, onChangeValues, onAddIntialValue, onDeleteValue) => {
         return (
           <ProductBody
             values={values}

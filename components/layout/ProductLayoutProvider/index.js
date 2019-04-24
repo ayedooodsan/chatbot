@@ -142,6 +142,7 @@ class ProductLayoutProvider extends Component {
 ProductLayoutProvider.defaultProps = {
   productValues: [],
   subProductValues: [],
+  subProduct: () => null,
   title: '',
   id: null
 };
@@ -149,12 +150,12 @@ ProductLayoutProvider.defaultProps = {
 ProductLayoutProvider.propTypes = {
   header: PropTypes.func.isRequired,
   product: PropTypes.func.isRequired,
-  subProduct: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   id: PropTypes.string,
+  title: PropTypes.string,
   productValues: PropTypes.array,
   subProductValues: PropTypes.array,
-  title: PropTypes.string
+  subProduct: PropTypes.func
 };
 
 export default withStyles(style)(ProductLayoutProvider);

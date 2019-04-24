@@ -5,6 +5,23 @@ query intent (
     id: $id
   ) {
     title
-    values
+    values {
+      text
+      entityRanges {
+        offset
+        length
+        entity {
+          id
+          title
+        }
+      }
+    }
+    params {
+      name
+      entity {
+        id
+        title
+      }
+    }
   }
 }

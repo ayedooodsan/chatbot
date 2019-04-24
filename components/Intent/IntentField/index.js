@@ -1,36 +1,66 @@
-import { useState } from 'react';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import { useState, useRef, useEffect } from 'react';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
-import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
+import { Editor, EditorState, CompositeDecorator } from 'draft-js';
+import EntityChip from '../EntityChip';
 import style from './style';
 
+const findEntities = (contentBlock, callback, contentState) => {
+  contentBlock.findEntityRanges(character => {
+    const entityKey = character.getEntity();
+    return (
+      entityKey !== null &&
+      contentState.getEntity(entityKey).getType() === 'ENTITY'
+    );
+  }, callback);
+};
+
+const decorator = new CompositeDecorator([
+  {
+    strategy: findEntities,
+    component: EntityChip
+  }
+]);
+
 const IntentField = props => {
-  const { intialValue, onChange, onDelete, classes } = props;
-  const [value, setValue] = useState(intialValue);
-  const handleChange = event => {
-    setValue(event.target.value);
+  const { onDelete, classes } = props;
+  const [editorState, setEditorState] = useState(
+    EditorState.createEmpty(decorator)
+  );
+  const editor = useRef(null);
+  const focusEditor = () => {
+    editor.current.focus();
   };
-  const handleBlur = () => {
-    if (intialValue !== value) {
-      onChange(value);
-    }
-  };
+
+  useEffect(() => {
+    focusEditor();
+  }, []);
+
   return (
     <Paper className={classes.root} elevation={1}>
-      <InputBase
-        value={value}
-        onChange={handleChange}
-        inputProps={{
-          onBlur: handleBlur
-        }}
-        autoFocus
-        fullWidth
-        className={classes.input}
-        placeholder="User says"
-      />
+      <div
+        onClick={focusEditor}
+        className={classNames(
+          classes.inputRoot,
+          classes.multiline,
+          classes.fullWidth
+        )}
+      >
+        <div className={classNames(classes.input, classes.inputMultiline)}>
+          <Editor
+            placeholder="User say"
+            ref={editor}
+            editorState={editorState}
+            onChange={newEditorState => setEditorState(newEditorState)}
+          />
+        </div>
+      </div>
       <IconButton
         onClick={onDelete}
         className={classes.iconButton}
