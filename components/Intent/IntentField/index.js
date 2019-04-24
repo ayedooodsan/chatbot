@@ -7,32 +7,12 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
-import { Editor, EditorState, CompositeDecorator } from 'draft-js';
-import EntityChip from '../EntityChip';
+import { Editor, EditorState } from 'draft-js';
 import style from './style';
-
-const findEntities = (contentBlock, callback, contentState) => {
-  contentBlock.findEntityRanges(character => {
-    const entityKey = character.getEntity();
-    return (
-      entityKey !== null &&
-      contentState.getEntity(entityKey).getType() === 'ENTITY'
-    );
-  }, callback);
-};
-
-const decorator = new CompositeDecorator([
-  {
-    strategy: findEntities,
-    component: EntityChip
-  }
-]);
 
 const IntentField = props => {
   const { onDelete, classes } = props;
-  const [editorState, setEditorState] = useState(
-    EditorState.createEmpty(decorator)
-  );
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const editor = useRef(null);
   const focusEditor = () => {
     editor.current.focus();
