@@ -16,7 +16,7 @@ const style = () => ({
   },
   subProduct: {
     display: 'flex',
-    width: 300
+    width: '40%'
   }
 });
 

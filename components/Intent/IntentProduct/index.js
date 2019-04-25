@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import ProductLayoutProvider from '../../layout/ProductLayoutProvider';
 import ProductHead from '../../layout/ProductHead';
 import ProductBody from '../../layout/ProductBody';
+import SubProductBody from '../../layout/SubProductBody';
 import connect from './store';
 import IntentField from '../IntentField';
+import ParamField from '../ParamField';
 import redirect from '../../../libraries/redirect';
 
 const IntentProduct = props => {
@@ -28,11 +30,18 @@ const IntentProduct = props => {
     };
   };
 
+  const onAddParam = onAddIntialValue => {
+    return () => {
+      onAddIntialValue('');
+    };
+  };
+
   return (
     <ProductLayoutProvider
       id={intentId}
       title={intent.title}
       productValues={intent.values}
+      subProductValues={intent.params}
       header={(onChangeTitle, intentTitle, getIntentProduct) => {
         return (
           <ProductHead
@@ -59,7 +68,7 @@ const IntentProduct = props => {
               onDeleteCurrentValue
             ) => (
               <IntentField
-                intialValue={value}
+                initialValue={value}
                 onChange={onChangeCurrentValue}
                 onDelete={onDeleteCurrentValue}
               />
@@ -68,6 +77,21 @@ const IntentProduct = props => {
           />
         );
       }}
+      subProduct={(values, onChangeValues, onAddIntialValue, onDeleteValue) => (
+        <SubProductBody
+          values={values}
+          onChangeValues={onChangeValues}
+          onDeleteValue={onDeleteValue}
+          generateForm={(value, onChangeParam, onDeleteParam) => (
+            <ParamField
+              initialValue={value}
+              onChange={onChangeParam}
+              onDelete={onDeleteParam}
+            />
+          )}
+          addFormList={onAddParam(onAddIntialValue)}
+        />
+      )}
     />
   );
 };

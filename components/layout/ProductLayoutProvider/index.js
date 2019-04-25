@@ -129,7 +129,7 @@ class ProductLayoutProvider extends Component {
                 subProductValues,
                 this.onChangeSubProductValues,
                 this.onAddSubProductValue,
-                this.onSubDeleteProductValue
+                this.onDeleteSubProductValue
               )}
             </div>
           )}

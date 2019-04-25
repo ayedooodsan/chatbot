@@ -71,7 +71,7 @@ const EntityProduct = props => {
               onDeleteCurrentValue
             ) => (
               <EntityField
-                intialValue={value}
+                initialValue={value}
                 onChange={onChangeCurrentValue}
                 onDelete={onDeleteCurrentValue}
               />

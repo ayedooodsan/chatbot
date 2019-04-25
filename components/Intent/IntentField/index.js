@@ -30,7 +30,7 @@ const IntentField = props => {
     EditorState.createEmpty(decorator)
   );
   const {
-    state: { offset, length, anchorEl, focused },
+    state: { length, anchorEl, focused },
     updateSelection,
     onPopperFocus,
     onPopperBlur
@@ -106,8 +106,6 @@ const IntentField = props => {
             aria-label="Delete"
           >
             <DeleteIcon />
-            {offset}
-            {length}
           </IconButton>
         </Paper>
         <Popper
