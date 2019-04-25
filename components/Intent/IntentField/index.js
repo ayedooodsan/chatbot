@@ -43,12 +43,14 @@ const IntentField = props => {
     ];
     generatedEditorState.entityMap = {};
     intent.entityRanges.forEach(entityRange => {
-      const entityId = entityRange.entity.id;
-      generatedEditorState.entityMap[entityId] = {
+      const { id, title } = entityRange.entity;
+      generatedEditorState.entityMap[id] = {
         type: 'ENTITY',
         mutability: 'IMMUTABLE',
         data: {
-          color: getColor(entityId)
+          color: getColor(id),
+          id,
+          title
         }
       };
     });
