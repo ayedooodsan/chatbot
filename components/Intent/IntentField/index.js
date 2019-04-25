@@ -13,10 +13,12 @@ import Fade from '@material-ui/core/Fade';
 import {
   Editor,
   EditorState,
-  getVisibleSelectionRect
+  getVisibleSelectionRect,
+  convertFromRaw
   // convertToRaw
 } from 'draft-js';
 import { withRouter } from 'next/router';
+import getColor from '../getColor';
 import SimpleAutoComplete from '../SimpleAutoComplete';
 import EntitySuggestions from '../EntitySuggestions';
 import decorator from './decorator';
@@ -24,10 +26,37 @@ import useFakeSelection from './useFakeSelection';
 import style from './style';
 
 const IntentField = props => {
-  const { onDelete, classes, router } = props;
+  const { onDelete, classes, router, initialValue } = props;
   const { projectId } = router.query;
+  const generateEditorState = intent => {
+    const generatedEditorState = {};
+    generatedEditorState.blocks = [
+      {
+        text: intent.text,
+        type: 'unstyled',
+        entityRanges: intent.entityRanges.map(entityRange => ({
+          offset: entityRange.offset,
+          length: entityRange.length,
+          key: entityRange.entity.id
+        }))
+      }
+    ];
+    generatedEditorState.entityMap = {};
+    intent.entityRanges.forEach(entityRange => {
+      const entityId = entityRange.entity.id;
+      generatedEditorState.entityMap[entityId] = {
+        type: 'ENTITY',
+        mutability: 'IMMUTABLE',
+        data: {
+          color: getColor(entityId)
+        }
+      };
+    });
+    return generatedEditorState;
+  };
+  const block = convertFromRaw(generateEditorState(initialValue));
   const [editorState, setEditorState] = useState(
-    EditorState.createEmpty(decorator)
+    EditorState.createWithContent(block, decorator)
   );
   const {
     state: { length, anchorEl, focused },
@@ -143,7 +172,7 @@ const IntentField = props => {
 };
 
 IntentField.propTypes = {
-  intialValue: PropTypes.string.isRequired,
+  initialValue: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,

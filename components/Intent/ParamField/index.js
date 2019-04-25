@@ -2,8 +2,11 @@ import { useForm, useField } from 'react-final-form-hooks';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
+import DeleteIcon from '@material-ui/icons/Delete';
+import getColor from '../getColor';
 import { isTypeOfString } from '../../../libraries/helpers';
 import style from './style';
 
@@ -23,7 +26,7 @@ const validate = values => {
 };
 
 const ParamField = props => {
-  const { initialValue, classes } = props;
+  const { initialValue, classes, onDelete } = props;
   const { form, handleSubmit } = useForm({
     onSubmit: onSubmit(props),
     initialValues: {
@@ -37,13 +40,18 @@ const ParamField = props => {
     meta
   } = name;
   return (
-    <div className={classes.root}>
-      <div className={classes.color}>Cek</div>
+    <Paper className={classes.root} elevation={0}>
+      <div
+        className={classes.color}
+        style={{ backgroundColor: getColor(initialValue.entity.id) }}
+      >
+        {' '}
+      </div>
       <div className={classes.inputContainer}>
         <Grid container alignItems="center">
-          <Grid item md={7}>
+          <Grid item md={7} className={classes.paddingRight}>
             <TextField
-              label="Param Name"
+              label="Parameter Name"
               margin="dense"
               variant="outlined"
               fullWidth
@@ -57,14 +65,24 @@ const ParamField = props => {
             />
           </Grid>
           <Grid item md={5}>
-            <Typography variant="subtitle2">
-              {initialValue.entity.title}
-            </Typography>
+            <TextField
+              label="Entity Title"
+              defaultValue={initialValue.entity.title}
+              margin="dense"
+              InputProps={{
+                readOnly: true
+              }}
+              variant="outlined"
+            />
           </Grid>
         </Grid>
       </div>
-      <div className={classes.buttonContainer}>Cek</div>
-    </div>
+      <div className={classes.buttonContainer}>
+        <IconButton onClick={onDelete} aria-label="Delete">
+          <DeleteIcon />
+        </IconButton>
+      </div>
+    </Paper>
   );
 };
 
@@ -76,7 +94,8 @@ ParamField.defaultProps = {
 
 ParamField.propTypes = {
   initialValue: PropTypes.object,
-  onChange: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 };
 

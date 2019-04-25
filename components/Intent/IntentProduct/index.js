@@ -80,6 +80,7 @@ const IntentProduct = props => {
       subProduct={(values, onChangeValues, onAddIntialValue, onDeleteValue) => (
         <SubProductBody
           values={values}
+          title="PARAMETERS"
           onChangeValues={onChangeValues}
           onDeleteValue={onDeleteValue}
           generateForm={(value, onChangeParam, onDeleteParam) => (

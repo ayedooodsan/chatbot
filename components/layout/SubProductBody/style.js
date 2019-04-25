@@ -6,10 +6,11 @@ const style = () => ({
     padding: '33px 20px 33px 0'
   },
   formList: {
-    flex: 1
+    flex: 1,
+    padding: '15px'
   },
   inScrollbar: {
-    padding: '0 5px 5px'
+    padding: '10px 0'
   }
 });
 

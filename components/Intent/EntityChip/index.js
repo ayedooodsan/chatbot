@@ -1,20 +1,22 @@
 import PropTypes from 'prop-types';
+import withStyles from '@material-ui/core/styles/withStyles';
+import style from './style';
 
 const EntityChip = props => {
-  const { contentState, classes, entityKey, children } = props;
-  const { url } = contentState.getEntity(entityKey).getData();
+  const { classes, children } = props;
+  const { color } = props.contentState.getEntity(props.entityKey).getData();
   return (
-    <a href={url} style={classes.link}>
+    <span className={classes.select} style={{ backgroundColor: color }}>
       {children}
-    </a>
+    </span>
   );
 };
 
 EntityChip.propTypes = {
   classes: PropTypes.object.isRequired,
-  children: PropTypes.object.isRequired,
+  contentState: PropTypes.object.isRequired,
   entityKey: PropTypes.string.isRequired,
-  contentState: PropTypes.object.isRequired
+  children: PropTypes.array.isRequired
 };
 
-export default EntityChip;
+export default withStyles(style)(EntityChip);
