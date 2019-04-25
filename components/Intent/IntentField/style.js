@@ -16,6 +16,11 @@ const style = theme => {
     iconButton: {
       padding: 10
     },
+    autoCompleteContainer: {
+      width: 350,
+      marginTop: 5,
+      padding: '10px'
+    },
     inputRoot: {
       fontFamily: theme.typography.fontFamily,
       color: theme.palette.text.primary,
