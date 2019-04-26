@@ -1,5 +1,4 @@
 import { CompositeDecorator } from 'draft-js';
-import EntityChip from '../EntityChip';
 import FakeSelect from '../FakeSelect';
 
 const findSelectedEntity = (contentBlock, callback, contentState) => {
@@ -22,15 +21,29 @@ const findEntities = (contentBlock, callback, contentState) => {
   }, callback);
 };
 
-const decorator = new CompositeDecorator([
-  {
-    strategy: findEntities,
-    component: EntityChip
-  },
-  {
-    strategy: findSelectedEntity,
-    component: FakeSelect
+const generateDecorator = EntityChip => {
+  if (EntityChip) {
+    return new CompositeDecorator([
+      {
+        strategy: findEntities,
+        component: EntityChip()
+      },
+      {
+        strategy: findSelectedEntity,
+        component: FakeSelect
+      }
+    ]);
   }
-]);
+  return new CompositeDecorator([
+    {
+      strategy: findEntities,
+      component: EntityChip
+    },
+    {
+      strategy: findSelectedEntity,
+      component: FakeSelect
+    }
+  ]);
+};
 
-export default decorator;
+export default generateDecorator;

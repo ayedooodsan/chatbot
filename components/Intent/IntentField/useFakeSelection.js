@@ -1,14 +1,17 @@
 import { useReducer } from 'react';
-import { addEntity, removeSelectedEntity } from './editorStateFn';
+import { SelectionState } from 'draft-js';
+import { changeEntity, removeEntity } from './editorStateFn';
 
 const getSelectionState = currentEditorState => {
   const selectionState = currentEditorState.getSelection();
   const currentOffset = selectionState.getAnchorOffset();
+  const currentBlockKey = selectionState.getAnchorKey();
   const currentFocusOffset = selectionState.getFocusOffset();
   const currentFocused = selectionState.getHasFocus();
   return {
     currentOffset,
     currentFocusOffset,
+    currentBlockKey,
     currentFocused
   };
 };
@@ -45,13 +48,15 @@ const reducer = (state, { type, payload }) => {
 
 const useSelectionListener = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { offset, length, anchorEl, hasFakeSelection } = state;
+  const { offset, length, anchorEl, hasFakeSelection, blockKey } = state;
 
   const updateSelection = (currentEditorState, visibleSelectionRect) => {
     let modifiedEditorState = currentEditorState;
-    const { currentOffset, currentFocusOffset } = getSelectionState(
-      currentEditorState
-    );
+    const {
+      currentOffset,
+      currentFocusOffset,
+      currentBlockKey
+    } = getSelectionState(currentEditorState);
 
     const newOffset =
       currentFocusOffset < currentOffset ? currentFocusOffset : currentOffset;
@@ -71,13 +76,23 @@ const useSelectionListener = () => {
     }
 
     if (hasFakeSelection) {
-      modifiedEditorState = removeSelectedEntity(modifiedEditorState);
+      const generatedSelectionState = SelectionState.createEmpty(
+        blockKey
+      ).merge({
+        anchorOffset: offset,
+        focusOffset: offset + length
+      });
+      modifiedEditorState = removeEntity(
+        modifiedEditorState,
+        generatedSelectionState
+      );
       dispatch({
         type: ON_CHANGE,
         payload: {
           offset: newOffset,
           focused: true,
           length: newLength,
+          blockKey: currentBlockKey,
           anchorEl: newAnchorEl,
           hasFakeSelection: false
         }
@@ -89,6 +104,7 @@ const useSelectionListener = () => {
           offset: newOffset,
           focused: true,
           length: newLength,
+          blockKey: currentBlockKey,
           anchorEl: newAnchorEl
         }
       });
@@ -97,11 +113,19 @@ const useSelectionListener = () => {
   };
 
   const onPopperFocus = currentEditorState => {
-    const newEditorState = addEntity(currentEditorState, {
-      type: 'SELECT-WORD',
-      mutability: 'MUTABLE',
-      data: {}
+    const generatedSelectionState = SelectionState.createEmpty(blockKey).merge({
+      anchorOffset: offset,
+      focusOffset: offset + length
     });
+    const newEditorState = changeEntity(
+      currentEditorState,
+      generatedSelectionState,
+      {
+        type: 'SELECT-WORD',
+        mutability: 'MUTABLE',
+        data: {}
+      }
+    );
     dispatch({
       type: ON_POPPER_FOCUS,
       payload: {
@@ -115,7 +139,16 @@ const useSelectionListener = () => {
   const onPopperBlur = currentEditorState => {
     let modifiedEditorState = currentEditorState;
     if (hasFakeSelection) {
-      modifiedEditorState = removeSelectedEntity(modifiedEditorState);
+      const generatedSelectionState = SelectionState.createEmpty(
+        blockKey
+      ).merge({
+        anchorOffset: offset,
+        focusOffset: offset + length
+      });
+      modifiedEditorState = removeEntity(
+        modifiedEditorState,
+        generatedSelectionState
+      );
       dispatch({
         type: ON_POPPER_BLUR,
         payload: {

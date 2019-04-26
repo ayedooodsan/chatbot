@@ -1,7 +1,11 @@
 const style = {
   select: {
+    cursor: 'pointer',
     backgroundColor: '#33bbd3',
-    color: 'white'
+    color: 'white',
+    '&::selection': {
+      backgroundColor: 'red'
+    }
   }
 };
 

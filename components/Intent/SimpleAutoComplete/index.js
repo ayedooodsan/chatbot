@@ -7,6 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 function renderInput(inputProps) {
   const { InputProps, classes, autoFocus, ...other } = inputProps;
+
   return (
     <TextField
       autoFocus={autoFocus}
@@ -75,7 +76,7 @@ const styles = () => ({
 function SimpleAutoComplete(props) {
   const {
     classes,
-    input,
+    onChange,
     label,
     error,
     initialValue,
@@ -83,7 +84,6 @@ function SimpleAutoComplete(props) {
     autoFocus
   } = props;
   // eslint-disable-next-line no-unused-vars
-  const { onChange, value, ...otherInputProps } = input;
   return (
     <Downshift
       onChange={selectedItem => {
@@ -110,7 +110,7 @@ function SimpleAutoComplete(props) {
             variant: 'outlined',
             error,
             classes,
-            InputProps: getInputProps(otherInputProps)
+            InputProps: getInputProps()
           })}
           <div
             {...(isOpen ? getMenuProps({}, { suppressRefError: true }) : {})}
@@ -142,7 +142,7 @@ SimpleAutoComplete.defaultProps = {
 SimpleAutoComplete.propTypes = {
   classes: PropTypes.object.isRequired,
   suggestions: PropTypes.func.isRequired,
-  input: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
   error: PropTypes.bool,
   autoFocus: PropTypes.bool,

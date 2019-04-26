@@ -26,7 +26,10 @@ const IntentProduct = props => {
 
   const onAdd = onAddIntialValue => {
     return () => {
-      onAddIntialValue('');
+      onAddIntialValue({
+        text: '',
+        entityRanges: []
+      });
     };
   };
 
