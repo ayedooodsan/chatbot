@@ -28,9 +28,9 @@ const withIntent = graphql(intentGql, {
 const withUpdateIntent = graphql(updateIntentGql, {
   name: 'updateIntent',
   props: ({ updateIntent }) => ({
-    updateIntent: ({ id, title, values }) =>
+    updateIntent: ({ id, title, values, params }) =>
       updateIntent({
-        variables: { id, title, values },
+        variables: { id, title, values, params },
         refetchQueries: ['myIntents', 'intent']
       })
   })

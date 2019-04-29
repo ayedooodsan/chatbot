@@ -13,8 +13,25 @@ const IntentProduct = props => {
   const { projectId, intentId, updateIntent, deleteIntent, intent } = props;
   const onSave = getIntentProduct => {
     return () => {
-      const { title, values } = getIntentProduct();
-      updateIntent({ id: intentId, title, values });
+      const { title, productValues, subProductValues } = getIntentProduct(
+        el => el.text !== 0
+      );
+      updateIntent({
+        id: intentId,
+        title,
+        values: productValues.map(productValue => ({
+          text: productValue.text,
+          entityRanges: productValue.entityRanges.map(entityRange => ({
+            offset: entityRange.offset,
+            length: entityRange.length,
+            entityId: entityRange.entity.id
+          }))
+        })),
+        params: subProductValues.map(subProductValue => ({
+          name: subProductValue.name,
+          entityId: subProductValue.entity.id
+        }))
+      });
     };
   };
 
@@ -59,7 +76,13 @@ const IntentProduct = props => {
           />
         );
       }}
-      product={(values, onChangeValues, onAddIntialValue, onDeleteValue) => {
+      product={(
+        values,
+        onChangeValues,
+        onAddIntialValue,
+        onDeleteValue,
+        updateParams
+      ) => {
         return (
           <ProductBody
             values={values}
@@ -74,6 +97,7 @@ const IntentProduct = props => {
                 initialValue={value}
                 onChange={onChangeCurrentValue}
                 onDelete={onDeleteCurrentValue}
+                updateParams={updateParams}
               />
             )}
             addFormList={onAdd(onAddIntialValue)}

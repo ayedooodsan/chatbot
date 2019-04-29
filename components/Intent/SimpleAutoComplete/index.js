@@ -4,6 +4,8 @@ import Downshift from 'downshift';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 function renderInput(inputProps) {
   const { InputProps, classes, autoFocus, ...other } = inputProps;
@@ -70,6 +72,14 @@ const styles = () => ({
   inputInput: {
     width: 'auto',
     flexGrow: 1
+  },
+  input: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  autocomplete: {
+    flex: 1,
+    marginLeft: 5
   }
 });
 
@@ -81,7 +91,8 @@ function SimpleAutoComplete(props) {
     error,
     initialValue,
     suggestions,
-    autoFocus
+    autoFocus,
+    onDelete
   } = props;
   // eslint-disable-next-line no-unused-vars
   return (
@@ -102,16 +113,27 @@ function SimpleAutoComplete(props) {
         selectedItem
       }) => (
         <div>
-          {renderInput({
-            fullWidth: true,
-            autoFocus,
-            label,
-            margin: 'dense',
-            variant: 'outlined',
-            error,
-            classes,
-            InputProps: getInputProps()
-          })}
+          <div className={classes.input}>
+            <div className={classes.autocomplete}>
+              {renderInput({
+                fullWidth: true,
+                autoFocus,
+                label,
+                margin: 'dense',
+                variant: 'outlined',
+                error,
+                classes,
+                InputProps: getInputProps()
+              })}
+            </div>
+            {onDelete && (
+              <div className={classes.reset}>
+                <IconButton onClick={onDelete} aria-label="Delete">
+                  <DeleteIcon />
+                </IconButton>
+              </div>
+            )}
+          </div>
           <div
             {...(isOpen ? getMenuProps({}, { suppressRefError: true }) : {})}
           >
@@ -143,6 +165,7 @@ SimpleAutoComplete.propTypes = {
   classes: PropTypes.object.isRequired,
   suggestions: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
   error: PropTypes.bool,
   autoFocus: PropTypes.bool,

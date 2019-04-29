@@ -20,6 +20,24 @@ class ProductLayoutProvider extends Component {
     });
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    const isTitlePropsEqual = _.isEqual(nextProps.title, this.props.title);
+    const isTitleStateEqual = _.isEqual(nextState.title, this.state.title);
+    const isProductValuesEqual =
+      nextState.productValues.length === this.state.productValues.length;
+    const isSubProductValuesEqual =
+      nextState.subProductValues.length === this.state.subProductValues.length;
+    if (
+      isTitlePropsEqual &&
+      isTitleStateEqual &&
+      isProductValuesEqual &&
+      isSubProductValuesEqual
+    ) {
+      return false;
+    }
+    return true;
+  }
+
   componentDidUpdate(prevProps) {
     const { title, productValues, subProductValues } = this.props;
     const isTitleEqual = _.isEqual(title, prevProps.title);
@@ -33,37 +51,44 @@ class ProductLayoutProvider extends Component {
     }
   }
 
-  onChangeProductValues = (value, index, key) => {
+  onChangeProductValues = (value, index, key, callback) => {
     this.setState(prevState => {
       const newValues = prevState.productValues;
-      if (key === undefined) {
+      if (key === undefined || key === null) {
         newValues[index] = value;
       } else {
         newValues[index][key] = value;
       }
       return { productValues: newValues };
-    });
+    }, callback);
   };
 
-  onDeleteProductValue = index => {
-    this.setState(prevState => {
-      const newValues = prevState.productValues;
-      newValues.splice(index, 1);
-      return { productValues: newValues };
-    });
+  onDeleteProductValue = (index, callback) => {
+    this.setState(
+      prevState => {
+        const newValues = [...prevState.productValues];
+        newValues.splice(index, 1);
+        return { productValues: newValues };
+      },
+      () => {
+        if (callback) {
+          callback();
+        }
+      }
+    );
   };
 
   onAddProductValue = initialValue => {
     this.setState(prevState => {
-      const newValues = prevState.productValues;
+      const newValues = [...prevState.productValues];
       newValues.push(initialValue);
-      return newValues;
+      return { productValues: newValues };
     });
   };
 
   onChangeSubProductValues = (value, index, key) => {
     this.setState(prevState => {
-      const newValues = prevState.subProductValues;
+      const newValues = [...prevState.subProductValues];
       if (key === undefined) {
         newValues[index] = value;
       } else {
@@ -75,7 +100,7 @@ class ProductLayoutProvider extends Component {
 
   onDeleteSubProductValue = index => {
     this.setState(prevState => {
-      const newValues = prevState.subProductValues;
+      const newValues = [...prevState.subProductValues];
       newValues.splice(index, 1);
       return { subProductValues: newValues };
     });
@@ -85,7 +110,7 @@ class ProductLayoutProvider extends Component {
     this.setState(prevState => {
       const newValues = prevState.subProductValues;
       newValues.push(initialValue);
-      return newValues;
+      return { subProductValues: newValues };
     });
   };
 
@@ -106,6 +131,17 @@ class ProductLayoutProvider extends Component {
     };
   };
 
+  updateSubProductFromProduct = createNewSubProduct => {
+    this.setState(prevState => {
+      const { subProductValues, productValues } = prevState;
+      const newSubProductValues = createNewSubProduct(
+        productValues,
+        subProductValues
+      );
+      return { subProductValues: newSubProductValues };
+    });
+  };
+
   render() {
     const { header, product, subProduct, classes } = this.props;
     const { title, productValues, subProductValues } = this.state;
@@ -120,7 +156,8 @@ class ProductLayoutProvider extends Component {
               productValues,
               this.onChangeProductValues,
               this.onAddProductValue,
-              this.onDeleteProductValue
+              this.onDeleteProductValue,
+              this.updateSubProductFromProduct
             )}
           </div>
           {subProductValues.length !== 0 && (

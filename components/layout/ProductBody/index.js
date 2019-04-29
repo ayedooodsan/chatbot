@@ -24,11 +24,11 @@ const ProductBody = props => {
               <div key={JSON.stringify(value)}>
                 {generateForm(
                   value,
-                  (newValue, key) => {
-                    onChangeValues(newValue, index, key);
+                  (newValue, key, callback) => {
+                    onChangeValues(newValue, index, key, callback);
                   },
-                  () => {
-                    onDeleteValue(index);
+                  callback => {
+                    onDeleteValue(index, callback);
                   }
                 )}
               </div>

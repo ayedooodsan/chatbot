@@ -1,8 +1,8 @@
 import { useReducer } from 'react';
 import { SelectionState } from 'draft-js';
-import { changeEntity, removeEntity } from './editorStateFn';
+import { changeEntity, removeEntity, getEntityAtCursor } from './editorStateFn';
 
-const getSelectionState = currentEditorState => {
+export const getSelectionState = currentEditorState => {
   const selectionState = currentEditorState.getSelection();
   const currentOffset = selectionState.getAnchorOffset();
   const currentBlockKey = selectionState.getAnchorKey();
@@ -82,10 +82,13 @@ const useSelectionListener = () => {
         anchorOffset: offset,
         focusOffset: offset + length
       });
-      modifiedEditorState = removeEntity(
-        modifiedEditorState,
-        generatedSelectionState
-      );
+      const entityInstance = getEntityAtCursor(modifiedEditorState);
+      if (entityInstance !== null && entityInstance.type === 'SELECT-WORD') {
+        modifiedEditorState = removeEntity(
+          modifiedEditorState,
+          generatedSelectionState
+        );
+      }
       dispatch({
         type: ON_CHANGE,
         payload: {

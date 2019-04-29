@@ -8,6 +8,7 @@ mutation updateIntent (
     id: $id
     title: $title
     values: $values
+    params: $params
   ) {
     title
     values {

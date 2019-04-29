@@ -20,7 +20,6 @@ const EntityChip = props => {
   });
   return (
     <span
-      contentEditable={false}
       className={classes.select}
       style={{ backgroundColor: color }}
       onClick={event => {

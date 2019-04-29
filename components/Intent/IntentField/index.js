@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -14,11 +14,18 @@ import {
   Editor,
   EditorState,
   getVisibleSelectionRect,
-  convertFromRaw
-  // convertToRaw
+  convertFromRaw,
+  convertToRaw
 } from 'draft-js';
 import { withRouter } from 'next/router';
-import { changeEntity, setSelection, setForceSelection } from './editorStateFn';
+import _ from 'lodash';
+import {
+  addEntity,
+  changeEntity,
+  removeEntity,
+  setSelection,
+  setForceSelection
+} from './editorStateFn';
 import EntityChip from '../EntityChip';
 import getColor from '../getColor';
 import SimpleAutoComplete from '../SimpleAutoComplete';
@@ -28,7 +35,14 @@ import useFakeSelection from './useFakeSelection';
 import style from './style';
 
 const IntentField = props => {
-  const { onDelete, classes, router, initialValue } = props;
+  const {
+    onDelete,
+    onChange,
+    classes,
+    router,
+    initialValue,
+    updateParams
+  } = props;
   const { projectId } = router.query;
   const [entityRef, setEntityRef] = useState(null);
   const [selectionState, setSelectionState] = useState(null);
@@ -43,10 +57,6 @@ const IntentField = props => {
   const focusEditor = () => {
     editor.current.focus();
   };
-
-  useEffect(() => {
-    focusEditor();
-  }, [projectId]);
 
   const generateEditorState = intent => {
     const generatedEditorState = {};
@@ -98,11 +108,99 @@ const IntentField = props => {
     )
   );
   const {
-    state: { length, anchorEl, focused },
+    state: { length, anchorEl, focused, offset },
     updateSelection,
     onPopperFocus,
     onPopperBlur
   } = useFakeSelection();
+
+  const getContentState = currentEditorState => {
+    const contentState = currentEditorState.getCurrentContent();
+    const rawJson = convertToRaw(contentState);
+    return rawJson;
+  };
+
+  const onChangeEditorState = (newEditorState, onPushIntent) => {
+    let modifiedEditorState = newEditorState;
+    const visibleSelectionRect = getVisibleSelectionRect(window);
+    modifiedEditorState = updateSelection(
+      modifiedEditorState,
+      visibleSelectionRect
+    );
+    setEditorState(modifiedEditorState);
+    if (onPushIntent) {
+      onPushIntent(modifiedEditorState);
+    }
+  };
+
+  const onUpdateParams = () => {
+    updateParams((intents, params) => {
+      const addedSubProduct = {};
+      const newParams = intents.reduce((currentParams, intent) => {
+        intent.entityRanges.forEach(entityRange => {
+          const { entity } = entityRange;
+          if (!addedSubProduct[entity.id]) {
+            const foundSubProduct = params.find(
+              subProduct => subProduct.entity.id === entity.id
+            );
+            if (foundSubProduct) {
+              currentParams.push(foundSubProduct);
+            } else {
+              currentParams.push({
+                name: entity.title,
+                entity
+              });
+            }
+            addedSubProduct[entity.id] = true;
+          }
+        });
+        return currentParams;
+      }, []);
+      return newParams;
+    });
+  };
+
+  const onPushIntent = newEditorState => {
+    const rawEditorState = getContentState(newEditorState);
+    const newBlock = rawEditorState.blocks[0];
+    const { entityMap } = rawEditorState;
+    const newIntent = {
+      text: newBlock.text,
+      entityRanges: newBlock.entityRanges.map(entityRange => ({
+        offset: entityRange.offset,
+        length: entityRange.length,
+        entity: entityMap[entityRange.key].data.entity
+      }))
+    };
+    if (!_.isEqual(initialValue, newIntent)) {
+      onChange(newIntent, null, onUpdateParams);
+    }
+  };
+
+  const onCreateEntity = newEntity => {
+    const { id, title } = newEntity;
+    if (id) {
+      let modifiedEditorState = addEntity(editorState, {
+        type: 'ENTITY',
+        mutability: 'IMMUTABLE',
+        data: {
+          offset,
+          length,
+          color: getColor(id),
+          entity: {
+            id,
+            title
+          }
+        }
+      });
+      modifiedEditorState = setForceSelection(
+        modifiedEditorState,
+        offset + length,
+        offset + length
+      );
+      onChangeEditorState(modifiedEditorState, onPushIntent);
+    }
+  };
 
   const onChangeEntity = newEntity => {
     const { id, title } = newEntity;
@@ -126,33 +224,29 @@ const IntentField = props => {
         entityData.offset + entityData.length
       );
       setEditorState(modifiedEditorState);
+      onPushIntent(modifiedEditorState);
     }
     setEntityRef(null);
     setSelectionState(null);
     setEntityData({});
   };
 
-  // const getContentState = currentEditorState => {
-  //   const contentState = currentEditorState.getCurrentContent();
-  //   const rawJson = convertToRaw(contentState);
-  //   const jsonStr = JSON.stringify(rawJson, null, 1);
-  //   const plainText = contentState.getPlainText();
-  //   return {
-  //     jsonStr,
-  //     plainText
-  //   };
-  // };
-
-  const onChangeEditorState = newEditorState => {
-    let modifiedEditorState = newEditorState;
-    const visibleSelectionRect = getVisibleSelectionRect(window);
-    modifiedEditorState = updateSelection(
+  const onEntityDelete = () => {
+    let modifiedEditorState = removeEntity(editorState, selectionState);
+    modifiedEditorState = setForceSelection(
       modifiedEditorState,
-      visibleSelectionRect
+      entityData.offset + entityData.length,
+      entityData.offset + entityData.length
     );
-    // const { jsonStr } = getContentState(modifiedEditorState);
-    // console.log(jsonStr);
     setEditorState(modifiedEditorState);
+    setEntityRef(null);
+    setSelectionState(null);
+    setEntityData({});
+    onPushIntent(modifiedEditorState);
+  };
+
+  const onIntentDelete = () => {
+    onDelete(onUpdateParams);
   };
 
   const onPopperClick = () => {
@@ -189,7 +283,7 @@ const IntentField = props => {
           </div>
         </div>
         <IconButton
-          onClick={onDelete}
+          onClick={onIntentDelete}
           className={classes.iconButton}
           aria-label="Delete"
         >
@@ -197,6 +291,7 @@ const IntentField = props => {
         </IconButton>
       </Paper>
       <Popper
+        className={classes.popper}
         open={length > 0 && focused && !entityRef}
         anchorEl={anchorEl}
         transition
@@ -208,7 +303,7 @@ const IntentField = props => {
             <Paper className={classes.autoCompleteContainer}>
               <ClickAwayListener onClickAway={onPopperClickAway}>
                 <SimpleAutoComplete
-                  onChange={onChangeEntity}
+                  onChange={onCreateEntity}
                   label="Search entity"
                   initialValue=""
                   suggestions={(inputValue, children) => {
@@ -228,6 +323,7 @@ const IntentField = props => {
         )}
       </Popper>
       <Popper
+        className={classes.popper}
         open={Boolean(entityRef) && !(length > 0 && focused)}
         anchorEl={entityRef}
         transition
@@ -244,6 +340,7 @@ const IntentField = props => {
                 <SimpleAutoComplete
                   key={entityRef}
                   onChange={onChangeEntity}
+                  onDelete={onEntityDelete}
                   autoFocus
                   label="Search entity"
                   initialValue={
@@ -273,6 +370,7 @@ IntentField.propTypes = {
   initialValue: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  updateParams: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   router: PropTypes.object.isRequired
 };
