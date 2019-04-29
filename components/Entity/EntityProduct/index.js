@@ -35,7 +35,8 @@ const EntityProduct = props => {
     return () => {
       onAddIntialValue({
         keyword: '',
-        synonyms: []
+        synonyms: [],
+        key: Math.random()
       });
     };
   };
@@ -73,7 +74,9 @@ const EntityProduct = props => {
               <EntityField
                 initialValue={value}
                 onChange={onChangeCurrentValue}
-                onDelete={onDeleteCurrentValue}
+                onDelete={() => {
+                  onDeleteCurrentValue();
+                }}
               />
             )}
             addFormList={onAdd(onAddIntialValue)}

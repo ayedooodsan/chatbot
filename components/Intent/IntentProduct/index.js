@@ -45,7 +45,8 @@ const IntentProduct = props => {
     return () => {
       onAddIntialValue({
         text: '',
-        entityRanges: []
+        entityRanges: [],
+        key: Math.random()
       });
     };
   };
