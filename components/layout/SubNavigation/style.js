@@ -44,6 +44,9 @@ const style = theme => ({
     flex: 1,
     overflow: 'hidden'
   },
+  noHeaderContainer: {
+    padding: '2px 25px 2px 5px'
+  },
   containerClose: {
     display: 'none'
   }
