@@ -31,8 +31,8 @@ const SubProductBody = props => {
                   (newValue, key) => {
                     onChangeValues(newValue, index, key);
                   },
-                  () => {
-                    onDeleteValue(index);
+                  callback => {
+                    onDeleteValue(index, callback);
                   }
                 )}
               </div>

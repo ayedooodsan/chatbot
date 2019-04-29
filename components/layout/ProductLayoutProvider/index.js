@@ -27,6 +27,9 @@ class ProductLayoutProvider extends Component {
       nextState.productValues.length === this.state.productValues.length;
     const isSubProductValuesEqual =
       nextState.subProductValues.length === this.state.subProductValues.length;
+    if (nextState.updateView) {
+      return true;
+    }
     if (
       isTitlePropsEqual &&
       isTitleStateEqual &&
@@ -48,6 +51,9 @@ class ProductLayoutProvider extends Component {
         subProductValues: _.cloneDeep(subProductValues),
         title: this.props.title
       });
+    } else if (this.state.updateView) {
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState({ updateView: false });
     }
   }
 
@@ -98,12 +104,19 @@ class ProductLayoutProvider extends Component {
     });
   };
 
-  onDeleteSubProductValue = index => {
-    this.setState(prevState => {
-      const newValues = [...prevState.subProductValues];
-      newValues.splice(index, 1);
-      return { subProductValues: newValues };
-    });
+  onDeleteSubProductValue = (index, callback) => {
+    this.setState(
+      prevState => {
+        const newValues = [...prevState.subProductValues];
+        newValues.splice(index, 1);
+        return { subProductValues: newValues };
+      },
+      () => {
+        if (callback) {
+          callback();
+        }
+      }
+    );
   };
 
   onAddSubProductValue = initialValue => {
@@ -142,6 +155,17 @@ class ProductLayoutProvider extends Component {
     });
   };
 
+  updateProductFromSubProduct = createNewProduct => {
+    this.setState(prevState => {
+      const { subProductValues, productValues } = prevState;
+      const newProductValues = createNewProduct(
+        productValues,
+        subProductValues
+      );
+      return { productValues: newProductValues, updateView: true };
+    });
+  };
+
   render() {
     const { header, product, subProduct, classes } = this.props;
     const { title, productValues, subProductValues } = this.state;
@@ -166,7 +190,8 @@ class ProductLayoutProvider extends Component {
                 subProductValues,
                 this.onChangeSubProductValues,
                 this.onAddSubProductValue,
-                this.onDeleteSubProductValue
+                this.onDeleteSubProductValue,
+                this.updateProductFromSubProduct
               )}
             </div>
           )}

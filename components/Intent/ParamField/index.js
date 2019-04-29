@@ -26,7 +26,7 @@ const validate = values => {
 };
 
 const ParamField = props => {
-  const { initialValue, classes, onDelete } = props;
+  const { initialValue, classes, onDelete, updateIntents } = props;
   const { form, handleSubmit } = useForm({
     onSubmit: onSubmit(props),
     initialValues: {
@@ -39,6 +39,26 @@ const ParamField = props => {
     input: { onBlur, ...restInput },
     meta
   } = name;
+
+  const onUpdateIntents = () => {
+    updateIntents((intents, params) => {
+      const mewIntents = intents.map(intent => ({
+        text: intent.text,
+        entityRanges: intent.entityRanges.filter(entityRange => {
+          const foundEntity = params.find(
+            param => entityRange.entity.id === param.entity.id
+          );
+          return foundEntity !== undefined;
+        })
+      }));
+      return mewIntents;
+    });
+  };
+
+  const onEntityDelete = () => {
+    onDelete(onUpdateIntents);
+  };
+
   return (
     <Paper className={classes.root} elevation={0}>
       <div
@@ -78,7 +98,7 @@ const ParamField = props => {
         </Grid>
       </div>
       <div className={classes.buttonContainer}>
-        <IconButton onClick={onDelete} aria-label="Delete">
+        <IconButton onClick={onEntityDelete} aria-label="Delete">
           <DeleteIcon />
         </IconButton>
       </div>
@@ -96,6 +116,7 @@ ParamField.propTypes = {
   initialValue: PropTypes.object,
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  updateIntents: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 };
 

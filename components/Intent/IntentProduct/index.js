@@ -104,7 +104,13 @@ const IntentProduct = props => {
           />
         );
       }}
-      subProduct={(values, onChangeValues, onAddIntialValue, onDeleteValue) => (
+      subProduct={(
+        values,
+        onChangeValues,
+        onAddIntialValue,
+        onDeleteValue,
+        updateIntents
+      ) => (
         <SubProductBody
           values={values}
           title="PARAMETERS"
@@ -115,6 +121,7 @@ const IntentProduct = props => {
               initialValue={value}
               onChange={onChangeParam}
               onDelete={onDeleteParam}
+              updateIntents={updateIntents}
             />
           )}
           addFormList={onAddParam(onAddIntialValue)}
