@@ -1,0 +1,12 @@
+query entitySuggestions(
+  $projectId: String!
+  $keyword: String
+) {
+  entitySuggestions(
+    projectId: $projectId
+    keyword: $keyword
+  ){
+    id
+    title
+  }
+}

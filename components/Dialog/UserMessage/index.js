@@ -46,9 +46,7 @@ const UserMessage = props => {
     message => message.id === activeMessageId
   );
 
-  const requiredParams = activeMessage.intent.params.filter(
-    param => param.required
-  );
+  const requiredParams = [];
 
   let activeParam;
   if (activeParamName !== null) {

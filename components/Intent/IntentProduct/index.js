@@ -3,16 +3,35 @@ import PropTypes from 'prop-types';
 import ProductLayoutProvider from '../../layout/ProductLayoutProvider';
 import ProductHead from '../../layout/ProductHead';
 import ProductBody from '../../layout/ProductBody';
+import SubProductBody from '../../layout/SubProductBody';
 import connect from './store';
 import IntentField from '../IntentField';
+import ParamField from '../ParamField';
 import redirect from '../../../libraries/redirect';
 
 const IntentProduct = props => {
   const { projectId, intentId, updateIntent, deleteIntent, intent } = props;
   const onSave = getIntentProduct => {
     return () => {
-      const { title, values } = getIntentProduct();
-      updateIntent({ id: intentId, title, values });
+      const { title, productValues, subProductValues } = getIntentProduct(
+        el => el.text !== 0
+      );
+      updateIntent({
+        id: intentId,
+        title,
+        values: productValues.map(productValue => ({
+          text: productValue.text,
+          entityRanges: productValue.entityRanges.map(entityRange => ({
+            offset: entityRange.offset,
+            length: entityRange.length,
+            entityId: entityRange.entity.id
+          }))
+        })),
+        params: subProductValues.map(subProductValue => ({
+          name: subProductValue.name,
+          entityId: subProductValue.entity.id
+        }))
+      });
     };
   };
 
@@ -24,6 +43,15 @@ const IntentProduct = props => {
 
   const onAdd = onAddIntialValue => {
     return () => {
+      onAddIntialValue({
+        text: '',
+        entityRanges: []
+      });
+    };
+  };
+
+  const onAddParam = onAddIntialValue => {
+    return () => {
       onAddIntialValue('');
     };
   };
@@ -32,7 +60,8 @@ const IntentProduct = props => {
     <ProductLayoutProvider
       id={intentId}
       title={intent.title}
-      values={intent.values}
+      productValues={intent.values}
+      subProductValues={intent.params}
       header={(onChangeTitle, intentTitle, getIntentProduct) => {
         return (
           <ProductHead
@@ -47,7 +76,13 @@ const IntentProduct = props => {
           />
         );
       }}
-      body={(values, onChangeValues, onAddIntialValue, onDeleteValue) => {
+      product={(
+        values,
+        onChangeValues,
+        onAddIntialValue,
+        onDeleteValue,
+        updateParams
+      ) => {
         return (
           <ProductBody
             values={values}
@@ -59,15 +94,39 @@ const IntentProduct = props => {
               onDeleteCurrentValue
             ) => (
               <IntentField
-                intialValue={value}
+                initialValue={value}
                 onChange={onChangeCurrentValue}
                 onDelete={onDeleteCurrentValue}
+                updateParams={updateParams}
               />
             )}
             addFormList={onAdd(onAddIntialValue)}
           />
         );
       }}
+      subProduct={(
+        values,
+        onChangeValues,
+        onAddIntialValue,
+        onDeleteValue,
+        updateIntents
+      ) => (
+        <SubProductBody
+          values={values}
+          title="PARAMETERS"
+          onChangeValues={onChangeValues}
+          onDeleteValue={onDeleteValue}
+          generateForm={(value, onChangeParam, onDeleteParam) => (
+            <ParamField
+              initialValue={value}
+              onChange={onChangeParam}
+              onDelete={onDeleteParam}
+              updateIntents={updateIntents}
+            />
+          )}
+          addFormList={onAddParam(onAddIntialValue)}
+        />
+      )}
     />
   );
 };
