@@ -1,31 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
-import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import Scrollbar from 'react-scrollbars-custom';
 
 import style from './style';
 
-const ProductBody = props => {
+const SubProductBody = props => {
   const {
     classes,
     generateForm,
     onChangeValues,
     onDeleteValue,
-    addFormList,
+    title,
     values
   } = props;
   return (
     <div className={classes.root}>
-      <div className={classes.formList}>
+      <Paper className={classes.formList} evaluation={1}>
+        <Typography variant="subtitle1">{title}</Typography>
+        <Divider />
         <Scrollbar>
           <div className={classes.inScrollbar}>
             {values.map((value, index) => (
               <div key={JSON.stringify(value)}>
                 {generateForm(
                   value,
-                  (newValue, key, callback) => {
-                    onChangeValues(newValue, index, key, callback);
+                  (newValue, key) => {
+                    onChangeValues(newValue, index, key);
                   },
                   callback => {
                     onDeleteValue(index, callback);
@@ -33,32 +37,25 @@ const ProductBody = props => {
                 )}
               </div>
             ))}
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              onClick={addFormList}
-            >
-              ADD EXAMPLE
-            </Button>
           </div>
         </Scrollbar>
-      </div>
+      </Paper>
     </div>
   );
 };
 
-ProductBody.defaultProps = {
+SubProductBody.defaultProps = {
   values: []
 };
 
-ProductBody.propTypes = {
+SubProductBody.propTypes = {
   classes: PropTypes.object.isRequired,
   generateForm: PropTypes.func.isRequired,
   addFormList: PropTypes.func.isRequired,
   onChangeValues: PropTypes.func.isRequired,
   onDeleteValue: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
   values: PropTypes.array
 };
 
-export default withStyles(style)(ProductBody);
+export default withStyles(style)(SubProductBody);

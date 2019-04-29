@@ -10,15 +10,15 @@ import ChipInput from 'material-ui-chip-input';
 import style from './style';
 
 const EntityField = props => {
-  const { intialValue, onChange, onDelete, classes } = props;
-  const [keyword, setKeyword] = useState(intialValue.keyword);
-  const [synonyms, setSynonyms] = useState(intialValue.synonyms);
+  const { initialValue, onChange, onDelete, classes } = props;
+  const [keyword, setKeyword] = useState(initialValue.keyword);
+  const [synonyms, setSynonyms] = useState(initialValue.synonyms);
 
   const handleKeywordChange = event => {
     setKeyword(event.target.value);
   };
   const handleKeywordBlur = () => {
-    if (intialValue.keyword !== keyword) {
+    if (initialValue.keyword !== keyword) {
       onChange(keyword, 'keyword');
     }
   };
@@ -32,7 +32,7 @@ const EntityField = props => {
     setSynonyms([...synonyms]);
   };
   const handleSynonymsBlur = () => {
-    if (intialValue.synonyms !== synonyms) {
+    if (initialValue.synonyms !== synonyms) {
       onChange(synonyms, 'synonyms');
     }
   };
@@ -81,7 +81,7 @@ const EntityField = props => {
 };
 
 EntityField.propTypes = {
-  intialValue: PropTypes.object.isRequired,
+  initialValue: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired

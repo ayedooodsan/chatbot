@@ -97,9 +97,13 @@ class Navigation extends React.Component {
   }
 }
 
+Navigation.defaultProps = {
+  router: {}
+};
+
 Navigation.propTypes = {
   classes: PropTypes.object.isRequired,
-  router: PropTypes.object.isRequired
+  router: PropTypes.object
 };
 
 export default withStyles(style)(withRouter(Navigation));

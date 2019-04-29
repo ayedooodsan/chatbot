@@ -9,6 +9,14 @@ const style = () => ({
     postion: 'relative',
     display: 'flex',
     flex: 1
+  },
+  product: {
+    display: 'flex',
+    flex: 1
+  },
+  subProduct: {
+    display: 'flex',
+    width: '40%'
   }
 });
 

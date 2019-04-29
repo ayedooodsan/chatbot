@@ -1,3 +1,3 @@
-const uri = 'http://chatbotapi.karsalintasbuwana.com/graphql';
+const uri = 'http://localhost:4237/graphql';
 
 export default uri;
