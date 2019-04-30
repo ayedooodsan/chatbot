@@ -146,8 +146,8 @@ const UserMessage = props => {
           {activeMessage.intent.values && (
             <ul className={classes.intentValues}>
               {activeMessage.intent.values.map(value => (
-                <li key={value}>
-                  <Typography variant="caption">{value}</Typography>
+                <li key={value.text}>
+                  <Typography variant="caption">{value.text}</Typography>
                 </li>
               ))}
             </ul>
