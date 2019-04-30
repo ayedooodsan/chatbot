@@ -6,17 +6,17 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import { withRouter } from 'next/router';
 import _ from 'lodash';
-import IntentEditor from '../../common/IntentEditor';
+import IntenEditor from '../../common/IntentEditor';
 import style from './style';
 
-const IntentField = props => {
+const TrainingField = props => {
   const { onDelete, onChange, classes, initialValue, updateParams } = props;
 
   const onUpdateParams = () => {
-    updateParams((intents, params) => {
+    updateParams((trainings, params) => {
       const addedSubProduct = {};
-      const newParams = intents.reduce((currentParams, intent) => {
-        intent.entityRanges.forEach(entityRange => {
+      const newParams = trainings.reduce((currentParams, training) => {
+        training.entityRanges.forEach(entityRange => {
           const { entity } = entityRange;
           if (!addedSubProduct[entity.id]) {
             const foundSubProduct = params.find(
@@ -39,10 +39,10 @@ const IntentField = props => {
     });
   };
 
-  const onPushIntent = rawEditorState => {
+  const onPushTraining = rawEditorState => {
     const newBlock = rawEditorState.blocks[0];
     const { entityMap } = rawEditorState;
-    const newIntent = {
+    const newTraining = {
       text: newBlock.text,
       entityRanges: newBlock.entityRanges.map(entityRange => ({
         offset: entityRange.offset,
@@ -50,21 +50,21 @@ const IntentField = props => {
         entity: entityMap[entityRange.key].data.entity
       }))
     };
-    if (!_.isEqual(initialValue, newIntent)) {
-      onChange(newIntent, null, onUpdateParams);
+    if (!_.isEqual(initialValue, newTraining)) {
+      onChange(newTraining, null, onUpdateParams);
     }
   };
 
-  const onIntentDelete = () => {
+  const onTrainingDelete = () => {
     onDelete(onUpdateParams);
   };
 
   return (
     <React.Fragment>
       <Paper className={classes.root} elevation={1}>
-        <IntentEditor initialValue={initialValue} onChange={onPushIntent} />
+        <IntenEditor initialValue={initialValue} onChange={onPushTraining} />
         <IconButton
-          onClick={onIntentDelete}
+          onClick={onTrainingDelete}
           className={classes.iconButton}
           aria-label="Delete"
         >
@@ -75,7 +75,7 @@ const IntentField = props => {
   );
 };
 
-IntentField.propTypes = {
+TrainingField.propTypes = {
   initialValue: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
@@ -84,4 +84,4 @@ IntentField.propTypes = {
   router: PropTypes.object.isRequired
 };
 
-export default withStyles(style)(withRouter(IntentField));
+export default withStyles(style)(withRouter(TrainingField));

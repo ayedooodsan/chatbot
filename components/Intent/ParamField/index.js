@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
 import DeleteIcon from '@material-ui/icons/Delete';
-import getColor from '../getColor';
+import getColor from '../../common/IntentEditor/getColor';
 import { isTypeOfString } from '../../../libraries/helpers';
 import style from './style';
 

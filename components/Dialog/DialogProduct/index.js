@@ -67,8 +67,6 @@ class DialogProduct extends Component {
     currentActiveMessageIds
   ) => {
     const activeMessageIds = [...currentActiveMessageIds];
-    console.log({ rawMessages });
-    console.log({ parentId });
     if (
       parentId === null ||
       rawMessages.find(rawMessage => rawMessage.parentId === parentId)
@@ -176,7 +174,6 @@ class DialogProduct extends Component {
         dialogInputProps,
         values
       );
-      console.log('cek', { computedRawMessages });
       const result = this.updateViewedDialog(
         computedRawMessages,
         newParentId,
