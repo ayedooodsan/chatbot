@@ -28,9 +28,7 @@ const theme = createMuiTheme({
         '& $notchedOutline': {
           borderColor: 'transparent'
         }
-      }
-    },
-    MuiInputBase: {
+      },
       input: {
         borderRadius: 4,
         backgroundColor: '#f4f5f7'

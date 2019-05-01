@@ -26,6 +26,9 @@ const style = () => {
       minHeight: 44,
       backgroundColor: '#f4f5f7',
       borderRadius: 4
+    },
+    noMarginTop: {
+      marginTop: 0
     }
   };
 };

@@ -135,6 +135,7 @@ const TrainingField = props => {
             INTENT RESULT
           </Typography>
           <SimpleAutoComplete
+            className={classes.noMarginTop}
             onChange={onChangeIntentResult}
             placeholder="Intent"
             initialValue={intentResult.title}

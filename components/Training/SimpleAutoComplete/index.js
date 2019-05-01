@@ -8,9 +8,10 @@ import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 
 function renderInput(inputProps) {
-  const { InputProps, classes, ref, ...other } = inputProps;
+  const { InputProps, classes, ref, className, ...other } = inputProps;
   return (
     <TextField
+      className={className}
       InputProps={{
         inputRef: ref,
         classes: {
@@ -75,7 +76,15 @@ const styles = () => ({
 });
 
 function SimpleAutoComplete(props) {
-  const { classes, onChange, label, error, initialValue, suggestions } = props;
+  const {
+    classes,
+    onChange,
+    label,
+    error,
+    initialValue,
+    suggestions,
+    className
+  } = props;
   // eslint-disable-next-line no-unused-vars
   const popperRef = useRef(null);
   return (
@@ -97,6 +106,7 @@ function SimpleAutoComplete(props) {
       }) => (
         <div>
           {renderInput({
+            className,
             fullWidth: true,
             label,
             margin: 'dense',
@@ -157,7 +167,8 @@ function SimpleAutoComplete(props) {
 
 SimpleAutoComplete.defaultProps = {
   error: false,
-  initialValue: null
+  initialValue: null,
+  className: ''
 };
 
 SimpleAutoComplete.propTypes = {
@@ -165,6 +176,7 @@ SimpleAutoComplete.propTypes = {
   suggestions: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
+  className: PropTypes.string,
   error: PropTypes.bool,
   initialValue: PropTypes.string
 };
