@@ -69,7 +69,10 @@ const UserDialogInput = props => {
               <SimpleAutoComplete
                 input={intent.input}
                 label="Intent"
-                initialValue={type === EDIT_USER ? payload.intent.title : null}
+                initialValue={type === EDIT_USER ? payload.intent : {}}
+                initialInputValue={
+                  type === EDIT_USER ? payload.intent.title : null
+                }
                 error={intent.meta.touched && isTypeOfString(intent.meta.error)}
                 suggestions={(inputValue, children) => {
                   return (

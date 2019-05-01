@@ -82,6 +82,7 @@ function SimpleAutoComplete(props) {
     label,
     error,
     initialValue,
+    initialInputValue,
     suggestions,
     className
   } = props;
@@ -93,7 +94,8 @@ function SimpleAutoComplete(props) {
         onChange(selectedItem);
       }}
       itemToString={item => (item ? item.title : '')}
-      initialInputValue={initialValue}
+      initialSelectedItem={initialValue}
+      initialInputValue={initialInputValue}
     >
       {({
         getInputProps,
@@ -167,7 +169,8 @@ function SimpleAutoComplete(props) {
 
 SimpleAutoComplete.defaultProps = {
   error: false,
-  initialValue: null,
+  initialValue: {},
+  initialInputValue: null,
   className: ''
 };
 
@@ -178,7 +181,8 @@ SimpleAutoComplete.propTypes = {
   label: PropTypes.string.isRequired,
   className: PropTypes.string,
   error: PropTypes.bool,
-  initialValue: PropTypes.string
+  initialValue: PropTypes.object,
+  initialInputValue: PropTypes.string
 };
 
 export default withStyles(styles)(SimpleAutoComplete);

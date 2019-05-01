@@ -42,7 +42,7 @@ const reducer = (state, { type, payload }) => {
 };
 
 const TrainingField = props => {
-  const { onDelete, onChange, classes, initialValue, router } = props;
+  const { onDelete, onChange, classes, initialValue, router, number } = props;
   const { projectId } = router.query;
   const [state, dispatch] = useReducer(reducer, initialValue);
   const { text, entityRanges, params, intentResult } = state;
@@ -69,7 +69,7 @@ const TrainingField = props => {
     const newParams = newTraining.entityRanges.reduce(
       (currentParams, entityRange) => {
         const { entity } = entityRange;
-        if (addedEntity[entity.id]) {
+        if (!addedEntity[entity.id]) {
           const foundEntity = params.find(
             param => param.entity.id === entity.id
           );
@@ -116,7 +116,7 @@ const TrainingField = props => {
       <Paper className={classes.root} elevation={1}>
         <div className={classes.fieldContainer}>
           <Typography variant="subtitle2" className={classes.fieldName}>
-            USER SAY
+            #{number} USER SAY
           </Typography>
           <IntenEditor
             className={classes.intentEditor}
@@ -138,7 +138,8 @@ const TrainingField = props => {
             className={classes.noMarginTop}
             onChange={onChangeIntentResult}
             placeholder="Intent"
-            initialValue={intentResult.title}
+            initialInputValue={intentResult.title}
+            initialValue={intentResult}
             error={!intentResult.title}
             suggestions={(inputValue, children) => {
               return (
@@ -178,7 +179,8 @@ TrainingField.propTypes = {
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
-  router: PropTypes.object.isRequired
+  router: PropTypes.object.isRequired,
+  number: PropTypes.number.isRequired
 };
 
 export default withStyles(style)(withRouter(TrainingField));

@@ -30,7 +30,8 @@ const ProductBody = props => {
                   },
                   callback => {
                     onDeleteValue(index, callback);
-                  }
+                  },
+                  index
                 )}
               </div>
             ))}

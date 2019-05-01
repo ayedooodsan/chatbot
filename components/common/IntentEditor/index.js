@@ -244,7 +244,6 @@ const IntentEditor = props => {
                 <SimpleAutoComplete
                   onChange={onCreateEntity}
                   label="Search entity"
-                  initialValue=""
                   suggestions={(inputValue, children) => {
                     return (
                       <EntitySuggestions
@@ -282,9 +281,10 @@ const IntentEditor = props => {
                   onDelete={onEntityDelete}
                   autoFocus
                   label="Search entity"
-                  initialValue={
+                  initialInputValue={
                     entityData.entity ? entityData.entity.title : ''
                   }
+                  initialValue={entityData.entity ? entityData.entity : {}}
                   suggestions={(inputValue, children) => {
                     return (
                       <EntitySuggestions

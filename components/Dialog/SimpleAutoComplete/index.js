@@ -75,7 +75,15 @@ const styles = () => ({
 });
 
 function SimpleAutoComplete(props) {
-  const { classes, input, label, error, initialValue, suggestions } = props;
+  const {
+    classes,
+    input,
+    label,
+    error,
+    initialInputValue,
+    initialValue,
+    suggestions
+  } = props;
   // eslint-disable-next-line no-unused-vars
   const { onChange, value, ...otherInputProps } = input;
   const popperRef = useRef(null);
@@ -85,7 +93,8 @@ function SimpleAutoComplete(props) {
         onChange(selectedItem);
       }}
       itemToString={item => (item ? item.title : '')}
-      initialInputValue={initialValue}
+      initialInputValue={initialInputValue}
+      initialSelectedItem={initialValue}
     >
       {({
         getInputProps,
@@ -158,7 +167,8 @@ function SimpleAutoComplete(props) {
 
 SimpleAutoComplete.defaultProps = {
   error: false,
-  initialValue: null
+  initialValue: {},
+  initialInputValue: null
 };
 
 SimpleAutoComplete.propTypes = {
@@ -167,7 +177,8 @@ SimpleAutoComplete.propTypes = {
   input: PropTypes.object.isRequired,
   label: PropTypes.string.isRequired,
   error: PropTypes.bool,
-  initialValue: PropTypes.string
+  initialValue: PropTypes.object,
+  initialInputValue: PropTypes.string
 };
 
 export default withStyles(styles)(SimpleAutoComplete);

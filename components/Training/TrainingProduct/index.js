@@ -76,9 +76,11 @@ const TrainingProduct = props => {
             generateForm={(
               value,
               onChangeCurrentValue,
-              onDeleteCurrentValue
+              onDeleteCurrentValue,
+              index
             ) => (
               <TrainingField
+                number={index + 1}
                 initialValue={value}
                 onChange={onChangeCurrentValue}
                 onDelete={() => {
