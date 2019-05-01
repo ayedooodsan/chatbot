@@ -51,7 +51,7 @@ const TrainingProduct = props => {
     <ProductLayoutProvider
       id={trainingId}
       title={training.title}
-      productValues={training.values}
+      productValues={training.userSays}
       header={(onChangeTitle, trainingTitle, getTrainingProduct) => {
         return (
           <ProductHead
@@ -69,6 +69,7 @@ const TrainingProduct = props => {
       product={(values, onChangeValues, onAddIntialValue, onDeleteValue) => {
         return (
           <ProductBody
+            noAdd
             values={values}
             onChangeValues={onChangeValues}
             onDeleteValue={onDeleteValue}

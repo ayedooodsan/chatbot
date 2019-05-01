@@ -8,6 +8,7 @@ import style from './style';
 
 const ProductBody = props => {
   const {
+    noAdd,
     classes,
     generateForm,
     onChangeValues,
@@ -33,14 +34,16 @@ const ProductBody = props => {
                 )}
               </div>
             ))}
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              onClick={addFormList}
-            >
-              ADD EXAMPLE
-            </Button>
+            {!noAdd && (
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={addFormList}
+              >
+                ADD EXAMPLE
+              </Button>
+            )}
           </div>
         </Scrollbar>
       </div>
@@ -49,7 +52,8 @@ const ProductBody = props => {
 };
 
 ProductBody.defaultProps = {
-  values: []
+  values: [],
+  noAdd: false
 };
 
 ProductBody.propTypes = {
@@ -58,6 +62,7 @@ ProductBody.propTypes = {
   addFormList: PropTypes.func.isRequired,
   onChangeValues: PropTypes.func.isRequired,
   onDeleteValue: PropTypes.func.isRequired,
+  noAdd: PropTypes.bool,
   values: PropTypes.array
 };
 

@@ -1,7 +1,7 @@
 import { graphql, compose } from 'react-apollo';
 import debounce from 'lodash/debounce';
 import entitySuggestionsGql from './entitySuggestions.gql';
-import withDebouncedProps from '../../../../libraries/withDebouncedProps';
+import withDebouncedProps from '../../../libraries/withDebouncedProps';
 
 const withData = graphql(entitySuggestionsGql, {
   name: 'entitySuggestions',

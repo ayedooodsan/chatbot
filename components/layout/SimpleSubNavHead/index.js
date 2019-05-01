@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'next/router';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
@@ -101,4 +100,4 @@ SimpleSubNavHead.propTypes = {
   keyword: PropTypes.string.isRequired
 };
 
-export default withStyles(style)(withRouter(SimpleSubNavHead));
+export default withStyles(style)(SimpleSubNavHead);

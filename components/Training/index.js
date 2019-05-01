@@ -94,7 +94,15 @@ class Training extends Component {
                           primary={myTraining.title}
                           primaryTypographyProps={{
                             className: classNames({
-                              [classes.listItemTextActive]: this.activeTraining(
+                              [classes.listItemPrimaryTextActive]: this.activeTraining(
+                                myTraining.id
+                              )
+                            })
+                          }}
+                          secondary={myTraining.date}
+                          secondaryTypographyProps={{
+                            className: classNames({
+                              [classes.listItemSecondaryTextActive]: this.activeTraining(
                                 myTraining.id
                               )
                             })

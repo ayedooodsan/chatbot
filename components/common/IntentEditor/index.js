@@ -26,13 +26,13 @@ import {
 import EntityChip from './EntityChip';
 import getColor from './getColor';
 import SimpleAutoComplete from './SimpleAutoComplete';
-import EntitySuggestions from './EntitySuggestions';
+import EntitySuggestions from '../EntitySuggestions';
 import generateDecorator from './decorator';
 import useFakeSelection from './useFakeSelection';
 import style from './style';
 
 const IntentEditor = props => {
-  const { classes, router, initialValue, onChange } = props;
+  const { classes, router, initialValue, onChange, className } = props;
   const { projectId } = router.query;
   const [entityRef, setEntityRef] = useState(null);
   const [selectionState, setSelectionState] = useState(null);
@@ -214,6 +214,7 @@ const IntentEditor = props => {
       <div
         onClick={focusEditor}
         className={classNames(
+          className,
           classes.inputRoot,
           classes.multiline,
           classes.fullWidth
@@ -304,10 +305,15 @@ const IntentEditor = props => {
   );
 };
 
+IntentEditor.defaultProps = {
+  className: ''
+};
+
 IntentEditor.propTypes = {
   initialValue: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
+  className: PropTypes.string,
   router: PropTypes.object.isRequired
 };
 

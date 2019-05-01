@@ -4,7 +4,6 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
-import { withRouter } from 'next/router';
 import _ from 'lodash';
 import IntentEditor from '../../common/IntentEditor';
 import style from './style';
@@ -14,23 +13,23 @@ const IntentField = props => {
 
   const onUpdateParams = () => {
     updateParams((intents, params) => {
-      const addedSubProduct = {};
+      const addedParams = {};
       const newParams = intents.reduce((currentParams, intent) => {
         intent.entityRanges.forEach(entityRange => {
           const { entity } = entityRange;
-          if (!addedSubProduct[entity.id]) {
-            const foundSubProduct = params.find(
-              subProduct => subProduct.entity.id === entity.id
+          if (!addedParams[entity.id]) {
+            const foundParams = params.find(
+              param => param.entity.id === entity.id
             );
-            if (foundSubProduct) {
-              currentParams.push(foundSubProduct);
+            if (foundParams) {
+              currentParams.push(foundParams);
             } else {
               currentParams.push({
                 name: entity.title,
                 entity
               });
             }
-            addedSubProduct[entity.id] = true;
+            addedParams[entity.id] = true;
           }
         });
         return currentParams;
@@ -80,8 +79,7 @@ IntentField.propTypes = {
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   updateParams: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired,
-  router: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired
 };
 
-export default withStyles(style)(withRouter(IntentField));
+export default withStyles(style)(IntentField);

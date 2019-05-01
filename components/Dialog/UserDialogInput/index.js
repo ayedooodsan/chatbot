@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Send from '@material-ui/icons/Send';
 import Face from '@material-ui/icons/Face';
 import { withRouter } from 'next/router';
-import IntentSuggestions from '../IntentSuggestions';
+import IntentSuggestions from '../../common/IntentSuggestions';
 import SimpleAutoComplete from '../SimpleAutoComplete';
 import { isTypeOfString } from '../../../libraries/helpers';
 import style from './style';
