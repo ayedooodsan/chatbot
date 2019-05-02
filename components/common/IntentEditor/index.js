@@ -128,6 +128,10 @@ const IntentEditor = props => {
     onChange(rawEditorState);
   };
 
+  const onEditorBlur = () => {
+    onPushIntent(editorState);
+  };
+
   const onCreateEntity = newEntity => {
     const { id, title } = newEntity;
     if (id) {
@@ -226,6 +230,7 @@ const IntentEditor = props => {
             ref={editor}
             editorState={editorState}
             onChange={onChangeEditorState}
+            onBlur={onEditorBlur}
           />
         </div>
       </div>
