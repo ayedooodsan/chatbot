@@ -1,30 +1,37 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import withStyles from '@material-ui/core/styles/withStyles';
-import Paper from '@material-ui/core/Paper';
-import InputBase from '@material-ui/core/InputBase';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
 import ProductLayoutProvider from '../../layout/ProductLayoutProvider';
 import ProductHead from '../../layout/ProductHead';
 import ProductBody from '../../layout/ProductBody';
+import SubProductBody from '../../layout/SubProductBody';
 import connect from './store';
-import style from './style';
+import IntentField from '../IntentField';
+import ParamField from '../ParamField';
 import redirect from '../../../libraries/redirect';
 
 const IntentProduct = props => {
-  const {
-    projectId,
-    intentId,
-    updateIntent,
-    deleteIntent,
-    intent,
-    classes
-  } = props;
+  const { projectId, intentId, updateIntent, deleteIntent, intent } = props;
   const onSave = getIntentProduct => {
     return () => {
-      const { title, values } = getIntentProduct();
-      updateIntent({ id: intentId, title, values });
+      const { title, productValues, subProductValues } = getIntentProduct(
+        el => el.text !== 0
+      );
+      updateIntent({
+        id: intentId,
+        title,
+        values: productValues.map(productValue => ({
+          text: productValue.text,
+          entityRanges: productValue.entityRanges.map(entityRange => ({
+            offset: entityRange.offset,
+            length: entityRange.length,
+            entityId: entityRange.entity.id
+          }))
+        })),
+        params: subProductValues.map(subProductValue => ({
+          name: subProductValue.name,
+          entityId: subProductValue.entity.id
+        }))
+      });
     };
   };
 
@@ -36,6 +43,16 @@ const IntentProduct = props => {
 
   const onAdd = onAddIntialValue => {
     return () => {
+      onAddIntialValue({
+        text: '',
+        entityRanges: [],
+        key: Math.random()
+      });
+    };
+  };
+
+  const onAddParam = onAddIntialValue => {
+    return () => {
       onAddIntialValue('');
     };
   };
@@ -44,7 +61,8 @@ const IntentProduct = props => {
     <ProductLayoutProvider
       id={intentId}
       title={intent.title}
-      values={intent.values}
+      productValues={intent.values}
+      subProductValues={intent.params}
       header={(onChangeTitle, intentTitle, getIntentProduct) => {
         return (
           <ProductHead
@@ -59,36 +77,57 @@ const IntentProduct = props => {
           />
         );
       }}
-      body={(values, onChangeValues, onAddIntialValue, onDeleteValue) => {
+      product={(
+        values,
+        onChangeValues,
+        onAddIntialValue,
+        onDeleteValue,
+        updateParams
+      ) => {
         return (
           <ProductBody
-            generateFormList={() => {
-              return values.map((value, index) => (
-                <Paper className={classes.root} elevation={1} key={value}>
-                  <InputBase
-                    value={value}
-                    onChange={event =>
-                      onChangeValues(event.target.value, index)
-                    }
-                    autoFocus
-                    fullWidth
-                    className={classes.input}
-                    placeholder="User says"
-                  />
-                  <IconButton
-                    onClick={() => onDeleteValue(index)}
-                    className={classes.iconButton}
-                    aria-label="Delete"
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Paper>
-              ));
-            }}
+            values={values}
+            onChangeValues={onChangeValues}
+            onDeleteValue={onDeleteValue}
+            generateForm={(
+              value,
+              onChangeCurrentValue,
+              onDeleteCurrentValue
+            ) => (
+              <IntentField
+                initialValue={value}
+                onChange={onChangeCurrentValue}
+                onDelete={onDeleteCurrentValue}
+                updateParams={updateParams}
+              />
+            )}
             addFormList={onAdd(onAddIntialValue)}
           />
         );
       }}
+      subProduct={(
+        values,
+        onChangeValues,
+        onAddIntialValue,
+        onDeleteValue,
+        updateIntents
+      ) => (
+        <SubProductBody
+          values={values}
+          title="PARAMETERS"
+          onChangeValues={onChangeValues}
+          onDeleteValue={onDeleteValue}
+          generateForm={(value, onChangeParam, onDeleteParam) => (
+            <ParamField
+              initialValue={value}
+              onChange={onChangeParam}
+              onDelete={onDeleteParam}
+              updateIntents={updateIntents}
+            />
+          )}
+          addFormList={onAddParam(onAddIntialValue)}
+        />
+      )}
     />
   );
 };
@@ -98,7 +137,6 @@ IntentProduct.defaultProps = {
 };
 
 IntentProduct.propTypes = {
-  classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
   intentId: PropTypes.string.isRequired,
   updateIntent: PropTypes.func.isRequired,
@@ -106,4 +144,4 @@ IntentProduct.propTypes = {
   intent: PropTypes.object
 };
 
-export default withStyles(style)(connect(IntentProduct));
+export default connect(IntentProduct);

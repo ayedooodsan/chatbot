@@ -1,15 +1,33 @@
 mutation updateIntent (
   $id: String!
   $title: String
-  $values: [String!]
+  $values: [IntentValueInput!]
+  $params: [IntentParamInput!]
 ) {
   updateIntent (
     id: $id
     title: $title
     values: $values
+    params: $params
   ) {
-    id
     title
-    values
+    values {
+      text
+      entityRanges {
+        offset
+        length
+        entity {
+          id
+          title
+        }
+      }
+    }
+    params {
+      name
+      entity {
+        id
+        title
+      }
+    }
   }
 }

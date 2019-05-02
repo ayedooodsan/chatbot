@@ -10,6 +10,18 @@ const style = {
   },
   iconButton: {
     padding: 10
+  },
+  inputRoot: {
+    marginTop: 0,
+    marginLeft: 4
+  },
+  chip: {
+    margin: 4,
+    marginTop: 0
+  },
+  chipContainer: {
+    paddingTop: 4,
+    marginBottom: 0
   }
 };
 

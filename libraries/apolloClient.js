@@ -3,11 +3,12 @@ import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloLink } from 'apollo-client-preset';
 import persist from './persist';
+import uri from '../graphql-url';
 
 let apolloClient = null;
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:4237/graphql',
+  uri,
   credentials: 'same-origin'
 });
 

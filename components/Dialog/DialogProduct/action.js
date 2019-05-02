@@ -21,6 +21,7 @@ const sendAction = (
   const computedRawMessages = _.cloneDeep(rawMessages);
   let computedViewedDialog = _.cloneDeep(viewedDialog);
   let computedActiveMessageIds = _.cloneDeep(activeMessageIds);
+  let newParentId = null;
   switch (type) {
     case START_MESSAGE: {
       computedRawMessages.push({
@@ -34,6 +35,7 @@ const sendAction = (
       });
       computedViewedDialog = [];
       computedActiveMessageIds = [];
+      newParentId = null;
       break;
     }
     case REPLY_ROBOT: {
@@ -61,21 +63,42 @@ const sendAction = (
         activeMessageIdIndex + 1,
         computedViewedDialog.length - activeMessageIdIndex - 1
       );
+      newParentId = payload.id;
       break;
     }
     case EDIT_ROBOT: {
       const selectedMessage = computedRawMessages.find(
         message => message.id === payload.id
       );
-      selectedMessage.templateName = values.templateName;
-      selectedMessage.payload = values.payload;
+      selectedMessage.payload = values.message;
+      newParentId =
+        computedActiveMessageIds[computedActiveMessageIds.length - 1].id;
       break;
     }
     case DELETE_ROBOT: {
       const selectedMessageIndex = computedRawMessages.findIndex(
         message => message.id === payload.id
       );
+      const { parentId } = computedRawMessages[selectedMessageIndex];
+      const selectedParentMessageIndex = computedRawMessages.findIndex(
+        message => message.id === parentId
+      );
       computedRawMessages.splice(selectedMessageIndex, 1);
+      if (selectedParentMessageIndex === -1) {
+        computedActiveMessageIds = [];
+        computedViewedDialog = [];
+        newParentId = null;
+      } else {
+        computedActiveMessageIds.splice(
+          selectedParentMessageIndex,
+          computedActiveMessageIds.length
+        );
+        computedViewedDialog.splice(
+          selectedParentMessageIndex,
+          computedViewedDialog.length
+        );
+        newParentId = computedRawMessages[selectedParentMessageIndex].parentId;
+      }
       break;
     }
     case REPLY_USER_PARAM: {
@@ -132,6 +155,7 @@ const sendAction = (
         activeMessageIdIndex + 1,
         computedViewedDialog.length - activeMessageIdIndex - 1
       );
+      newParentId = payload.id;
       break;
     }
     case EDIT_USER: {
@@ -139,15 +163,35 @@ const sendAction = (
         message => message.id === payload.id
       );
       selectedMessage.title = values.title;
-      selectedMessage.intentId = values.intentId;
+      selectedMessage.intentId = values.intent.id;
       selectedMessage.intent = values.intent;
+      newParentId = computedRawMessages[computedRawMessages.length - 1].id;
       break;
     }
     case DELETE_USER: {
       const selectedMessageIndex = computedRawMessages.findIndex(
         message => message.id === payload.id
       );
+      const { parentId } = computedRawMessages[selectedMessageIndex];
+      const selectedParentMessageIndex = computedRawMessages.findIndex(
+        message => message.id === parentId
+      );
       computedRawMessages.splice(selectedMessageIndex, 1);
+      if (selectedParentMessageIndex === -1) {
+        computedActiveMessageIds = [];
+        computedViewedDialog = [];
+        newParentId = null;
+      } else {
+        computedActiveMessageIds.splice(
+          selectedParentMessageIndex,
+          computedActiveMessageIds.length
+        );
+        computedViewedDialog.splice(
+          selectedParentMessageIndex,
+          computedViewedDialog.length
+        );
+        newParentId = computedRawMessages[selectedParentMessageIndex].parentId;
+      }
       break;
     }
     default: {
@@ -157,7 +201,8 @@ const sendAction = (
   return {
     computedRawMessages,
     computedViewedDialog,
-    computedActiveMessageIds
+    computedActiveMessageIds,
+    newParentId
   };
 };
 

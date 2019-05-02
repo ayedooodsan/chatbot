@@ -6,6 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
 import NProgress from 'next-nprogress/component';
 import getPageContext from '../libraries/getPageContext';
+import 'draft-js/dist/Draft.css';
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {

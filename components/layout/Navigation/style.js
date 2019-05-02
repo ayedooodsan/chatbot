@@ -46,8 +46,8 @@ const style = theme => ({
     color: 'white',
     opacity: 1,
     visibility: 'visible',
-    '-webkit-transition': 'opacity 2000ms, visibility 2000ms',
-    transition: 'opacity 2000ms, visibility 2000ms'
+    '-webkit-transition': 'opacity 500ms, visibility 500ms',
+    transition: 'opacity 500ms, visibility 500ms'
   },
   listItemTextClose: {
     opacity: 0,

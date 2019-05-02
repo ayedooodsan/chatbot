@@ -71,11 +71,23 @@ const styles = () => ({
   inputInput: {
     width: 'auto',
     flexGrow: 1
+  },
+  suggestions: {
+    height: 184,
+    overflowY: 'overlay'
   }
 });
 
 function SimpleAutoComplete(props) {
-  const { classes, input, label, error, initialValue, suggestions } = props;
+  const {
+    classes,
+    input,
+    label,
+    error,
+    initialInputValue,
+    initialValue,
+    suggestions
+  } = props;
   // eslint-disable-next-line no-unused-vars
   const { onChange, value, ...otherInputProps } = input;
   const popperRef = useRef(null);
@@ -85,7 +97,8 @@ function SimpleAutoComplete(props) {
         onChange(selectedItem);
       }}
       itemToString={item => (item ? item.title : '')}
-      initialInputValue={initialValue}
+      initialInputValue={initialInputValue}
+      initialSelectedItem={initialValue}
     >
       {({
         getInputProps,
@@ -113,14 +126,8 @@ function SimpleAutoComplete(props) {
             open={isOpen}
             anchorEl={popperRef.current}
             placement="top"
-            modifiers={{
-              flip: {
-                enabled: true
-              },
-              preventOverflow: {
-                enabled: true,
-                boundariesElement: 'window'
-              }
+            style={{
+              zIndex: 1
             }}
           >
             <div
@@ -136,17 +143,19 @@ function SimpleAutoComplete(props) {
                     : null
                 }}
               >
-                {suggestions(inputValue, result => {
-                  return result.map((suggestion, index) =>
-                    renderSuggestion({
-                      suggestion,
-                      index,
-                      itemProps: getItemProps({ item: suggestion }),
-                      highlightedIndex,
-                      selectedItem
-                    })
-                  );
-                })}
+                <div className={classes.suggestions}>
+                  {suggestions(inputValue, result => {
+                    return result.map((suggestion, index) =>
+                      renderSuggestion({
+                        suggestion,
+                        index,
+                        itemProps: getItemProps({ item: suggestion }),
+                        highlightedIndex,
+                        selectedItem
+                      })
+                    );
+                  })}
+                </div>
               </Paper>
             </div>
           </Popper>
@@ -158,7 +167,8 @@ function SimpleAutoComplete(props) {
 
 SimpleAutoComplete.defaultProps = {
   error: false,
-  initialValue: null
+  initialValue: {},
+  initialInputValue: null
 };
 
 SimpleAutoComplete.propTypes = {
@@ -167,7 +177,8 @@ SimpleAutoComplete.propTypes = {
   input: PropTypes.object.isRequired,
   label: PropTypes.string.isRequired,
   error: PropTypes.bool,
-  initialValue: PropTypes.string
+  initialValue: PropTypes.object,
+  initialInputValue: PropTypes.string
 };
 
 export default withStyles(styles)(SimpleAutoComplete);

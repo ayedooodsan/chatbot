@@ -10,8 +10,6 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 import { withRouter } from 'next/router';
 import Project from '../../Project';
 import style from './style';
@@ -20,7 +18,7 @@ import { Link } from '../../../routes';
 
 class Navigation extends React.Component {
   state = {
-    open: false
+    open: true
   };
 
   handleDrawerOpen = () => {
@@ -94,31 +92,18 @@ class Navigation extends React.Component {
             </Link>
           ))}
         </List>
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon className={classes.listItemIcon}>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText
-                primary={text}
-                primaryTypographyProps={{
-                  className: classNames(classes.listItemIcon, {
-                    [classes.listItemTextClose]: !this.state.open
-                  })
-                }}
-              />
-            </ListItem>
-          ))}
-        </List>
       </Drawer>
     );
   }
 }
 
+Navigation.defaultProps = {
+  router: {}
+};
+
 Navigation.propTypes = {
   classes: PropTypes.object.isRequired,
-  router: PropTypes.object.isRequired
+  router: PropTypes.object
 };
 
 export default withStyles(style)(withRouter(Navigation));

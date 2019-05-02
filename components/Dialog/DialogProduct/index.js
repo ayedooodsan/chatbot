@@ -66,32 +66,61 @@ class DialogProduct extends Component {
     currentViewedDialog,
     currentActiveMessageIds
   ) => {
-    const viewedDialog = [...currentViewedDialog];
     const activeMessageIds = [...currentActiveMessageIds];
-    let messages = [];
-    let currentActiveMessageId = parentId;
-    const tempRawMessages = [...rawMessages];
-    while (tempRawMessages.length > 0) {
-      const message = tempRawMessages.shift();
-      if (message.parentId === currentActiveMessageId) {
-        messages.push(message);
-      } else {
-        const activeMessage = messages.find(
-          // eslint-disable-next-line no-loop-func
-          parent => parent.id === message.parentId
-        );
-        if (activeMessage !== undefined) {
-          viewedDialog.push(messages);
-          messages = [message];
-          currentActiveMessageId = activeMessage.id;
-          activeMessageIds.push(currentActiveMessageId);
+    if (
+      parentId === null ||
+      rawMessages.find(rawMessage => rawMessage.parentId === parentId)
+    ) {
+      const viewedDialog = [...currentViewedDialog];
+      let messages = [];
+      let currentActiveMessageId = parentId;
+      const tempRawMessages = [...rawMessages];
+      while (tempRawMessages.length > 0) {
+        const message = tempRawMessages.shift();
+        if (message.parentId === currentActiveMessageId) {
+          messages.push(message);
+        } else {
+          const activeMessage = messages.find(
+            // eslint-disable-next-line no-loop-func
+            parent => parent.id === message.parentId
+          );
+          if (activeMessage !== undefined) {
+            viewedDialog.push(messages);
+            messages = [message];
+            currentActiveMessageId = activeMessage.id;
+            activeMessageIds.push(currentActiveMessageId);
+          }
         }
       }
+      if (messages.length !== 0) {
+        viewedDialog.push(messages);
+        currentActiveMessageId = messages[0].id;
+        activeMessageIds.push(currentActiveMessageId);
+      }
+      return { viewedDialog, activeMessageIds };
     }
+    let messages = [];
+    const viewDepth = activeMessageIds.length - 1;
+    const viewedDialog = rawMessages.reduce(
+      (currentVewedDialog, rawMessage) => {
+        const newViewedDialog = currentVewedDialog;
+        const currentDepth = rawMessage.depth + 1;
+        if (currentDepth > viewDepth) {
+          return newViewedDialog;
+        }
+        const isNewDepth = currentVewedDialog.length !== currentDepth;
+        if (isNewDepth) {
+          newViewedDialog.push(messages);
+          messages = [rawMessage];
+        } else {
+          messages.push(rawMessage);
+        }
+        return newViewedDialog;
+      },
+      []
+    );
     if (messages.length !== 0) {
       viewedDialog.push(messages);
-      currentActiveMessageId = messages[0].id;
-      activeMessageIds.push(currentActiveMessageId);
     }
     return { viewedDialog, activeMessageIds };
   };
@@ -138,7 +167,8 @@ class DialogProduct extends Component {
       const {
         computedViewedDialog,
         computedActiveMessageIds,
-        computedRawMessages
+        computedRawMessages,
+        newParentId
       } = sendAction(
         { rawMessages, viewedDialog, activeMessageIds },
         dialogInputProps,
@@ -146,7 +176,7 @@ class DialogProduct extends Component {
       );
       const result = this.updateViewedDialog(
         computedRawMessages,
-        dialogInputProps.payload.id,
+        newParentId,
         computedViewedDialog,
         computedActiveMessageIds
       );
@@ -236,6 +266,7 @@ class DialogProduct extends Component {
                 ? viewedUnsatifiedDialog.map((messages, index) =>
                     messages[0].type === 'USER' ? (
                       <UserMessage
+                        key={messages[0].id}
                         messages={messages}
                         onChangeDialogInput={this.onChangeDialogInputProps}
                         onChangeActiveMessage={activeMessageId => {
@@ -252,6 +283,7 @@ class DialogProduct extends Component {
                       />
                     ) : (
                       <RobotMessage
+                        key={messages[0].id}
                         messages={messages}
                         onChangeDialogInput={this.onChangeDialogInputProps}
                       />
@@ -260,6 +292,7 @@ class DialogProduct extends Component {
                 : viewedDialog.map((messages, index) =>
                     messages[0].type === 'USER' ? (
                       <UserMessage
+                        key={messages[0].id}
                         messages={messages}
                         onChangeDialogInput={this.onChangeDialogInputProps}
                         onChangeActiveMessage={activeMessageId => {
@@ -276,6 +309,7 @@ class DialogProduct extends Component {
                       />
                     ) : (
                       <RobotMessage
+                        key={messages[0].id}
                         messages={messages}
                         onChangeDialogInput={this.onChangeDialogInputProps}
                       />
@@ -303,7 +337,7 @@ DialogProduct.defaultProps = {
 
 DialogProduct.propTypes = {
   classes: PropTypes.object.isRequired,
-  projectId: PropTypes.object.isRequired,
+  projectId: PropTypes.string.isRequired,
   deleteDialog: PropTypes.func.isRequired,
   updateDialog: PropTypes.func.isRequired,
   dialogId: PropTypes.string,

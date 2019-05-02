@@ -7,22 +7,44 @@ import Scrollbar from 'react-scrollbars-custom';
 import style from './style';
 
 const ProductBody = props => {
-  const { classes, generateFormList, addFormList } = props;
-
+  const {
+    noAdd,
+    classes,
+    generateForm,
+    onChangeValues,
+    onDeleteValue,
+    addFormList,
+    values
+  } = props;
   return (
     <div className={classes.root}>
       <div className={classes.formList}>
         <Scrollbar>
           <div className={classes.inScrollbar}>
-            {generateFormList()}
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              onClick={addFormList}
-            >
-              ADD EXAMPLE
-            </Button>
+            {values.map((value, index) => (
+              <div key={JSON.stringify(value)}>
+                {generateForm(
+                  value,
+                  (newValue, key, callback) => {
+                    onChangeValues(newValue, index, key, callback);
+                  },
+                  callback => {
+                    onDeleteValue(index, callback);
+                  },
+                  index
+                )}
+              </div>
+            ))}
+            {!noAdd && (
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={addFormList}
+              >
+                ADD EXAMPLE
+              </Button>
+            )}
           </div>
         </Scrollbar>
       </div>
@@ -30,10 +52,19 @@ const ProductBody = props => {
   );
 };
 
+ProductBody.defaultProps = {
+  values: [],
+  noAdd: false
+};
+
 ProductBody.propTypes = {
   classes: PropTypes.object.isRequired,
-  generateFormList: PropTypes.func.isRequired,
-  addFormList: PropTypes.func.isRequired
+  generateForm: PropTypes.func.isRequired,
+  addFormList: PropTypes.func.isRequired,
+  onChangeValues: PropTypes.func.isRequired,
+  onDeleteValue: PropTypes.func.isRequired,
+  noAdd: PropTypes.bool,
+  values: PropTypes.array
 };
 
 export default withStyles(style)(ProductBody);

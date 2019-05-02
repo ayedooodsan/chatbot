@@ -1,0 +1,18 @@
+mutation updateEntity (
+  $id: String!
+  $title: String
+  $values: [KeywordInput!]
+) {
+  updateEntity (
+    id: $id
+    title: $title
+    values: $values
+  ) {
+    id
+    title
+    values {
+      keyword
+      synonyms
+    }
+  }
+}

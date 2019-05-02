@@ -20,7 +20,7 @@ class Dialog extends Component {
   state = {
     keyword: '',
     pagination: {
-      limit: 10,
+      limit: 10000,
       offset: 1
     },
     createItemDialogStatus: false

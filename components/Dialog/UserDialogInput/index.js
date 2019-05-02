@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Send from '@material-ui/icons/Send';
 import Face from '@material-ui/icons/Face';
 import { withRouter } from 'next/router';
-import IntentSuggestions from '../IntentSuggestions';
+import IntentSuggestions from '../../common/IntentSuggestions';
 import SimpleAutoComplete from '../SimpleAutoComplete';
 import { isTypeOfString } from '../../../libraries/helpers';
 import style from './style';
@@ -69,7 +69,10 @@ const UserDialogInput = props => {
               <SimpleAutoComplete
                 input={intent.input}
                 label="Intent"
-                initialValue={type === EDIT_USER ? payload.intent.title : null}
+                initialValue={type === EDIT_USER ? payload.intent : {}}
+                initialInputValue={
+                  type === EDIT_USER ? payload.intent.title : null
+                }
                 error={intent.meta.touched && isTypeOfString(intent.meta.error)}
                 suggestions={(inputValue, children) => {
                   return (

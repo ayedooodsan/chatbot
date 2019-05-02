@@ -68,6 +68,7 @@ const DialogInput = props => {
           )}
           send={send}
           type={EDIT_ROBOT}
+          payload={payload}
         />
       );
       break;
@@ -210,9 +211,14 @@ const DialogInput = props => {
   return Element;
 };
 
+DialogInput.defaultProps = {
+  type: '',
+  payload: {}
+};
+
 DialogInput.propTypes = {
-  type: PropTypes.string.isRequired,
-  payload: PropTypes.object.isRequired,
+  type: PropTypes.string,
+  payload: PropTypes.object,
   send: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 };

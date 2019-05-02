@@ -1,0 +1,10 @@
+query myEntities (
+  $projectId: String!
+) {
+  myEntities (
+    projectId: $projectId
+  ) {
+    id
+    title
+  }
+}
