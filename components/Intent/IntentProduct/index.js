@@ -37,7 +37,7 @@ const IntentProduct = props => {
 
   const onDelete = async () => {
     const response = await deleteIntent({ id: intentId });
-    redirect({}, `/${projectId}/entity`);
+    redirect({}, `/${projectId}/intent`);
     return response;
   };
 

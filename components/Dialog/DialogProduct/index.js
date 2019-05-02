@@ -214,7 +214,7 @@ class DialogProduct extends Component {
   onDelete = async () => {
     const { deleteDialog, dialogId, projectId } = this.props;
     const response = await deleteDialog({ id: dialogId });
-    redirect({}, `/${projectId}/entity`);
+    redirect({}, `/${projectId}/dialog`);
     return response;
   };
 
