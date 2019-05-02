@@ -2,7 +2,6 @@ const style = {
   root: {
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: '#f4f5f7',
     padding: 5,
     margin: '5px 0'
   },
