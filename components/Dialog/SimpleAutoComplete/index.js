@@ -71,6 +71,10 @@ const styles = () => ({
   inputInput: {
     width: 'auto',
     flexGrow: 1
+  },
+  suggestions: {
+    height: 184,
+    overflowY: 'overlay'
   }
 });
 
@@ -122,14 +126,8 @@ function SimpleAutoComplete(props) {
             open={isOpen}
             anchorEl={popperRef.current}
             placement="top"
-            modifiers={{
-              flip: {
-                enabled: true
-              },
-              preventOverflow: {
-                enabled: true,
-                boundariesElement: 'window'
-              }
+            style={{
+              zIndex: 1
             }}
           >
             <div
@@ -145,17 +143,19 @@ function SimpleAutoComplete(props) {
                     : null
                 }}
               >
-                {suggestions(inputValue, result => {
-                  return result.map((suggestion, index) =>
-                    renderSuggestion({
-                      suggestion,
-                      index,
-                      itemProps: getItemProps({ item: suggestion }),
-                      highlightedIndex,
-                      selectedItem
-                    })
-                  );
-                })}
+                <div className={classes.suggestions}>
+                  {suggestions(inputValue, result => {
+                    return result.map((suggestion, index) =>
+                      renderSuggestion({
+                        suggestion,
+                        index,
+                        itemProps: getItemProps({ item: suggestion }),
+                        highlightedIndex,
+                        selectedItem
+                      })
+                    );
+                  })}
+                </div>
               </Paper>
             </div>
           </Popper>
