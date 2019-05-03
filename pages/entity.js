@@ -1,11 +1,16 @@
 import PropTypes from 'prop-types';
 import Entity from '../components/Entity';
 import withData from '../libraries/withData';
+import App from '../components/App';
 
 const entity = props => {
   const { router } = props;
   const { entityId, projectId } = router.url.query;
-  return <Entity entityId={entityId} projectId={projectId} />;
+  return (
+    <App>
+      <Entity entityId={entityId} projectId={projectId} />
+    </App>
+  );
 };
 
 entity.propTypes = {
