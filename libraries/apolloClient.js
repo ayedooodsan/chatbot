@@ -15,22 +15,12 @@ function createClient(headers, token, initialState, reduxStore) {
     credentials: 'same-origin'
   });
 
-  const errorLink = onError(({ graphQLErrors, networkError }) => {
+  const errorLink = onError(({ graphQLErrors }) => {
     if (graphQLErrors) {
       const text = graphQLErrors.map(({ message }) => message).join('; ');
       reduxStore.dispatch(
         dispatchers.enqueueSnackbar({
           message: text,
-          options: {
-            variant: 'warning'
-          }
-        })
-      );
-    }
-    if (networkError) {
-      reduxStore.dispatch(
-        dispatchers.enqueueSnackbar({
-          message: networkError,
           options: {
             variant: 'warning'
           }
