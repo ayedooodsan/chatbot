@@ -1,0 +1,10 @@
+query myTrainings (
+  $projectId: String!
+) {
+  myTrainings (
+    projectId: $projectId
+  ) {
+    id
+    title
+  }
+}

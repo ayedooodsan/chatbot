@@ -46,6 +46,7 @@ const TrainingField = props => {
   const { projectId } = router.query;
   const [state, dispatch] = useReducer(reducer, initialValue);
   const { text, entityRanges, params, intentResult } = state;
+
   const onUpdateParams = () => {
     console.log('on udpate params');
   };
@@ -104,8 +105,28 @@ const TrainingField = props => {
     });
   };
 
-  const onChangeParam = () => null;
-  const onDeleteParam = () => null;
+  const onChangeParam = (name, index) => {
+    params[index].name = name;
+    dispatch({
+      type: ON_CHANGE_PARAMS,
+      payload: params
+    });
+  };
+
+  const onDeleteParam = index => {
+    const [deletedParam] = params.splice(index, 1);
+    const newEntityRanges = entityRanges.filter(
+      entityRange => entityRange.entity.id !== deletedParam.entity.id
+    );
+    dispatch({
+      type: ON_CHANGE_USER_SAY,
+      payload: {
+        text,
+        entityRanges: newEntityRanges,
+        params
+      }
+    });
+  };
 
   const onTrainingDelete = () => {
     onDelete(onUpdateParams);
@@ -119,16 +140,17 @@ const TrainingField = props => {
             #{number} USER SAY
           </Typography>
           <IntenEditor
+            key={params.length}
             className={classes.intentEditor}
             initialValue={{ text, entityRanges }}
             onChange={onPushUserSay}
           />
-          {params.map(param => (
+          {params.map((param, index) => (
             <ParamEditor
               key={param.entity.id}
               initialValue={param}
-              onChange={onChangeParam}
-              onDelete={onDeleteParam}
+              onChange={name => onChangeParam(name, index)}
+              onDelete={() => onDeleteParam(index)}
             />
           ))}
           <Typography variant="subtitle2" className={classes.fieldName}>
@@ -138,9 +160,9 @@ const TrainingField = props => {
             className={classes.noMarginTop}
             onChange={onChangeIntentResult}
             placeholder="Intent"
-            initialInputValue={intentResult.title}
+            initialInputValue={intentResult === null ? '' : intentResult.title}
             initialValue={intentResult}
-            error={!intentResult.title}
+            error={intentResult === null ? false : !intentResult.title}
             suggestions={(inputValue, children) => {
               return (
                 <IntentSuggestions projectId={projectId} keyword={inputValue}>

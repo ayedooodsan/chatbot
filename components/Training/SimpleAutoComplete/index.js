@@ -88,6 +88,7 @@ function SimpleAutoComplete(props) {
     initialValue,
     initialInputValue,
     suggestions,
+    placeholder,
     className
   } = props;
   // eslint-disable-next-line no-unused-vars
@@ -112,6 +113,7 @@ function SimpleAutoComplete(props) {
       }) => (
         <div>
           {renderInput({
+            placeholder,
             className,
             fullWidth: true,
             label,
@@ -184,6 +186,7 @@ SimpleAutoComplete.propTypes = {
   suggestions: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
   className: PropTypes.string,
   error: PropTypes.bool,
   initialValue: PropTypes.object,

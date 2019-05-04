@@ -1,0 +1,32 @@
+query training (
+  $id: String!
+) {
+  training (
+    id: $id
+  ) {
+    title
+    userSays {
+      actionStatus
+      intentResult {
+        id
+        title
+      }
+      text
+      entityRanges {
+        offset
+        length
+        entity {
+          id
+          title
+        }
+      }
+      params {
+        name
+        entity {
+          id
+          title
+        }
+      }
+    }
+  }
+}

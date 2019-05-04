@@ -13,7 +13,7 @@ import style from './style';
 const onSubmit = props => {
   const { onChange } = props;
   return values => {
-    onChange(values.name, 'name');
+    onChange(values.name);
   };
 };
 

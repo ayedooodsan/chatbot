@@ -26,7 +26,9 @@ const ParamField = props => {
   return (
     <ParamEditor
       onDelete={onParamDelete}
-      onChange={onChange}
+      onChange={name => {
+        onChange(name, 'name');
+      }}
       initialValue={initialValue}
     />
   );

@@ -5,11 +5,13 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import withStyles from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
+import readXlsxFile from 'read-excel-file';
+import UploadFileTemplate from './UploadFileTemplate';
 import LayoutProvider from '../layout/LayoutProvider';
 import Navigation from '../layout/Navigation';
 import SubNavigation from '../layout/SubNavigation';
 import SimpleHeader from '../layout/SimpleSubNavHead';
-import CreateProductDialog from '../common/CreateProductDialog';
+import UploadProductDialog from '../common/UploadProductDialog';
 import TrainingProduct from './TrainingProduct';
 import connect from './store';
 import { Link } from '../../routes';
@@ -23,22 +25,44 @@ class Training extends Component {
       limit: 10000,
       offset: 1
     },
-    createItemDialogStatus: false
+    uploadProductDialogStatus: false
   };
 
   openCreateItemDialog = () => {
-    this.setState({ createItemDialogStatus: true });
+    this.setState({ uploadProductDialogStatus: true });
   };
 
   closeCreateItemDialog = () => {
-    this.setState({ createItemDialogStatus: false });
+    this.setState({ uploadProductDialogStatus: false });
   };
 
-  createItem = title => {
-    const { createTraining, projectId } = this.props;
-    createTraining({ title, values: [], projectId }).then(response => {
+  createTrainingInput = rows => {
+    rows.splice(0, 1);
+    const trainingInputs = rows.reduce((currentTrainingInputs, row) => {
+      const [title, userSay] = row;
+      const foundTrainingInput = currentTrainingInputs.find(
+        currentTrainingInput => currentTrainingInput.title === title
+      );
+      if (!foundTrainingInput) {
+        currentTrainingInputs.push({
+          title,
+          userSays: [userSay]
+        });
+      } else {
+        foundTrainingInput.userSays.push(userSay);
+      }
+      return currentTrainingInputs;
+    }, []);
+    return trainingInputs;
+  };
+
+  createItem = async file => {
+    const rows = await readXlsxFile(file);
+    const trainings = this.createTrainingInput(rows);
+    const { createTrainings, projectId } = this.props;
+    createTrainings({ trainings, projectId }).then(response => {
       this.closeCreateItemDialog();
-      const trainingId = response.data.createTraining.id;
+      const trainingId = response.data.createTrainings[0].id;
       redirect({}, `/${projectId}/training/${trainingId}`);
     });
   };
@@ -57,7 +81,7 @@ class Training extends Component {
     currentTrainingId === this.props.trainingId;
 
   render() {
-    const { keyword, pagination, createItemDialogStatus } = this.state;
+    const { keyword, pagination, uploadProductDialogStatus } = this.state;
     const { myTrainings, projectId, trainingId, classes } = this.props;
     return (
       <LayoutProvider
@@ -120,13 +144,16 @@ class Training extends Component {
         {trainingId && (
           <TrainingProduct trainingId={trainingId} projectId={projectId} />
         )}
-        <CreateProductDialog
-          placeholder="Training Name"
-          message="Add new training"
-          open={createItemDialogStatus}
+        <UploadProductDialog
+          placeholder="Choose User Input File"
+          message="Upload User Input"
+          submessage="You can upload user inputs to the Training tool in one .xlsx file (follow the template below)."
+          open={uploadProductDialogStatus}
           handleClose={this.closeCreateItemDialog}
           handleConfirm={this.createItem}
-        />
+        >
+          <UploadFileTemplate />
+        </UploadProductDialog>
       </LayoutProvider>
     );
   }
@@ -140,7 +167,7 @@ Training.defaultProps = {
 Training.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
-  createTraining: PropTypes.func.isRequired,
+  createTrainings: PropTypes.func.isRequired,
   trainingId: PropTypes.string,
   myTrainings: PropTypes.array
 };
