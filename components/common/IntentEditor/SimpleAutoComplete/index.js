@@ -80,6 +80,10 @@ const styles = () => ({
   autocomplete: {
     flex: 1,
     marginLeft: 5
+  },
+  suggestions: {
+    height: 184,
+    overflowY: 'overlay'
   }
 });
 
@@ -137,6 +141,7 @@ function SimpleAutoComplete(props) {
             )}
           </div>
           <div
+            className={classes.suggestions}
             {...(isOpen ? getMenuProps({}, { suppressRefError: true }) : {})}
           >
             {suggestions(inputValue, result => {

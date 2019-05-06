@@ -28,12 +28,28 @@ class DialogProduct extends Component {
       viewedUnsatifiedDialog: [],
       dialogInputProps: {}
     };
+    this.propChangeCounter = 0;
   }
 
   componentDidMount() {
     const { messages, title } = this.props.dialog;
     this.setState({ rawMessages: messages, title });
     this.setState(this.updateViewedDialog(messages, null, [], []));
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const isMessagesEqual = _.isEqual(
+      nextProps.dialog.messages,
+      this.props.dialog.messages
+    );
+    const isTitleEqual = _.isEqual(
+      nextProps.dialog.title,
+      this.props.dialog.title
+    );
+    if ((!isTitleEqual || !isMessagesEqual) && this.propChangeCounter > 1) {
+      return false;
+    }
+    return true;
   }
 
   componentDidUpdate(prevProps) {
@@ -49,6 +65,7 @@ class DialogProduct extends Component {
       const { messages, title } = this.props.dialog;
       this.setState({ rawMessages: messages, title });
       this.setState(this.updateViewedDialog(messages, null, [], []));
+      this.propChangeCounter += 1;
     }
   }
 
@@ -197,7 +214,7 @@ class DialogProduct extends Component {
       id: String(rawMessage.id),
       parentId:
         rawMessage.parentId === null ? null : String(rawMessage.parentId),
-      intentId: rawMessage.intentId,
+      intentId: rawMessage.intent ? rawMessage.intent.id : null,
       title: rawMessage.title,
       type: rawMessage.type,
       depth: rawMessage.depth,
@@ -206,15 +223,14 @@ class DialogProduct extends Component {
     updateDialog({
       id: dialogId,
       title,
-      messages: messages.length === 0 ? null : messages,
-      rootMessageId: messages.length === 0 ? null : messages[0].id
+      messages: messages.length === 0 ? null : messages
     });
   };
 
   onDelete = async () => {
     const { deleteDialog, dialogId, projectId } = this.props;
     const response = await deleteDialog({ id: dialogId });
-    redirect({}, `/${projectId}/entity`);
+    redirect({}, `/${projectId}/dialog`);
     return response;
   };
 
