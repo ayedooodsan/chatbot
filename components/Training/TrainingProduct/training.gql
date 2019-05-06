@@ -15,10 +15,7 @@ query training (
       entityRanges {
         offset
         length
-        entity {
-          id
-          title
-        }
+        paramKey
       }
       params {
         name
@@ -26,6 +23,7 @@ query training (
           id
           title
         }
+        key
       }
     }
   }

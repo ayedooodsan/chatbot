@@ -19,10 +19,7 @@ mutation updateTraining (
       entityRanges {
         offset
         length
-        entity {
-          id
-          title
-        }
+        paramKey
       }
       params {
         name
@@ -30,6 +27,7 @@ mutation updateTraining (
           id
           title
         }
+        key
       }
     }
   }

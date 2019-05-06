@@ -61,27 +61,27 @@ const TrainingField = props => {
       entityRanges: newBlock.entityRanges.map(entityRange => ({
         offset: entityRange.offset,
         length: entityRange.length,
-        entity: entityMap[entityRange.key].data.entity
+        entity: entityMap[entityRange.key].data.entity,
+        paramKey: entityMap[entityRange.key].data.paramKey
       }))
     };
     const addedEntity = {};
     const newParams = newTraining.entityRanges.reduce(
       (currentParams, entityRange) => {
-        const { entity } = entityRange;
-        if (!addedEntity[entity.id]) {
-          const foundEntity = params.find(
-            param => param.entity.id === entity.id
-          );
+        const { entity, paramKey } = entityRange;
+        if (!addedEntity[paramKey]) {
+          const foundEntity = params.find(param => param.key === paramKey);
           if (foundEntity) {
             currentParams.push(foundEntity);
           } else {
             currentParams.push({
-              name: entity.title,
-              entity
+              name: '',
+              entity,
+              key: paramKey
             });
           }
         }
-        addedEntity[entity.id] = true;
+        addedEntity[paramKey] = true;
         return currentParams;
       },
       []
@@ -107,14 +107,14 @@ const TrainingField = props => {
     params[index].name = name;
     dispatch({
       type: ON_CHANGE_PARAMS,
-      payload: params
+      payload: { params }
     });
   };
 
   const onDeleteParam = index => {
     const [deletedParam] = params.splice(index, 1);
     const newEntityRanges = entityRanges.filter(
-      entityRange => entityRange.entity.id !== deletedParam.entity.id
+      entityRange => entityRange.paramKey !== deletedParam.key
     );
     dispatch({
       type: ON_CHANGE_USER_SAY,
@@ -146,6 +146,7 @@ const TrainingField = props => {
             key={params.length}
             className={classes.intentEditor}
             initialValue={{ text, entityRanges }}
+            params={params}
             onChange={onPushUserSay}
           />
           {params.map((param, index) => (

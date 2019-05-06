@@ -38,11 +38,12 @@ const TrainingProduct = props => {
             entityRanges: entityRanges.map(entityRange => ({
               offset: entityRange.offset,
               length: entityRange.length,
-              entityId: entityRange.entity.id
+              paramKey: entityRange.paramKey
             })),
             params: params.map(param => ({
               name: param.name,
-              entityId: param.entity.id
+              entityId: param.entity.id,
+              key: param.key
             })),
             intentResultId: intentResult === null ? null : intentResult.id,
             actionStatus
@@ -72,11 +73,12 @@ const TrainingProduct = props => {
             entityRanges: entityRanges.map(entityRange => ({
               offset: entityRange.offset,
               length: entityRange.length,
-              entityId: entityRange.entity.id
+              paramKey: entityRange.paramKey
             })),
             params: params.map(param => ({
               name: param.name,
-              entityId: param.entity.id
+              entityId: param.entity.id,
+              key: param.key
             })),
             intentResultId: intentResult === null ? null : intentResult.id,
             actionStatus
