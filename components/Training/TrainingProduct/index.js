@@ -4,18 +4,24 @@ import ProductLayoutProvider from '../../layout/ProductLayoutProvider';
 import ProductHead from '../../layout/ProductHead';
 import ProductBody from '../../layout/ProductBody';
 import connect from './store';
-import EntityField from '../EntityField';
+import TrainingField from '../TrainingField';
 import redirect from '../../../libraries/redirect';
 
-const EntityProduct = props => {
-  const { projectId, entityId, updateEntity, deleteEntity, entity } = props;
-  const onSave = getEntityProduct => {
+const TrainingProduct = props => {
+  const {
+    projectId,
+    trainingId,
+    updateTraining,
+    deleteTraining,
+    training
+  } = props;
+  const onSave = getTrainingProduct => {
     return () => {
-      const entityFilter = entityEntry =>
-        entityEntry.keyword !== '' && entityEntry.synonyms.length !== 0;
-      const { title, productValues } = getEntityProduct(entityFilter);
-      updateEntity({
-        id: entityId,
+      const trainingFilter = trainingEntry =>
+        trainingEntry.keyword !== '' && trainingEntry.synonyms.length !== 0;
+      const { title, productValues } = getTrainingProduct(trainingFilter);
+      updateTraining({
+        id: trainingId,
         title,
         values: productValues.map(value => ({
           keyword: value.keyword,
@@ -26,8 +32,8 @@ const EntityProduct = props => {
   };
 
   const onDelete = async () => {
-    const response = await deleteEntity({ id: entityId });
-    redirect({}, `/${projectId}/entity`);
+    const response = await deleteTraining({ id: trainingId });
+    redirect({}, `/${projectId}/training`);
     return response;
   };
 
@@ -43,17 +49,17 @@ const EntityProduct = props => {
 
   return (
     <ProductLayoutProvider
-      id={entityId}
-      title={entity.title}
-      productValues={entity.values}
-      header={(onChangeTitle, entityTitle, getEntityProduct) => {
+      id={trainingId}
+      title={training.title}
+      productValues={training.userSays}
+      header={(onChangeTitle, trainingTitle, getTrainingProduct) => {
         return (
           <ProductHead
-            productName={entityTitle}
-            deleteMessage={`Delete ${entityTitle} Entity`}
-            deleteSubMessage="To delete this entity, please enter the first word on entity title."
+            productName={trainingTitle}
+            deleteMessage={`Delete ${trainingTitle} Training`}
+            deleteSubMessage="To delete this training, please enter the first word on training title."
             onChange={onChangeTitle}
-            onSave={onSave(getEntityProduct)}
+            onSave={onSave(getTrainingProduct)}
             onDelete={onDelete}
             projectId={projectId}
             autoFocus
@@ -63,15 +69,18 @@ const EntityProduct = props => {
       product={(values, onChangeValues, onAddIntialValue, onDeleteValue) => {
         return (
           <ProductBody
+            noAdd
             values={values}
             onChangeValues={onChangeValues}
             onDeleteValue={onDeleteValue}
             generateForm={(
               value,
               onChangeCurrentValue,
-              onDeleteCurrentValue
+              onDeleteCurrentValue,
+              index
             ) => (
-              <EntityField
+              <TrainingField
+                number={index + 1}
                 initialValue={value}
                 onChange={onChangeCurrentValue}
                 onDelete={() => {
@@ -87,16 +96,16 @@ const EntityProduct = props => {
   );
 };
 
-EntityProduct.defaultProps = {
-  entity: {}
+TrainingProduct.defaultProps = {
+  training: {}
 };
 
-EntityProduct.propTypes = {
+TrainingProduct.propTypes = {
   projectId: PropTypes.string.isRequired,
-  entityId: PropTypes.string.isRequired,
-  updateEntity: PropTypes.func.isRequired,
-  deleteEntity: PropTypes.func.isRequired,
-  entity: PropTypes.object
+  trainingId: PropTypes.string.isRequired,
+  updateTraining: PropTypes.func.isRequired,
+  deleteTraining: PropTypes.func.isRequired,
+  training: PropTypes.object
 };
 
-export default connect(EntityProduct);
+export default connect(TrainingProduct);

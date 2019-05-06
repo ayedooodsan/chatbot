@@ -80,6 +80,10 @@ const styles = () => ({
   autocomplete: {
     flex: 1,
     marginLeft: 5
+  },
+  suggestions: {
+    height: 184,
+    overflowY: 'overlay'
   }
 });
 
@@ -90,6 +94,7 @@ function SimpleAutoComplete(props) {
     label,
     error,
     initialValue,
+    initialInputValue,
     suggestions,
     autoFocus,
     onDelete
@@ -101,7 +106,8 @@ function SimpleAutoComplete(props) {
         onChange(selectedItem);
       }}
       itemToString={item => (item ? item.title : '')}
-      initialInputValue={initialValue}
+      initialInputValue={initialInputValue}
+      initialSelectedItem={initialValue}
     >
       {({
         getInputProps,
@@ -135,6 +141,7 @@ function SimpleAutoComplete(props) {
             )}
           </div>
           <div
+            className={classes.suggestions}
             {...(isOpen ? getMenuProps({}, { suppressRefError: true }) : {})}
           >
             {suggestions(inputValue, result => {
@@ -158,7 +165,8 @@ function SimpleAutoComplete(props) {
 SimpleAutoComplete.defaultProps = {
   error: false,
   autoFocus: false,
-  initialValue: null
+  initialValue: {},
+  initialInputValue: null
 };
 
 SimpleAutoComplete.propTypes = {
@@ -169,6 +177,7 @@ SimpleAutoComplete.propTypes = {
   label: PropTypes.string.isRequired,
   error: PropTypes.bool,
   autoFocus: PropTypes.bool,
+  initialInputValue: PropTypes.string,
   initialValue: PropTypes.string
 };
 

@@ -8,9 +8,10 @@ import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 
 function renderInput(inputProps) {
-  const { InputProps, classes, ref, ...other } = inputProps;
+  const { InputProps, classes, ref, className, ...other } = inputProps;
   return (
     <TextField
+      className={className}
       InputProps={{
         inputRef: ref,
         classes: {
@@ -81,15 +82,15 @@ const styles = () => ({
 function SimpleAutoComplete(props) {
   const {
     classes,
-    input,
+    onChange,
     label,
     error,
-    initialInputValue,
     initialValue,
-    suggestions
+    initialInputValue,
+    suggestions,
+    className
   } = props;
   // eslint-disable-next-line no-unused-vars
-  const { onChange, value, ...otherInputProps } = input;
   const popperRef = useRef(null);
   return (
     <Downshift
@@ -97,8 +98,8 @@ function SimpleAutoComplete(props) {
         onChange(selectedItem);
       }}
       itemToString={item => (item ? item.title : '')}
-      initialInputValue={initialInputValue}
       initialSelectedItem={initialValue}
+      initialInputValue={initialInputValue}
     >
       {({
         getInputProps,
@@ -111,13 +112,14 @@ function SimpleAutoComplete(props) {
       }) => (
         <div>
           {renderInput({
+            className,
             fullWidth: true,
             label,
             margin: 'dense',
             variant: 'outlined',
             error,
             classes,
-            InputProps: getInputProps(otherInputProps),
+            InputProps: getInputProps(),
             ref: node => {
               popperRef.current = node;
             }
@@ -125,9 +127,16 @@ function SimpleAutoComplete(props) {
           <Popper
             open={isOpen}
             anchorEl={popperRef.current}
-            placement="top"
-            style={{
-              zIndex: 1
+            placement="bottom-start"
+            style={{ zIndex: 1 }}
+            modifiers={{
+              flip: {
+                enabled: true
+              },
+              preventOverflow: {
+                enabled: true,
+                boundariesElement: 'window'
+              }
             }}
           >
             <div
@@ -136,8 +145,6 @@ function SimpleAutoComplete(props) {
               <Paper
                 square
                 style={{
-                  marginLeft: 20,
-                  marginBottom: 15,
                   width: popperRef.current
                     ? popperRef.current.clientWidth
                     : null
@@ -168,14 +175,16 @@ function SimpleAutoComplete(props) {
 SimpleAutoComplete.defaultProps = {
   error: false,
   initialValue: {},
-  initialInputValue: null
+  initialInputValue: null,
+  className: ''
 };
 
 SimpleAutoComplete.propTypes = {
   classes: PropTypes.object.isRequired,
   suggestions: PropTypes.func.isRequired,
-  input: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
+  className: PropTypes.string,
   error: PropTypes.bool,
   initialValue: PropTypes.object,
   initialInputValue: PropTypes.string

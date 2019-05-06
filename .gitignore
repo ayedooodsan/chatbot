@@ -5,7 +5,9 @@ config.js
 public.env
 coverage/
 out/
+graphql-url.js
 package-lock.json
+
 # Created by https://www.gitignore.io/api/node,macos,linux,windows,webstorm,sublimetext,visualstudiocode
 
 ### Linux ###

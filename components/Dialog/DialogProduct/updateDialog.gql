@@ -1,13 +1,11 @@
 mutation updateDialog (
   $id: String!
   $title: String
-  $rootMessageId: String
   $messages: [MessageInput!]
 ) {
   updateDialog (
     id: $id
     title: $title
-    rootMessageId: $rootMessageId
     messages: $messages
   ) {
     id
@@ -20,10 +18,8 @@ mutation updateDialog (
       intent {
         id
         title
-        values
-        params {
-          name
-          required
+        values {
+          text
         }
       }
       payload
