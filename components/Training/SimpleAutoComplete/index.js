@@ -109,10 +109,12 @@ function SimpleAutoComplete(props) {
         highlightedIndex,
         inputValue,
         isOpen,
-        selectedItem
+        selectedItem,
+        clearSelection
       }) => (
         <div>
           {renderInput({
+            clearSelection,
             placeholder,
             className,
             fullWidth: true,

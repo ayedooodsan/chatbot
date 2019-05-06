@@ -11,6 +11,7 @@ const ProductBody = props => {
     noAdd,
     classes,
     generateForm,
+    generateAction,
     onChangeValues,
     onDeleteValue,
     addFormList,
@@ -21,6 +22,9 @@ const ProductBody = props => {
       <div className={classes.formList}>
         <Scrollbar>
           <div className={classes.inScrollbar}>
+            <div className={classes.buttonContainer}>
+              {generateAction && generateAction()}
+            </div>
             {values.map((value, index) => (
               <div key={JSON.stringify(value)}>
                 {generateForm(
@@ -54,7 +58,8 @@ const ProductBody = props => {
 
 ProductBody.defaultProps = {
   values: [],
-  noAdd: false
+  noAdd: false,
+  generateAction: null
 };
 
 ProductBody.propTypes = {
@@ -63,6 +68,7 @@ ProductBody.propTypes = {
   addFormList: PropTypes.func.isRequired,
   onChangeValues: PropTypes.func.isRequired,
   onDeleteValue: PropTypes.func.isRequired,
+  generateAction: PropTypes.func,
   noAdd: PropTypes.bool,
   values: PropTypes.array
 };
