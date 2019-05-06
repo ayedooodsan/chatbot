@@ -90,7 +90,8 @@
     "react-scrollbars-custom": "^4.0.0-alpha.12",
     "redux": "4.0.1",
     "redux-thunk": "^2.3.0",
-    "rimraf": "2.6.3"
+    "rimraf": "2.6.3",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/plugin-transform-flow-strip-types": "7.4.0",
