@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useForm, useField } from 'react-final-form-hooks';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
@@ -6,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
 import DeleteIcon from '@material-ui/icons/Delete';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import getColor from '../IntentEditor/getColor';
 import { isTypeOfString } from '../../../libraries/helpers';
 import style from './style';
@@ -40,11 +42,18 @@ const ParamEditor = props => {
     meta
   } = name;
 
+  const inputRef = useRef(null);
+  if (!restInput.value) {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }
+
   return (
     <Paper className={classes.root} elevation={0}>
       <div
         className={classes.color}
-        style={{ backgroundColor: getColor(initialValue.entity.id) }}
+        style={{ backgroundColor: getColor(initialValue.key) }}
       >
         {' '}
       </div>
@@ -52,11 +61,11 @@ const ParamEditor = props => {
         <Grid container alignItems="center">
           <Grid item md={7} className={classes.paddingRight}>
             <TextField
+              inputRef={inputRef}
               label="Parameter Name"
               margin="dense"
               variant="outlined"
               fullWidth
-              helperText={meta.touched && meta.error}
               {...restInput}
               onBlur={event => {
                 onBlur(event);
@@ -78,6 +87,11 @@ const ParamEditor = props => {
             />
           </Grid>
         </Grid>
+        {meta.touched && isTypeOfString(meta.error) && (
+          <FormHelperText margin="dense" error>
+            {meta.touched && meta.error}
+          </FormHelperText>
+        )}
       </div>
       <div className={classes.buttonContainer}>
         <IconButton onClick={onDelete} aria-label="Delete">

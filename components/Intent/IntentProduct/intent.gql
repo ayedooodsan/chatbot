@@ -10,10 +10,7 @@ query intent (
       entityRanges {
         offset
         length
-        entity {
-          id
-          title
-        }
+        paramKey
       }
     }
     params {
@@ -22,6 +19,7 @@ query intent (
         id
         title
       }
+      key
     }
   }
 }
