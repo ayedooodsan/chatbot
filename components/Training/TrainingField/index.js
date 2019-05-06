@@ -1,11 +1,13 @@
 import React, { useReducer, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
-import CancelIcon from '@material-ui/icons/Cancel';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import DeleteIcon from '@material-ui/icons/DeleteOutlined';
+import CheckIcon from '@material-ui/icons/Check';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
 import { withRouter } from 'next/router';
 import SimpleAutoComplete from '../SimpleAutoComplete';
 import IntentSuggestions from '../../common/IntentSuggestions';
@@ -42,14 +44,10 @@ const reducer = (state, { type, payload }) => {
 };
 
 const TrainingField = props => {
-  const { onDelete, onChange, classes, initialValue, router, number } = props;
+  const { onChange, classes, initialValue, router, number } = props;
   const { projectId } = router.query;
   const [state, dispatch] = useReducer(reducer, initialValue);
-  const { text, entityRanges, params, intentResult } = state;
-
-  const onUpdateParams = () => {
-    console.log('on udpate params');
-  };
+  const { text, entityRanges, params, intentResult, actionStatus } = state;
 
   useEffect(() => {
     onChange(state);
@@ -128,8 +126,13 @@ const TrainingField = props => {
     });
   };
 
-  const onTrainingDelete = () => {
-    onDelete(onUpdateParams);
+  const onChangeAction = newActionStatus => {
+    dispatch({
+      type: ON_CHANGE_ACTION_STATUS,
+      payload: {
+        actionStatus: newActionStatus
+      }
+    });
   };
 
   return (
@@ -176,19 +179,34 @@ const TrainingField = props => {
           <Typography variant="body2" className={classes.fieldName}>
             ACTION
           </Typography>
+          {intentResult && (
+            <Tooltip
+              title={`Add to intent "${intentResult.title}"`}
+              placement="left"
+            >
+              <IconButton
+                className={classNames(classes.iconButton, {
+                  [classes.selectedCheck]: actionStatus === 'Check'
+                })}
+                aria-label="Check"
+                onClick={() => {
+                  onChangeAction('Check');
+                }}
+              >
+                <CheckIcon />
+              </IconButton>
+            </Tooltip>
+          )}
           <IconButton
-            onClick={onTrainingDelete}
-            className={classes.iconButton}
-            aria-label="Check"
-          >
-            <CheckCircleIcon />
-          </IconButton>
-          <IconButton
-            onClick={onTrainingDelete}
-            className={classes.iconButton}
+            className={classNames(classes.iconButton, {
+              [classes.selectedDelete]: actionStatus === 'Delete'
+            })}
             aria-label="Delete"
+            onClick={() => {
+              onChangeAction('Delete');
+            }}
           >
-            <CancelIcon />
+            <DeleteIcon />
           </IconButton>
         </div>
       </Paper>
@@ -199,7 +217,6 @@ const TrainingField = props => {
 TrainingField.propTypes = {
   initialValue: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   router: PropTypes.object.isRequired,
   number: PropTypes.number.isRequired

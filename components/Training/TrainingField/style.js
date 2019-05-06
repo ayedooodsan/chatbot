@@ -1,4 +1,4 @@
-const style = () => {
+const style = theme => {
   return {
     root: {
       margin: '8px 0',
@@ -13,14 +13,19 @@ const style = () => {
       paddingTop: 5
     },
     buttonContainer: {
-      padding: '0 10px 0 10px',
+      padding: '0 12px 0 22px',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center'
     },
     iconButton: {
-      marginBottom: 5,
-      padding: 10
+      marginBottom: 5
+    },
+    selectedDelete: {
+      color: '#f44336'
+    },
+    selectedCheck: {
+      color: theme.palette.primary.main
     },
     intentEditor: {
       minHeight: 44,

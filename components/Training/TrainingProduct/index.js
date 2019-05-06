@@ -130,7 +130,15 @@ const TrainingProduct = props => {
             onDeleteValue={onDeleteValue}
             generateAction={() => (
               <React.Fragment>
-                <Button onClik={onApprove}>Approve</Button>
+                <Button
+                  variant="contained"
+                  style={{
+                    backgroundColor: 'white'
+                  }}
+                  onClik={onApprove}
+                >
+                  Approve
+                </Button>
               </React.Fragment>
             )}
             generateForm={(

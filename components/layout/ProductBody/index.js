@@ -19,12 +19,14 @@ const ProductBody = props => {
   } = props;
   return (
     <div className={classes.root}>
+      <div className={classes.inScrollbar}>
+        <div className={classes.buttonContainer}>
+          {generateAction && generateAction()}
+        </div>
+      </div>
       <div className={classes.formList}>
         <Scrollbar>
           <div className={classes.inScrollbar}>
-            <div className={classes.buttonContainer}>
-              {generateAction && generateAction()}
-            </div>
             {values.map((value, index) => (
               <div key={JSON.stringify(value)}>
                 {generateForm(
