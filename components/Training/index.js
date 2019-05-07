@@ -6,6 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import withStyles from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import readXlsxFile from 'read-excel-file';
+import moment from 'moment';
 import UploadFileTemplate from './UploadFileTemplate';
 import LayoutProvider from '../layout/LayoutProvider';
 import Navigation from '../layout/Navigation';
@@ -123,7 +124,9 @@ class Training extends Component {
                               )
                             })
                           }}
-                          secondary={myTraining.date}
+                          secondary={moment(myTraining.createdAt).format(
+                            'MM/DD/YYYY'
+                          )}
                           secondaryTypographyProps={{
                             className: classNames({
                               [classes.listItemSecondaryTextActive]: this.activeTraining(

@@ -43,7 +43,7 @@ const withApproveTraining = graphql(approveTrainingGql, {
     approveTraining: ({ id, title, userSays }) =>
       approveTraining({
         variables: { id, title, userSays },
-        refetchQueries: ['myTrainings', 'training']
+        refetchQueries: ['myTrainings', 'training', 'intent']
       })
   })
 });

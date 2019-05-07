@@ -6,5 +6,6 @@ query myTrainings (
   ) {
     id
     title
+    createdAt
   }
 }

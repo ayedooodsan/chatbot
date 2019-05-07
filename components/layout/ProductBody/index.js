@@ -21,7 +21,7 @@ const ProductBody = props => {
     <div className={classes.root}>
       <div className={classes.inScrollbar}>
         <div className={classes.buttonContainer}>
-          {generateAction && generateAction()}
+          {values.length > 0 && generateAction && generateAction()}
         </div>
       </div>
       <div className={classes.formList}>

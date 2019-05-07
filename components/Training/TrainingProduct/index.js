@@ -106,6 +106,7 @@ const TrainingProduct = props => {
 
   return (
     <ProductLayoutProvider
+      key={training.userSays.length}
       id={trainingId}
       title={training.title}
       productValues={training.userSays}
@@ -123,7 +124,15 @@ const TrainingProduct = props => {
           />
         );
       }}
-      product={(values, onChangeValues, onAddIntialValue, onDeleteValue) => {
+      product={(
+        values,
+        onChangeValues,
+        onAddIntialValue,
+        onDeleteValue,
+        updateSubProductFromProduct,
+        subProduct,
+        getTrainingProduct
+      ) => {
         return (
           <ProductBody
             noAdd
@@ -137,7 +146,7 @@ const TrainingProduct = props => {
                   style={{
                     backgroundColor: 'white'
                   }}
-                  onClik={onApprove}
+                  onClick={onApprove(getTrainingProduct)}
                 >
                   Approve
                 </Button>
@@ -167,7 +176,9 @@ const TrainingProduct = props => {
 };
 
 TrainingProduct.defaultProps = {
-  training: {}
+  training: {
+    userSays: []
+  }
 };
 
 TrainingProduct.propTypes = {
