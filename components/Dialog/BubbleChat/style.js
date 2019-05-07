@@ -2,10 +2,12 @@ const style = () => ({
   bubbleSelf: {
     display: 'flex',
     alignItems: 'flex-end',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    marginLeft: '2.5rem'
   },
   bubbleOther: {
-    display: 'flex'
+    display: 'flex',
+    marginRight: '2.5rem'
   },
   bubbleContent: {
     borderRadius: '4px',

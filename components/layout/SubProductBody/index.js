@@ -19,26 +19,30 @@ const SubProductBody = props => {
   } = props;
   return (
     <div className={classes.root}>
-      <Paper className={classes.formList} evaluation={1}>
-        <Typography variant="subtitle1">{title}</Typography>
-        <Divider />
-        <Scrollbar>
-          <div className={classes.inScrollbar}>
-            {values.map((value, index) => (
-              <div key={JSON.stringify(value)}>
-                {generateForm(
-                  value,
-                  (newValue, key) => {
-                    onChangeValues(newValue, index, key);
-                  },
-                  callback => {
-                    onDeleteValue(index, callback);
-                  }
-                )}
-              </div>
-            ))}
-          </div>
-        </Scrollbar>
+      <Paper className={classes.subProduct} evaluation={1}>
+        <div className={classes.header}>
+          <Typography variant="subtitle1">{title}</Typography>
+          <Divider />
+        </div>
+        <div className={classes.body}>
+          <Scrollbar>
+            <div className={classes.inScrollbar}>
+              {values.map((value, index) => (
+                <div key={JSON.stringify(value)}>
+                  {generateForm(
+                    value,
+                    (newValue, key) => {
+                      onChangeValues(newValue, index, key);
+                    },
+                    callback => {
+                      onDeleteValue(index, callback);
+                    }
+                  )}
+                </div>
+              ))}
+            </div>
+          </Scrollbar>
+        </div>
       </Paper>
     </div>
   );

@@ -9,27 +9,33 @@ import IntentEditor from '../../common/IntentEditor';
 import style from './style';
 
 const IntentField = props => {
-  const { onDelete, onChange, classes, initialValue, updateParams } = props;
+  const {
+    onDelete,
+    onChange,
+    classes,
+    initialValue,
+    updateParams,
+    params
+  } = props;
 
   const onUpdateParams = () => {
-    updateParams((intents, params) => {
+    updateParams(intents => {
       const addedParams = {};
       const newParams = intents.reduce((currentParams, intent) => {
         intent.entityRanges.forEach(entityRange => {
-          const { entity } = entityRange;
-          if (!addedParams[entity.id]) {
-            const foundParams = params.find(
-              param => param.entity.id === entity.id
-            );
+          const { paramKey, entity } = entityRange;
+          if (!addedParams[paramKey]) {
+            const foundParams = params.find(param => param.key === paramKey);
             if (foundParams) {
               currentParams.push(foundParams);
             } else {
               currentParams.push({
-                name: entity.title,
-                entity
+                name: '',
+                entity,
+                key: paramKey
               });
             }
-            addedParams[entity.id] = true;
+            addedParams[paramKey] = true;
           }
         });
         return currentParams;
@@ -46,7 +52,8 @@ const IntentField = props => {
       entityRanges: newBlock.entityRanges.map(entityRange => ({
         offset: entityRange.offset,
         length: entityRange.length,
-        entity: entityMap[entityRange.key].data.entity
+        entity: entityMap[entityRange.key].data.entity,
+        paramKey: entityMap[entityRange.key].data.paramKey
       }))
     };
     if (!_.isEqual(initialValue, newIntent)) {
@@ -61,7 +68,11 @@ const IntentField = props => {
   return (
     <React.Fragment>
       <Paper className={classes.root} elevation={1}>
-        <IntentEditor initialValue={initialValue} onChange={onPushIntent} />
+        <IntentEditor
+          initialValue={initialValue}
+          onChange={onPushIntent}
+          params={params}
+        />
         <IconButton
           onClick={onIntentDelete}
           className={classes.iconButton}
@@ -76,6 +87,7 @@ const IntentField = props => {
 
 IntentField.propTypes = {
   initialValue: PropTypes.object.isRequired,
+  params: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   updateParams: PropTypes.func.isRequired,

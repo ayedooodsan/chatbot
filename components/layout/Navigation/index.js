@@ -18,7 +18,7 @@ import { Link } from '../../../routes';
 
 class Navigation extends React.Component {
   state = {
-    open: true
+    open: false
   };
 
   handleDrawerOpen = () => {

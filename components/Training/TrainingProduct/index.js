@@ -11,22 +11,42 @@ const TrainingProduct = props => {
   const {
     projectId,
     trainingId,
-    updateTraining,
+    approveTraining,
     deleteTraining,
     training
   } = props;
+
   const onSave = getTrainingProduct => {
     return () => {
-      const trainingFilter = trainingEntry =>
-        trainingEntry.keyword !== '' && trainingEntry.synonyms.length !== 0;
+      const trainingFilter = trainingEntry => trainingEntry.text !== '';
       const { title, productValues } = getTrainingProduct(trainingFilter);
-      updateTraining({
+      approveTraining({
         id: trainingId,
         title,
-        values: productValues.map(value => ({
-          keyword: value.keyword,
-          synonyms: value.synonyms
-        }))
+        userSays: productValues.map(userSay => {
+          const {
+            text,
+            entityRanges,
+            params,
+            intentResult,
+            actionStatus
+          } = userSay;
+          return {
+            text,
+            entityRanges: entityRanges.map(entityRange => ({
+              offset: entityRange.offset,
+              length: entityRange.length,
+              paramKey: entityRange.paramKey
+            })),
+            params: params.map(param => ({
+              name: param.name,
+              entityId: param.entity.id,
+              key: param.key
+            })),
+            intentResultId: intentResult === null ? null : intentResult.id,
+            actionStatus
+          };
+        })
       });
     };
   };
@@ -49,6 +69,7 @@ const TrainingProduct = props => {
 
   return (
     <ProductLayoutProvider
+      key={training.userSays.length}
       id={trainingId}
       title={training.title}
       productValues={training.userSays}
@@ -97,13 +118,16 @@ const TrainingProduct = props => {
 };
 
 TrainingProduct.defaultProps = {
-  training: {}
+  training: {
+    userSays: []
+  }
 };
 
 TrainingProduct.propTypes = {
   projectId: PropTypes.string.isRequired,
   trainingId: PropTypes.string.isRequired,
   updateTraining: PropTypes.func.isRequired,
+  approveTraining: PropTypes.func.isRequired,
   deleteTraining: PropTypes.func.isRequired,
   training: PropTypes.object
 };
