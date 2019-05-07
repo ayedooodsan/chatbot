@@ -19,7 +19,8 @@ const style = theme => {
       alignItems: 'center'
     },
     iconButton: {
-      marginBottom: 5
+      marginBottom: 5,
+      padding: 5
     },
     selectedDelete: {
       color: '#f44336'

@@ -19,11 +19,11 @@ const ProductBody = props => {
   } = props;
   return (
     <div className={classes.root}>
-      <div className={classes.inScrollbar}>
-        <div className={classes.buttonContainer}>
-          {values.length > 0 && generateAction && generateAction()}
+      {values.length > 0 && generateAction && (
+        <div className={classes.inScrollbar}>
+          <div className={classes.buttonContainer}>{generateAction()}</div>
         </div>
-      </div>
+      )}
       <div className={classes.formList}>
         <Scrollbar>
           <div className={classes.inScrollbar}>

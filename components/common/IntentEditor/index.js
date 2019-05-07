@@ -250,7 +250,7 @@ const IntentEditor = props => {
               <ClickAwayListener onClickAway={onPopperClickAway}>
                 <SimpleAutoComplete
                   onChange={onCreateEntity}
-                  label="Search entity"
+                  label="Search entity / param"
                   params={params}
                   suggestions={(inputValue, children) => {
                     return (
@@ -288,7 +288,7 @@ const IntentEditor = props => {
                   onChange={onChangeEntity}
                   onDelete={onEntityDelete}
                   autoFocus
-                  label="Search entity"
+                  label="Search entity / param"
                   initialInputValue={
                     entityData.entity ? entityData.entity.title : ''
                   }

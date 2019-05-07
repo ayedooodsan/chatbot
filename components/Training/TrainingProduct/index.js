@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
 import ProductLayoutProvider from '../../layout/ProductLayoutProvider';
 import ProductHead from '../../layout/ProductHead';
 import ProductBody from '../../layout/ProductBody';
@@ -13,47 +12,11 @@ const TrainingProduct = props => {
     projectId,
     trainingId,
     approveTraining,
-    updateTraining,
     deleteTraining,
     training
   } = props;
 
   const onSave = getTrainingProduct => {
-    return () => {
-      const trainingFilter = trainingEntry => trainingEntry.text !== '';
-      const { title, productValues } = getTrainingProduct(trainingFilter);
-      updateTraining({
-        id: trainingId,
-        title,
-        userSays: productValues.map(userSay => {
-          const {
-            text,
-            entityRanges,
-            params,
-            intentResult,
-            actionStatus
-          } = userSay;
-          return {
-            text,
-            entityRanges: entityRanges.map(entityRange => ({
-              offset: entityRange.offset,
-              length: entityRange.length,
-              paramKey: entityRange.paramKey
-            })),
-            params: params.map(param => ({
-              name: param.name,
-              entityId: param.entity.id,
-              key: param.key
-            })),
-            intentResultId: intentResult === null ? null : intentResult.id,
-            actionStatus
-          };
-        })
-      });
-    };
-  };
-
-  const onApprove = getTrainingProduct => {
     return () => {
       const trainingFilter = trainingEntry => trainingEntry.text !== '';
       const { title, productValues } = getTrainingProduct(trainingFilter);
@@ -124,34 +87,13 @@ const TrainingProduct = props => {
           />
         );
       }}
-      product={(
-        values,
-        onChangeValues,
-        onAddIntialValue,
-        onDeleteValue,
-        updateSubProductFromProduct,
-        subProduct,
-        getTrainingProduct
-      ) => {
+      product={(values, onChangeValues, onAddIntialValue, onDeleteValue) => {
         return (
           <ProductBody
             noAdd
             values={values}
             onChangeValues={onChangeValues}
             onDeleteValue={onDeleteValue}
-            generateAction={() => (
-              <React.Fragment>
-                <Button
-                  variant="contained"
-                  style={{
-                    backgroundColor: 'white'
-                  }}
-                  onClick={onApprove(getTrainingProduct)}
-                >
-                  Approve
-                </Button>
-              </React.Fragment>
-            )}
             generateForm={(
               value,
               onChangeCurrentValue,

@@ -5,6 +5,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/DeleteOutlined';
 import CheckIcon from '@material-ui/icons/Check';
+import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -209,6 +210,19 @@ const TrainingField = props => {
           >
             <DeleteIcon />
           </IconButton>
+          {actionStatus !== null && (
+            <Tooltip title="Reset action" placement="left">
+              <IconButton
+                className={classes.iconButton}
+                aria-label="Close"
+                onClick={() => {
+                  onChangeAction(null);
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         </div>
       </Paper>
     </React.Fragment>
