@@ -1,4 +1,4 @@
-const style = () => ({
+const style = theme => ({
   listItem: {
     paddingLeft: '14px',
     paddingRight: '14px'
@@ -41,6 +41,16 @@ const style = () => ({
   button: {
     paddingTop: 10,
     paddingBottom: 10
+  },
+  lightTooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 1)',
+    boxShadow: theme.shadows[1],
+    fontSize: 12
+  },
+  lightPopper: {
+    marginLeft: -5,
+    opacity: 1
   }
 });
 
