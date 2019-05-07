@@ -60,7 +60,6 @@ const style = theme => ({
     fontSize: 12
   },
   lightPopper: {
-    marginLeft: -5,
     opacity: 1
   }
 });
