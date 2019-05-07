@@ -16,6 +16,7 @@ import {
   convertToRaw
 } from 'draft-js';
 import { withRouter } from 'next/router';
+import uuid from 'uuid/v1';
 import {
   addEntity,
   changeEntity,
@@ -32,7 +33,7 @@ import useFakeSelection from './useFakeSelection';
 import style from './style';
 
 const IntentEditor = props => {
-  const { classes, router, initialValue, onChange, className } = props;
+  const { classes, router, initialValue, params, onChange, className } = props;
   const { projectId } = router.query;
   const [entityRef, setEntityRef] = useState(null);
   const [selectionState, setSelectionState] = useState(null);
@@ -55,33 +56,33 @@ const IntentEditor = props => {
         text: intent.text,
         type: 'unstyled',
         entityRanges: intent.entityRanges.map(entityRange => {
-          const { offset, length } = entityRange;
-          const { id } = entityRange.entity;
+          const { offset, length, paramKey } = entityRange;
           return {
-            offset: entityRange.offset,
-            length: entityRange.length,
-            key: `${offset}-${length}-${id}`
+            offset,
+            length,
+            key: paramKey
           };
         })
       }
     ];
     generatedEditorState.entityMap = {};
     intent.entityRanges.forEach(entityRange => {
-      const { offset, length } = entityRange;
-      const { id, title } = entityRange.entity;
-      generatedEditorState.entityMap[`${offset}-${length}-${id}`] = {
-        type: 'ENTITY',
-        mutability: 'IMMUTABLE',
-        data: {
-          offset,
-          length,
-          color: getColor(id),
-          entity: {
-            id,
-            title
+      const { offset, length, paramKey } = entityRange;
+      const foundParam = params.find(param => param.key === paramKey);
+      if (foundParam) {
+        const { entity } = foundParam;
+        generatedEditorState.entityMap[paramKey] = {
+          type: 'ENTITY',
+          mutability: 'IMMUTABLE',
+          data: {
+            offset,
+            length,
+            entity,
+            color: getColor(paramKey),
+            paramKey
           }
-        }
-      };
+        };
+      }
     });
     return generatedEditorState;
   };
@@ -103,7 +104,6 @@ const IntentEditor = props => {
     onPopperFocus,
     onPopperBlur
   } = useFakeSelection();
-
   const onChangeEditorState = (newEditorState, onPushIntent) => {
     let modifiedEditorState = newEditorState;
     const visibleSelectionRect = getVisibleSelectionRect(window);
@@ -133,7 +133,7 @@ const IntentEditor = props => {
   };
 
   const onCreateEntity = newEntity => {
-    const { id, title } = newEntity;
+    const { id, title, key } = newEntity;
     if (id) {
       let modifiedEditorState = addEntity(editorState, {
         type: 'ENTITY',
@@ -141,11 +141,12 @@ const IntentEditor = props => {
         data: {
           offset,
           length,
-          color: getColor(id),
+          color: getColor(key || uuid()),
           entity: {
             id,
             title
-          }
+          },
+          paramKey: key || uuid()
         }
       });
       modifiedEditorState = setForceSelection(
@@ -158,7 +159,7 @@ const IntentEditor = props => {
   };
 
   const onChangeEntity = newEntity => {
-    const { id, title } = newEntity;
+    const { id, title, key } = newEntity;
     if (id) {
       let modifiedEditorState = changeEntity(editorState, selectionState, {
         type: 'ENTITY',
@@ -166,11 +167,12 @@ const IntentEditor = props => {
         data: {
           offset: entityData.offset,
           length: entityData.length,
-          color: getColor(id),
+          color: getColor(key || uuid()),
           entity: {
             id,
             title
-          }
+          },
+          paramKey: key || uuid()
         }
       });
       modifiedEditorState = setForceSelection(
@@ -248,7 +250,8 @@ const IntentEditor = props => {
               <ClickAwayListener onClickAway={onPopperClickAway}>
                 <SimpleAutoComplete
                   onChange={onCreateEntity}
-                  label="Search entity"
+                  label="Search entity / param"
+                  params={params}
                   suggestions={(inputValue, children) => {
                     return (
                       <EntitySuggestions
@@ -285,10 +288,11 @@ const IntentEditor = props => {
                   onChange={onChangeEntity}
                   onDelete={onEntityDelete}
                   autoFocus
-                  label="Search entity"
+                  label="Search entity / param"
                   initialInputValue={
                     entityData.entity ? entityData.entity.title : ''
                   }
+                  params={params}
                   initialValue={entityData.entity ? entityData.entity : {}}
                   suggestions={(inputValue, children) => {
                     return (
@@ -316,6 +320,7 @@ IntentEditor.defaultProps = {
 
 IntentEditor.propTypes = {
   initialValue: PropTypes.object.isRequired,
+  params: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   className: PropTypes.string,

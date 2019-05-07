@@ -1,0 +1,12 @@
+mutation createTrainings (
+  $projectId: String!
+  $trainings: [TrainingInput!]!
+) {
+  createTrainings (
+    projectId: $projectId
+    trainings: $trainings
+  ) {
+    id
+    title
+  }
+}

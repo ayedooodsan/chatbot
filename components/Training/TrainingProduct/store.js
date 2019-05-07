@@ -1,92 +1,76 @@
-let training = {
-  id: '1',
-  title: 'Dialog A',
-  userSays: [
-    {
-      actionStatus: 'delete',
-      intentResult: {
-        id: '5cbeb37b62dc764f0720b6d2',
-        title: 'Lokasi yang dikunjungi'
-      },
-      text: 'Selamat datang di kota pekanbaru',
-      entityRanges: [
-        {
-          offset: 8,
-          length: 6,
-          entity: {
-            id: '5cbe84aa1f24d91d691ddffb',
-            title: 'Buah'
-          }
-        },
-        {
-          offset: 23,
-          length: 9,
-          entity: {
-            id: '5cbd703aa2084f67299d8a24',
-            title: 'Kota'
-          }
-        }
-      ],
-      params: [
-        {
-          name: 'Buah',
-          entity: {
-            id: '5cbe84aa1f24d91d691ddffb',
-            title: 'Buah'
-          }
-        },
-        {
-          name: 'Kota',
-          entity: {
-            id: '5cbd703aa2084f67299d8a24',
-            title: 'Kota'
-          }
-        }
-      ]
-    },
-    {
-      actionStatus: null,
-      intentResult: {
-        id: '5cc66d18f38909220b15d2c4',
-        title: 'Tempat Tinggal'
-      },
-      text: 'Saya baru saja nonton End Game',
-      entityRanges: [
-        {
-          offset: 22,
-          length: 8,
-          entity: {
-            id: '5cc676cda9252b42d237aa3a',
-            title: 'Movies'
-          }
-        }
-      ],
-      params: [
-        {
-          name: 'Movies',
-          entity: {
-            id: '5cc676cda9252b42d237aa3a',
-            title: 'Movies'
-          }
-        }
-      ]
+import { graphql, compose } from 'react-apollo';
+import intentGql from '../../Intent/IntentProduct/intent.gql';
+import trainingGql from './training.gql';
+import updateTrainingGql from './updateTraining.gql';
+import approveTrainingGql from './approveTraining.gql';
+import deleteTrainingGql from './deleteTraining.gql';
+
+const withTraining = graphql(trainingGql, {
+  name: 'training',
+  options: props => ({
+    variables: {
+      id: props.trainingId
     }
-  ]
-};
-const deleteTraining = () => null;
-const updateTraining = newTraining => {
-  training = newTraining;
-};
+  }),
+  props: ({ training: { loading, training, error } }) => {
+    if (error) {
+      return {
+        loading,
+        training: {}
+      };
+    }
+    return {
+      loading,
+      training,
+      error
+    };
+  }
+});
 
-const connect = Comp => props => (
-  <div>
-    <Comp
-      training={training}
-      deleteTraining={deleteTraining}
-      updateTraining={updateTraining}
-      {...props}
-    />
-  </div>
-);
+const withUpdateTraining = graphql(updateTrainingGql, {
+  name: 'updateTraining',
+  props: ({ updateTraining }) => ({
+    updateTraining: ({ id, title, userSays }) =>
+      updateTraining({
+        variables: { id, title, userSays },
+        refetchQueries: ['myTrainings', 'training']
+      })
+  })
+});
 
-export default connect;
+const withApproveTraining = graphql(approveTrainingGql, {
+  name: 'approveTraining',
+  props: ({ approveTraining }) => ({
+    approveTraining: ({ id, title, userSays }) =>
+      approveTraining({
+        variables: { id, title, userSays },
+        refetchQueries: [
+          'myTrainings',
+          'training',
+          ...userSays.map(userSay => ({
+            query: intentGql,
+            variables: { id: userSay.intentResultId }
+          }))
+        ]
+      })
+  })
+});
+
+const withDeleteTraining = graphql(deleteTrainingGql, {
+  name: 'deleteTraining',
+  props: ({ deleteTraining }) => ({
+    deleteTraining: ({ id }) =>
+      deleteTraining({
+        variables: { id },
+        refetchQueries: ['myTrainings']
+      })
+  })
+});
+
+export default comp =>
+  compose(
+    withTraining,
+    withUpdateTraining,
+    withApproveTraining,
+    withDeleteTraining
+  )(comp);

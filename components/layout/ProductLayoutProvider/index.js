@@ -25,8 +25,10 @@ class ProductLayoutProvider extends Component {
     const isTitleStateEqual = _.isEqual(nextState.title, this.state.title);
     const isProductValuesEqual =
       nextState.productValues.length === this.state.productValues.length;
-    const isSubProductValuesEqual =
-      nextState.subProductValues.length === this.state.subProductValues.length;
+    const isSubProductEqual = _.isEqual(
+      nextState.subProductValues,
+      this.state.subProductValues
+    );
     if (nextState.updateView) {
       return true;
     }
@@ -34,7 +36,7 @@ class ProductLayoutProvider extends Component {
       isTitlePropsEqual &&
       isTitleStateEqual &&
       isProductValuesEqual &&
-      isSubProductValuesEqual
+      isSubProductEqual
     ) {
       return false;
     }
@@ -181,7 +183,9 @@ class ProductLayoutProvider extends Component {
               this.onChangeProductValues,
               this.onAddProductValue,
               this.onDeleteProductValue,
-              this.updateSubProductFromProduct
+              this.updateSubProductFromProduct,
+              subProductValues,
+              this.getProduct
             )}
           </div>
           {subProductValues.length !== 0 && (
