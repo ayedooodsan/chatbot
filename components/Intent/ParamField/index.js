@@ -44,8 +44,7 @@ ParamField.propTypes = {
   initialValue: PropTypes.object,
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  updateIntents: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired
+  updateIntents: PropTypes.func.isRequired
 };
 
 export default ParamField;

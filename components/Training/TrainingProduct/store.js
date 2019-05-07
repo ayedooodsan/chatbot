@@ -1,4 +1,5 @@
 import { graphql, compose } from 'react-apollo';
+import intentGql from '../../Intent/IntentProduct/intent.gql';
 import trainingGql from './training.gql';
 import updateTrainingGql from './updateTraining.gql';
 import approveTrainingGql from './approveTraining.gql';
@@ -43,7 +44,14 @@ const withApproveTraining = graphql(approveTrainingGql, {
     approveTraining: ({ id, title, userSays }) =>
       approveTraining({
         variables: { id, title, userSays },
-        refetchQueries: ['myTrainings', 'training', 'intent']
+        refetchQueries: [
+          'myTrainings',
+          'training',
+          ...userSays.map(userSay => ({
+            query: intentGql,
+            variables: { id: userSay.intentResultId }
+          }))
+        ]
       })
   })
 });
