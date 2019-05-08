@@ -157,8 +157,7 @@ function SimpleAutoComplete(props) {
                   title: param.name,
                   id: param.entity.id,
                   key: param.key
-                }))
-                .slice(0, 3);
+                }));
               let hasParamLabel = false;
               let hasEntityLabel = false;
               return [...filteredParam, ...result].map((suggestion, index) => {

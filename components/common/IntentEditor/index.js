@@ -290,7 +290,10 @@ const IntentEditor = props => {
                   autoFocus
                   label="Search entity / param"
                   initialInputValue={
-                    entityData.entity ? entityData.entity.title : ''
+                    entityData.paramKey
+                      ? params.find(param => param.key === entityData.paramKey)
+                          .name
+                      : ''
                   }
                   params={params}
                   initialValue={entityData.entity ? entityData.entity : {}}
