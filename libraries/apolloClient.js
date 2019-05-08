@@ -3,6 +3,7 @@ import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloLink } from 'apollo-client-preset';
 import { onError } from 'apollo-link-error';
+import promiseToObservable from './promiseToObservable';
 import { dispatchers } from '../redux/notifier';
 import persist from './persist';
 import uri from '../graphql-url';
@@ -15,9 +16,17 @@ function createClient(headers, token, initialState, reduxStore) {
     credentials: 'same-origin'
   });
 
-  const errorLink = onError(({ graphQLErrors }) => {
+  const errorLink = onError(({ graphQLErrors, forward, operation }) => {
     if (graphQLErrors) {
       const text = graphQLErrors.map(({ message }) => message).join('; ');
+      if (text.includes('Not authenticated as user.')) {
+        promiseToObservable(
+          new Promise(async resolve => {
+            const status = await persist.willRemoveAccessToken();
+            resolve(status);
+          })
+        ).flatMap(() => forward(operation));
+      }
       reduxStore.dispatch(
         dispatchers.enqueueSnackbar({
           message: text,

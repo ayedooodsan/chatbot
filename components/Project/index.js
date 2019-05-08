@@ -14,6 +14,7 @@ import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
 import RootRef from '@material-ui/core/RootRef';
 import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
 import CreateProductDialog from '../common/CreateProductDialog';
 import { Link } from '../../routes';
 import connect from './store';
@@ -44,43 +45,88 @@ const Project = props => {
     <RootRef rootRef={rootRef}>
       <React.Fragment>
         <List>
-          <ListItem
-            button
-            onClick={() => {
-              setOpen(!open);
-            }}
-            className={classes.listItem}
-          >
-            <ListItemIcon className={classes.listItemIcon}>
-              <Avatar className={classes.avatar}>
-                {getInitialProject(activeProject.title)}
-              </Avatar>
-            </ListItemIcon>
-            <ListItemText
-              primary="Project"
-              secondary={activeProject.title}
-              className={classes.listItemText}
-              primaryTypographyProps={{
-                className: classNames(classes.listItemTextTyp, {
-                  [classes.listItemTextTypClose]: !collapse
-                })
+          {!collapse ? (
+            <Tooltip
+              title="Project"
+              classes={{
+                tooltip: classes.lightTooltip,
+                popper: classes.lightPopper
               }}
-              secondaryTypographyProps={{
-                className: classNames(
-                  classes.listItemTextTyp,
-                  classes.listItemTextTypSecondary,
-                  {
+              placement="right"
+            >
+              <ListItem
+                button
+                onClick={() => {
+                  setOpen(!open);
+                }}
+                className={classes.listItem}
+              >
+                <ListItemIcon className={classes.listItemIcon}>
+                  <Avatar className={classes.avatar}>
+                    {getInitialProject(activeProject.title)}
+                  </Avatar>
+                </ListItemIcon>
+                <ListItemText
+                  primary="Project"
+                  secondary={activeProject.title}
+                  className={classes.listItemText}
+                  primaryTypographyProps={{
+                    className: classNames(classes.listItemTextTyp, {
+                      [classes.listItemTextTypClose]: !collapse
+                    })
+                  }}
+                  secondaryTypographyProps={{
+                    className: classNames(
+                      classes.listItemTextTyp,
+                      classes.listItemTextTypSecondary,
+                      {
+                        [classes.listItemTextTypClose]: !collapse
+                      }
+                    )
+                  }}
+                />
+              </ListItem>
+            </Tooltip>
+          ) : (
+            <ListItem
+              button
+              onClick={() => {
+                setOpen(!open);
+              }}
+              className={classes.listItem}
+            >
+              <ListItemIcon className={classes.listItemIcon}>
+                <Avatar className={classes.avatar}>
+                  {getInitialProject(activeProject.title)}
+                </Avatar>
+              </ListItemIcon>
+              <ListItemText
+                primary="Project"
+                secondary={activeProject.title}
+                className={classes.listItemText}
+                primaryTypographyProps={{
+                  className: classNames(classes.listItemTextTyp, {
                     [classes.listItemTextTypClose]: !collapse
-                  }
-                )
-              }}
-            />
-          </ListItem>
+                  })
+                }}
+                secondaryTypographyProps={{
+                  className: classNames(
+                    classes.listItemTextTyp,
+                    classes.listItemTextTypSecondary,
+                    {
+                      [classes.listItemTextTypClose]: !collapse
+                    }
+                  )
+                }}
+              />
+            </ListItem>
+          )}
         </List>
         <Popper
           open={open}
           anchorEl={rootRef.current}
           transition
+          style={{ zIndex: 2000 }}
           placement="right-start"
         >
           {({ TransitionProps }) => (

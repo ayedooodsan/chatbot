@@ -47,10 +47,12 @@ const withApproveTraining = graphql(approveTrainingGql, {
         refetchQueries: [
           'myTrainings',
           'training',
-          ...userSays.map(userSay => ({
-            query: intentGql,
-            variables: { id: userSay.intentResultId }
-          }))
+          ...userSays
+            .filter(userSay => userSay.actionStatus === 'Check')
+            .map(userSay => ({
+              query: intentGql,
+              variables: { id: userSay.intentResultId }
+            }))
         ]
       })
   })

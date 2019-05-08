@@ -4,6 +4,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import PropTypes from 'prop-types';
 import 'isomorphic-fetch';
 import cookies from 'next-cookies';
+import _ from 'lodash';
 import apolloClient from './apolloClient';
 import reduxStore from './reduxStore';
 import persist from './persist';
@@ -44,7 +45,7 @@ export default Component =>
         token = JSON.parse(tokenCookies);
       }
       const { isPublic } = Component;
-      if (!isPublic && !token) {
+      if (!isPublic && _.isEqual(token, {})) {
         redirect(ctx, '/');
       }
 
