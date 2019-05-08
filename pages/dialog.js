@@ -1,11 +1,16 @@
 import PropTypes from 'prop-types';
 import Dialog from '../components/Dialog';
 import withData from '../libraries/withData';
+import App from '../components/App';
 
 const dialog = props => {
   const { router } = props;
   const { dialogId, projectId } = router.url.query;
-  return <Dialog dialogId={dialogId} projectId={projectId} />;
+  return (
+    <App>
+      <Dialog dialogId={dialogId} projectId={projectId} />
+    </App>
+  );
 };
 
 dialog.propTypes = {

@@ -64,12 +64,14 @@ const UserMessage = props => {
           {messages.map(message =>
             message.id === activeMessageId ? (
               <Chip
+                key={message.title}
                 label={message.title}
                 className={classes.chip}
                 color="primary"
               />
             ) : (
               <Chip
+                key={message.title}
                 label={message.title}
                 className={classes.chip}
                 variant="outlined"
@@ -146,8 +148,8 @@ const UserMessage = props => {
           {activeMessage.intent.values && (
             <ul className={classes.intentValues}>
               {activeMessage.intent.values.map(value => (
-                <li key={value}>
-                  <Typography variant="caption">{value}</Typography>
+                <li key={value.text}>
+                  <Typography variant="caption">{value.text}</Typography>
                 </li>
               ))}
             </ul>
@@ -180,6 +182,7 @@ const UserMessage = props => {
             param.name === activeParamName ? (
               <Chip
                 icon={<ErrorOutline style={{ color: 'rgba(0, 0, 0, 0.87)' }} />}
+                key={param.name}
                 label={param.name}
                 className={classes.chip}
                 color="primary"
@@ -187,6 +190,7 @@ const UserMessage = props => {
             ) : (
               <Chip
                 variant="outlined"
+                key={param.name}
                 icon={<ErrorOutline style={{ color: 'rgba(0, 0, 0, 0.87)' }} />}
                 label={param.name}
                 className={classes.chip}

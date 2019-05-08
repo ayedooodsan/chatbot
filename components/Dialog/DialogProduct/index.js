@@ -28,12 +28,28 @@ class DialogProduct extends Component {
       viewedUnsatifiedDialog: [],
       dialogInputProps: {}
     };
+    this.propChangeCounter = 0;
   }
 
   componentDidMount() {
     const { messages, title } = this.props.dialog;
     this.setState({ rawMessages: messages, title });
     this.setState(this.updateViewedDialog(messages, null, [], []));
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const isMessagesEqual = _.isEqual(
+      nextProps.dialog.messages,
+      this.props.dialog.messages
+    );
+    const isTitleEqual = _.isEqual(
+      nextProps.dialog.title,
+      this.props.dialog.title
+    );
+    if ((!isTitleEqual || !isMessagesEqual) && this.propChangeCounter > 1) {
+      return false;
+    }
+    return true;
   }
 
   componentDidUpdate(prevProps) {
@@ -49,6 +65,7 @@ class DialogProduct extends Component {
       const { messages, title } = this.props.dialog;
       this.setState({ rawMessages: messages, title });
       this.setState(this.updateViewedDialog(messages, null, [], []));
+      this.propChangeCounter += 1;
     }
   }
 
@@ -66,32 +83,61 @@ class DialogProduct extends Component {
     currentViewedDialog,
     currentActiveMessageIds
   ) => {
-    const viewedDialog = [...currentViewedDialog];
     const activeMessageIds = [...currentActiveMessageIds];
-    let messages = [];
-    let currentActiveMessageId = parentId;
-    const tempRawMessages = [...rawMessages];
-    while (tempRawMessages.length > 0) {
-      const message = tempRawMessages.shift();
-      if (message.parentId === currentActiveMessageId) {
-        messages.push(message);
-      } else {
-        const activeMessage = messages.find(
-          // eslint-disable-next-line no-loop-func
-          parent => parent.id === message.parentId
-        );
-        if (activeMessage !== undefined) {
-          viewedDialog.push(messages);
-          messages = [message];
-          currentActiveMessageId = activeMessage.id;
-          activeMessageIds.push(currentActiveMessageId);
+    if (
+      parentId === null ||
+      rawMessages.find(rawMessage => rawMessage.parentId === parentId)
+    ) {
+      const viewedDialog = [...currentViewedDialog];
+      let messages = [];
+      let currentActiveMessageId = parentId;
+      const tempRawMessages = [...rawMessages];
+      while (tempRawMessages.length > 0) {
+        const message = tempRawMessages.shift();
+        if (message.parentId === currentActiveMessageId) {
+          messages.push(message);
+        } else {
+          const activeMessage = messages.find(
+            // eslint-disable-next-line no-loop-func
+            parent => parent.id === message.parentId
+          );
+          if (activeMessage !== undefined) {
+            viewedDialog.push(messages);
+            messages = [message];
+            currentActiveMessageId = activeMessage.id;
+            activeMessageIds.push(currentActiveMessageId);
+          }
         }
       }
+      if (messages.length !== 0) {
+        viewedDialog.push(messages);
+        currentActiveMessageId = messages[0].id;
+        activeMessageIds.push(currentActiveMessageId);
+      }
+      return { viewedDialog, activeMessageIds };
     }
+    let messages = [];
+    const viewDepth = activeMessageIds.length - 1;
+    const viewedDialog = rawMessages.reduce(
+      (currentVewedDialog, rawMessage) => {
+        const newViewedDialog = currentVewedDialog;
+        const currentDepth = rawMessage.depth + 1;
+        if (currentDepth > viewDepth) {
+          return newViewedDialog;
+        }
+        const isNewDepth = currentVewedDialog.length !== currentDepth;
+        if (isNewDepth) {
+          newViewedDialog.push(messages);
+          messages = [rawMessage];
+        } else {
+          messages.push(rawMessage);
+        }
+        return newViewedDialog;
+      },
+      []
+    );
     if (messages.length !== 0) {
       viewedDialog.push(messages);
-      currentActiveMessageId = messages[0].id;
-      activeMessageIds.push(currentActiveMessageId);
     }
     return { viewedDialog, activeMessageIds };
   };
@@ -138,7 +184,8 @@ class DialogProduct extends Component {
       const {
         computedViewedDialog,
         computedActiveMessageIds,
-        computedRawMessages
+        computedRawMessages,
+        newParentId
       } = sendAction(
         { rawMessages, viewedDialog, activeMessageIds },
         dialogInputProps,
@@ -146,7 +193,7 @@ class DialogProduct extends Component {
       );
       const result = this.updateViewedDialog(
         computedRawMessages,
-        dialogInputProps.payload.id,
+        newParentId,
         computedViewedDialog,
         computedActiveMessageIds
       );
@@ -167,7 +214,7 @@ class DialogProduct extends Component {
       id: String(rawMessage.id),
       parentId:
         rawMessage.parentId === null ? null : String(rawMessage.parentId),
-      intentId: rawMessage.intentId,
+      intentId: rawMessage.intent ? rawMessage.intent.id : null,
       title: rawMessage.title,
       type: rawMessage.type,
       depth: rawMessage.depth,
@@ -176,15 +223,14 @@ class DialogProduct extends Component {
     updateDialog({
       id: dialogId,
       title,
-      messages: messages.length === 0 ? null : messages,
-      rootMessageId: messages.length === 0 ? null : messages[0].id
+      messages: messages.length === 0 ? null : messages
     });
   };
 
   onDelete = async () => {
     const { deleteDialog, dialogId, projectId } = this.props;
     const response = await deleteDialog({ id: dialogId });
-    redirect({}, `/${projectId}/entity`);
+    redirect({}, `/${projectId}/dialog`);
     return response;
   };
 

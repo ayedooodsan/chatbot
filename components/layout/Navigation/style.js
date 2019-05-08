@@ -52,6 +52,15 @@ const style = theme => ({
   listItemTextClose: {
     opacity: 0,
     visibility: 'hidden'
+  },
+  lightTooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 1)',
+    boxShadow: theme.shadows[1],
+    fontSize: 12
+  },
+  lightPopper: {
+    opacity: 1
   }
 });
 

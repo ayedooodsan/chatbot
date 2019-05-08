@@ -1,0 +1,34 @@
+mutation updateTraining (
+  $id: String!
+  $title: String
+  $userSays: [UserSayInput!]
+) {
+  updateTraining (
+    id: $id
+    title: $title
+    userSays: $userSays
+  ) {
+    title
+    userSays {
+      actionStatus
+      intentResult {
+        id
+        title
+      }
+      text
+      entityRanges {
+        offset
+        length
+        paramKey
+      }
+      params {
+        name
+        entity {
+          id
+          title
+        }
+        key
+      }
+    }
+  }
+}

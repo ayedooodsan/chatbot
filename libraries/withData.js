@@ -4,6 +4,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 import PropTypes from 'prop-types';
 import 'isomorphic-fetch';
 import cookies from 'next-cookies';
+import _ from 'lodash';
 import apolloClient from './apolloClient';
 import reduxStore from './reduxStore';
 import persist from './persist';
@@ -24,12 +25,13 @@ export default Component =>
 
     constructor(props) {
       super(props);
+      this.reduxStore = reduxStore(this.props.reduxState, {});
       this.apolloClient = apolloClient(
         this.props.headers,
         this.props.accessToken,
-        this.props.apolloState
+        this.props.apolloState,
+        this.reduxStore
       );
-      this.reduxStore = reduxStore(this.props.reduxState, {});
     }
 
     static async getInitialProps(ctx) {
@@ -43,7 +45,7 @@ export default Component =>
         token = JSON.parse(tokenCookies);
       }
       const { isPublic } = Component;
-      if (!isPublic && !token) {
+      if (!isPublic && _.isEqual(token, {})) {
         redirect(ctx, '/');
       }
 
@@ -57,8 +59,8 @@ export default Component =>
       };
 
       if (!process.browser) {
-        const client = apolloClient(headers || {}, token, {}, ctx);
         const store = reduxStore(undefined, token);
+        const client = apolloClient(headers || {}, token, {}, store);
         try {
           const app = (
             <ApolloProvider client={client}>

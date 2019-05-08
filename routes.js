@@ -8,6 +8,7 @@ routes.add('signup', '/sign-up');
 routes.add('dialog', '/:projectId/dialog/:dialogId?', 'dialog');
 routes.add('intent', '/:projectId/intent/:intentId?', 'intent');
 routes.add('entity', '/:projectId/entity/:entityId?', 'entity');
+routes.add('training', '/:projectId/training/:trainingId?', 'training');
 routes.add('setting', '/:projectId/setting/:settingType?', 'setting');
 // @RANEndRoutes
 // ------------ ROUTES ---------------

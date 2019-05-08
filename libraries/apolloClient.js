@@ -2,17 +2,42 @@ import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloLink } from 'apollo-client-preset';
+import { onError } from 'apollo-link-error';
+import promiseToObservable from './promiseToObservable';
+import { dispatchers } from '../redux/notifier';
 import persist from './persist';
 import uri from '../graphql-url';
 
 let apolloClient = null;
 
-const httpLink = createHttpLink({
-  uri,
-  credentials: 'same-origin'
-});
+function createClient(headers, token, initialState, reduxStore) {
+  const httpLink = createHttpLink({
+    uri,
+    credentials: 'same-origin'
+  });
 
-function createClient(headers, token, initialState) {
+  const errorLink = onError(({ graphQLErrors, forward, operation }) => {
+    if (graphQLErrors) {
+      const text = graphQLErrors.map(({ message }) => message).join('; ');
+      if (text.includes('Not authenticated as user.')) {
+        promiseToObservable(
+          new Promise(async resolve => {
+            const status = await persist.willRemoveAccessToken();
+            resolve(status);
+          })
+        ).flatMap(() => forward(operation));
+      }
+      reduxStore.dispatch(
+        dispatchers.enqueueSnackbar({
+          message: text,
+          options: {
+            variant: 'warning'
+          }
+        })
+      );
+    }
+  });
+
   let accessToken = token;
 
   (async () => {
@@ -49,22 +74,22 @@ function createClient(headers, token, initialState) {
 
   return new ApolloClient({
     headers,
-    link: authLink,
+    link: errorLink.concat(authLink),
     connectToDevTools: process.browser,
     ssrMode: !process.browser,
     cache: new InMemoryCache().restore(initialState || {})
   });
 }
 
-export default (headers, token, initialState) => {
+export default (headers, token, initialState, reduxStore) => {
   if (!process.browser) {
-    return createClient(headers, token, initialState);
+    return createClient(headers, token, initialState, reduxStore);
   }
   if (apolloClient) {
     const currentState = apolloClient.cache.extract();
-    apolloClient = createClient(headers, token, currentState);
+    apolloClient = createClient(headers, token, currentState, reduxStore);
   } else {
-    apolloClient = createClient(headers, token, initialState);
+    apolloClient = createClient(headers, token, initialState, reduxStore);
   }
   return apolloClient;
 };

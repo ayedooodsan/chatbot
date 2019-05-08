@@ -24,12 +24,13 @@ const IntentProduct = props => {
           entityRanges: productValue.entityRanges.map(entityRange => ({
             offset: entityRange.offset,
             length: entityRange.length,
-            entityId: entityRange.entity.id
+            paramKey: entityRange.paramKey
           }))
         })),
         params: subProductValues.map(subProductValue => ({
           name: subProductValue.name,
-          entityId: subProductValue.entity.id
+          entityId: subProductValue.entity.id,
+          key: subProductValue.key
         }))
       });
     };
@@ -37,7 +38,7 @@ const IntentProduct = props => {
 
   const onDelete = async () => {
     const response = await deleteIntent({ id: intentId });
-    redirect({}, `/${projectId}/entity`);
+    redirect({}, `/${projectId}/intent`);
     return response;
   };
 
@@ -82,7 +83,8 @@ const IntentProduct = props => {
         onChangeValues,
         onAddIntialValue,
         onDeleteValue,
-        updateParams
+        updateParams,
+        params
       ) => {
         return (
           <ProductBody
@@ -96,6 +98,7 @@ const IntentProduct = props => {
             ) => (
               <IntentField
                 initialValue={value}
+                params={params}
                 onChange={onChangeCurrentValue}
                 onDelete={onDeleteCurrentValue}
                 updateParams={updateParams}

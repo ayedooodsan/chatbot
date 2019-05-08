@@ -16,10 +16,7 @@ mutation updateIntent (
       entityRanges {
         offset
         length
-        entity {
-          id
-          title
-        }
+        paramKey
       }
     }
     params {
@@ -28,6 +25,7 @@ mutation updateIntent (
         id
         title
       }
+      key
     }
   }
 }

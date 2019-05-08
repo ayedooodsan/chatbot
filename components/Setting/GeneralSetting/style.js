@@ -15,7 +15,7 @@ const style = {
   fieldRoot: {
     display: 'flex',
     alignItems: 'center',
-    height: 44
+    minHeight: 44
   },
   input: {
     marginLeft: 8,

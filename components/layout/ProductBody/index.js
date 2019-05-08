@@ -8,8 +8,10 @@ import style from './style';
 
 const ProductBody = props => {
   const {
+    noAdd,
     classes,
     generateForm,
+    generateAction,
     onChangeValues,
     onDeleteValue,
     addFormList,
@@ -17,6 +19,11 @@ const ProductBody = props => {
   } = props;
   return (
     <div className={classes.root}>
+      {values.length > 0 && generateAction && (
+        <div className={classes.inScrollbar}>
+          <div className={classes.buttonContainer}>{generateAction()}</div>
+        </div>
+      )}
       <div className={classes.formList}>
         <Scrollbar>
           <div className={classes.inScrollbar}>
@@ -29,18 +36,21 @@ const ProductBody = props => {
                   },
                   callback => {
                     onDeleteValue(index, callback);
-                  }
+                  },
+                  index
                 )}
               </div>
             ))}
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              onClick={addFormList}
-            >
-              ADD EXAMPLE
-            </Button>
+            {!noAdd && (
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={addFormList}
+              >
+                ADD EXAMPLE
+              </Button>
+            )}
           </div>
         </Scrollbar>
       </div>
@@ -49,7 +59,9 @@ const ProductBody = props => {
 };
 
 ProductBody.defaultProps = {
-  values: []
+  values: [],
+  noAdd: false,
+  generateAction: null
 };
 
 ProductBody.propTypes = {
@@ -58,6 +70,8 @@ ProductBody.propTypes = {
   addFormList: PropTypes.func.isRequired,
   onChangeValues: PropTypes.func.isRequired,
   onDeleteValue: PropTypes.func.isRequired,
+  generateAction: PropTypes.func,
+  noAdd: PropTypes.bool,
   values: PropTypes.array
 };
 

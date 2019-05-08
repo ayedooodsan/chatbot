@@ -21,6 +21,19 @@ const theme = createMuiTheme({
   },
   typography: {
     useNextVariants: true
+  },
+  overrides: {
+    MuiOutlinedInput: {
+      root: {
+        '& $notchedOutline': {
+          borderColor: 'transparent',
+          backgroundColor: '#f4f5f7'
+        }
+      },
+      input: {
+        zIndex: 1
+      }
+    }
   }
 });
 

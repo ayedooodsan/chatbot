@@ -68,6 +68,7 @@ const DialogInput = props => {
           )}
           send={send}
           type={EDIT_ROBOT}
+          payload={payload}
         />
       );
       break;

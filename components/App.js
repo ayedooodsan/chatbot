@@ -1,5 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { SnackbarProvider } from 'notistack';
+import Notifier from './common/Notifier';
 
 let offlineInstalled = false;
 
@@ -18,7 +20,18 @@ const App = ({ children }) => {
     offlineInstalled = true;
   }
 
-  return <div>{children}</div>;
+  return (
+    <SnackbarProvider
+      maxSnack={1}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'left'
+      }}
+    >
+      <Notifier />
+      {children}
+    </SnackbarProvider>
+  );
 };
 
 App.propTypes = {

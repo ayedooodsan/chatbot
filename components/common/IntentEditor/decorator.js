@@ -1,5 +1,5 @@
 import { CompositeDecorator } from 'draft-js';
-import FakeSelect from '../FakeSelect';
+import FakeSelect from './FakeSelect';
 
 const findSelectedEntity = (contentBlock, callback, contentState) => {
   contentBlock.findEntityRanges(character => {
