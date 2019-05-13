@@ -11,6 +11,7 @@ import SubNavigation from '../layout/SubNavigation';
 import { Link } from '../../routes';
 import style from './style';
 import GeneralSetting from './GeneralSetting';
+import BackupSetting from './BackupSetting';
 
 const Setting = props => {
   const { projectId, classes, settingType } = props;
@@ -27,6 +28,10 @@ const Setting = props => {
     switch (settingType) {
       case 'general': {
         SettingProduct = GeneralSetting;
+        break;
+      }
+      case 'backup': {
+        SettingProduct = BackupSetting;
         break;
       }
       default: {

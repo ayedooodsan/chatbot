@@ -33,7 +33,7 @@ SimpleProductHead.defaultProps = {
 
 SimpleProductHead.propTypes = {
   classes: PropTypes.object.isRequired,
-  title: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired,
   noButton: PropTypes.bool
 };
 

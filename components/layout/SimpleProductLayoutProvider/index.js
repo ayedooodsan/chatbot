@@ -15,11 +15,15 @@ const SimpleProductLayoutProvider = props => {
   );
 };
 
+SimpleProductLayoutProvider.defaultProps = {
+  onSave: null
+};
+
 SimpleProductLayoutProvider.propTypes = {
   classes: PropTypes.object.isRequired,
   product: PropTypes.func.isRequired,
   header: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired
+  onSave: PropTypes.func
 };
 
 export default withStyles(style)(SimpleProductLayoutProvider);

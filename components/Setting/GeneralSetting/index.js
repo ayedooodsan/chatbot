@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useForm, useField } from 'react-final-form-hooks';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -8,6 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Warning from '@material-ui/icons/Warning';
 import FileCopy from '@material-ui/icons/FileCopy';
 import Clipboard from 'react-clipboard.js';
@@ -19,9 +20,12 @@ import style from './style';
 import connect from './store';
 
 const onSubmit = props => {
+  const { updateProject, projectId } = props;
   return values => {
-    console.log(props);
-    console.log(values);
+    updateProject({
+      id: projectId,
+      title: values.title
+    });
   };
 };
 
@@ -49,64 +53,79 @@ const GeneralSetting = props => {
       header={() => <SimpleProductHead title="General Setting" />}
       product={() => (
         <SimpleProductBody>
-          <div className={classes.container}>
-            <Typography variant="subtitle2" gutterBottom>
-              Project id
-            </Typography>
-            <Paper className={classes.fieldRoot} elevation={1}>
-              <InputBase
-                placeholder="ProjectId"
-                defaultValue={projectId}
-                fullWidth
-                className={classes.input}
-                readOnly
-                variant="outlined"
-              />
-              <Clipboard
-                onSuccess={() => setCopyTooltipOpen(true)}
-                component="div"
-                data-clipboard-text={projectId}
-              >
-                <Tooltip
-                  onClose={() => setCopyTooltipOpen(false)}
-                  open={copyTooltipOpen}
-                  title="Copied"
-                  placement="left"
-                >
-                  <IconButton className={classes.button}>
-                    <FileCopy />
-                  </IconButton>
-                </Tooltip>
-              </Clipboard>
-            </Paper>
-          </div>
-          <div className={classes.container}>
-            <Typography variant="subtitle2" gutterBottom>
-              Project name
-            </Typography>
-            <Paper className={classes.fieldRoot} elevation={1}>
-              <InputBase
-                placeholder="Project name"
-                fullWidth
-                className={classes.input}
-                helperText={title.meta.touched && title.meta.error}
-                {...title.input}
-                error={title.meta.touched && isTypeOfString(title.meta.error)}
-              />
-            </Paper>
-          </div>
-          <div className={classes.container}>
-            <Paper className={classes.verticalContainer} elevation={1}>
-              <Warning className={classes.icon} />
+          <React.Fragment>
+            <div className={classes.container}>
               <Typography variant="subtitle2" gutterBottom>
-                Danger Zone
+                Project id
               </Typography>
-              <Typography variant="body1" gutterBottom>
-                This action cannot be undone. Be careful
+              <Paper className={classes.fieldRoot} elevation={1}>
+                <InputBase
+                  placeholder="ProjectId"
+                  defaultValue={projectId}
+                  fullWidth
+                  className={classes.input}
+                  readOnly
+                  variant="outlined"
+                />
+                <Clipboard
+                  onSuccess={() => setCopyTooltipOpen(true)}
+                  component="div"
+                  data-clipboard-text={projectId}
+                >
+                  <Tooltip
+                    onClose={() => setCopyTooltipOpen(false)}
+                    open={copyTooltipOpen}
+                    title="Copied"
+                    placement="left"
+                  >
+                    <IconButton className={classes.button}>
+                      <FileCopy />
+                    </IconButton>
+                  </Tooltip>
+                </Clipboard>
+              </Paper>
+            </div>
+            <div className={classes.container}>
+              <Typography variant="subtitle2" gutterBottom>
+                Project name
               </Typography>
-              <Button variant="outlined">Delete</Button>
-            </Paper>
-          </div>
+              <Paper
+                style={
+                  title.meta.touched && isTypeOfString(title.meta.error)
+                    ? {
+                        border: '1px solid red'
+                      }
+                    : {}
+                }
+                className={classes.fieldRoot}
+                elevation={1}
+              >
+                <InputBase
+                  placeholder="Project name"
+                  fullWidth
+                  className={classes.input}
+                  {...title.input}
+                />
+              </Paper>
+              {title.meta.touched && isTypeOfString(title.meta.error) && (
+                <FormHelperText margin="dense" error>
+                  {title.meta.touched && title.meta.error}
+                </FormHelperText>
+              )}
+            </div>
+            <div className={classes.container}>
+              <Paper className={classes.verticalContainer} elevation={1}>
+                <Warning className={classes.icon} />
+                <Typography variant="subtitle2" gutterBottom>
+                  Danger Zone
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  This action cannot be undone. Be careful
+                </Typography>
+                <Button variant="outlined">Delete</Button>
+              </Paper>
+            </div>
+          </React.Fragment>
         </SimpleProductBody>
       )}
       onSave={handleSubmit}
