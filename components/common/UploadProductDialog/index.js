@@ -72,7 +72,7 @@ const UploadProductDialog = props => {
               }) => validity.valid && onChange(file)}
             />
             <Button
-              variant="raised"
+              variant="contained"
               component="span"
               className={classes.button}
             >
