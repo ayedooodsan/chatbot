@@ -1,0 +1,12 @@
+mutation updateProject (
+  $id: String!
+  $title: String!
+) {
+  updateProject (
+    id: $id
+    title: $title
+  ) {
+    id
+    title
+  }
+}
