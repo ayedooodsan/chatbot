@@ -38,7 +38,7 @@ const EntityField = props => {
   };
   return (
     <Paper className={classes.root} elevation={1}>
-      <Grid container alignItems="center">
+      <Grid container alignItems="center" spacing={8}>
         <Grid item md={3}>
           <InputBase
             value={keyword}

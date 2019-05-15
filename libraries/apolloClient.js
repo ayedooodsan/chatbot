@@ -1,8 +1,8 @@
 import { ApolloClient } from 'apollo-client';
-import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloLink } from 'apollo-client-preset';
 import { onError } from 'apollo-link-error';
+import { createUploadLink } from 'apollo-upload-client';
 import promiseToObservable from './promiseToObservable';
 import { dispatchers } from '../redux/notifier';
 import persist from './persist';
@@ -11,7 +11,7 @@ import uri from '../graphql-url';
 let apolloClient = null;
 
 function createClient(headers, token, initialState, reduxStore) {
-  const httpLink = createHttpLink({
+  const httpLink = createUploadLink({
     uri,
     credentials: 'same-origin'
   });
