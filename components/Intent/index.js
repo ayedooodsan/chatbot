@@ -83,10 +83,16 @@ class Intent extends Component {
                       key={myIntent.id}
                     >
                       <Tooltip title={myIntent.title} placement="right">
-                        <ListItem dense button>
+                        <ListItem
+                          className={classes.listItem}
+                          divider
+                          dense
+                          button
+                        >
                           <ListItemText
                             primary={myIntent.title}
                             primaryTypographyProps={{
+                              variant: 'body2',
                               noWrap: true,
                               className: classNames({
                                 [classes.listItemTextActive]: this.activeIntent(

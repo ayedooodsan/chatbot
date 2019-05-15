@@ -83,10 +83,16 @@ class Dialog extends Component {
                       key={myDialog.id}
                     >
                       <Tooltip title={myDialog.title} placement="right">
-                        <ListItem dense button>
+                        <ListItem
+                          className={classes.listItem}
+                          dense
+                          divider
+                          button
+                        >
                           <ListItemText
                             primary={myDialog.title}
                             primaryTypographyProps={{
+                              variant: 'body2',
                               noWrap: true,
                               className: classNames({
                                 [classes.listItemTextActive]: this.activeDialog(
