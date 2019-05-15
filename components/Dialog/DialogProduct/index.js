@@ -28,7 +28,7 @@ class DialogProduct extends Component {
       viewedUnsatifiedDialog: [],
       dialogInputProps: {}
     };
-    this.propChangeCounter = 0;
+    this.afterSave = false;
   }
 
   componentDidMount() {
@@ -37,16 +37,9 @@ class DialogProduct extends Component {
     this.setState(this.updateViewedDialog(messages, null, [], []));
   }
 
-  shouldComponentUpdate(nextProps) {
-    const isMessagesEqual = _.isEqual(
-      nextProps.dialog.messages,
-      this.props.dialog.messages
-    );
-    const isTitleEqual = _.isEqual(
-      nextProps.dialog.title,
-      this.props.dialog.title
-    );
-    if ((!isTitleEqual || !isMessagesEqual) && this.propChangeCounter > 1) {
+  shouldComponentUpdate() {
+    if (this.afterSave) {
+      this.afterSave = false;
       return false;
     }
     return true;
@@ -65,7 +58,6 @@ class DialogProduct extends Component {
       const { messages, title } = this.props.dialog;
       this.setState({ rawMessages: messages, title });
       this.setState(this.updateViewedDialog(messages, null, [], []));
-      this.propChangeCounter += 1;
     }
   }
 
@@ -220,6 +212,7 @@ class DialogProduct extends Component {
       depth: rawMessage.depth,
       payload: rawMessage.payload
     }));
+    this.afterSave = true;
     updateDialog({
       id: dialogId,
       title,

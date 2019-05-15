@@ -64,7 +64,9 @@ class SubNavigation extends React.Component {
             <div className={classes.containerHeader}>{header()}</div>
           )}
           <div className={classes.containerBody}>
-            <Scrollbar>{body()}</Scrollbar>
+            <Scrollbar>
+              <div className={classes.insideScrollbar}>{body()}</div>
+            </Scrollbar>
           </div>
         </div>
       </Paper>

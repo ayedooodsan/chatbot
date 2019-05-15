@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import BackupDialog from './BackupDialog';
 import SimpleProductLayoutProvider from '../../layout/SimpleProductLayoutProvider';
 import SimpleProductHead from '../../layout/SimpleProductHead';
 import SimpleProductBody from '../../layout/SimpleProductBody';
@@ -13,10 +14,15 @@ import style from './style';
 import connect from './store';
 
 const BackupSetting = props => {
-  const { classes, exportProject, projectId } = props;
-  const [backupFile, setBackupFile] = useState(null);
+  const { classes, exportProject, importProject, projectId } = props;
+  const [imporDialogOpen, setImporDialogOpen] = useState(false);
 
-  console.log(backupFile);
+  const onChangeBackup = file => {
+    setImporDialogOpen(false);
+    importProject({ id: projectId, file }).then(response => {
+      console.log(response);
+    });
+  };
 
   const onDownload = () => {
     exportProject({ id: projectId }).then(response => {
@@ -32,7 +38,7 @@ const BackupSetting = props => {
         <SimpleProductBody>
           <div style={{ padding: '0 5px' }}>
             <Grid container spacing={16} justify="center">
-              <Grid item xs="5" className={classes.grid}>
+              <Grid item xs={5} className={classes.grid}>
                 <Paper className={classes.verticalContainer} elevation={1}>
                   <Typography variant="subtitle1" gutterBottom>
                     Export
@@ -46,11 +52,11 @@ const BackupSetting = props => {
                     variant="outlined"
                     className={classes.button}
                   >
-                    Download
+                    Export
                   </Button>
                 </Paper>
               </Grid>
-              <Grid item xs="5" className={classes.grid}>
+              <Grid item xs={5} className={classes.grid}>
                 <Paper className={classes.verticalContainer} elevation={1}>
                   <Typography variant="subtitle1" gutterBottom>
                     Import
@@ -60,29 +66,24 @@ const BackupSetting = props => {
                     the current the current ones. Intents, entities and dialogs
                     with the same name will be replaced with the newer version.
                   </Typography>
-                  <label htmlFor="uploadFile">
-                    <input
-                      accept=".xlsx"
-                      className={classes.input}
-                      style={{ display: 'none' }}
-                      id="uploadFile"
-                      multiple
-                      type="file"
-                      onChange={({
-                        target: {
-                          validity,
-                          files: [file]
-                        }
-                      }) => validity.valid && setBackupFile(file)}
-                    />
-                    <Button
-                      variant="outlined"
-                      component="span"
-                      className={classes.button}
-                    >
-                      Upload
-                    </Button>
-                  </label>
+                  <BackupDialog
+                    open={imporDialogOpen}
+                    handleClose={() => setImporDialogOpen(false)}
+                    handleConfirm={onChangeBackup}
+                    placeholder="Type IMPORT and click the import button"
+                    message="Upload Project Backup"
+                    subMessage={`You can upload an agent as a zip archive consisting of the folders "intents" and "entities". The folders should contain JSON files of the intents and entities.`}
+                    actionName="IMPORT"
+                  />
+                  <Button
+                    onClick={() => {
+                      setImporDialogOpen(true);
+                    }}
+                    variant="outlined"
+                    className={classes.button}
+                  >
+                    Import
+                  </Button>
                 </Paper>
               </Grid>
             </Grid>
@@ -96,7 +97,8 @@ const BackupSetting = props => {
 BackupSetting.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
-  exportProject: PropTypes.func.isRequired
+  exportProject: PropTypes.func.isRequired,
+  importProject: PropTypes.func.isRequired
 };
 
 export default withStyles(style)(connect(BackupSetting));

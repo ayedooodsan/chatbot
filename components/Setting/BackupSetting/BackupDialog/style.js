@@ -1,10 +1,10 @@
 const style = {
-  root: {
+  buttons: {
     display: 'flex',
-    overflowY: 'hidden'
+    justifyContent: 'center'
   },
-  children: {
-    flex: 1
+  button: {
+    marginTop: 15
   }
 };
 

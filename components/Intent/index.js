@@ -4,6 +4,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import withStyles from '@material-ui/core/styles/withStyles';
+import Tooltip from '@material-ui/core/Tooltip';
 import classNames from 'classnames';
 import LayoutProvider from '../layout/LayoutProvider';
 import Navigation from '../layout/Navigation';
@@ -81,25 +82,27 @@ class Intent extends Component {
                       route={`/${projectId}/intent/${myIntent.id}`}
                       key={myIntent.id}
                     >
-                      <ListItem
-                        className={classNames({
-                          [classes.listItemActive]: this.activeIntent(
-                            myIntent.id
-                          )
-                        })}
-                        button
-                      >
-                        <ListItemText
-                          primary={myIntent.title}
-                          primaryTypographyProps={{
-                            className: classNames({
-                              [classes.listItemTextActive]: this.activeIntent(
-                                myIntent.id
-                              )
-                            })
-                          }}
-                        />
-                      </ListItem>
+                      <Tooltip title={myIntent.title} placement="right">
+                        <ListItem
+                          className={classes.listItem}
+                          divider
+                          dense
+                          button
+                        >
+                          <ListItemText
+                            primary={myIntent.title}
+                            primaryTypographyProps={{
+                              variant: 'body2',
+                              noWrap: true,
+                              className: classNames({
+                                [classes.listItemTextActive]: this.activeIntent(
+                                  myIntent.id
+                                )
+                              })
+                            }}
+                          />
+                        </ListItem>
+                      </Tooltip>
                     </Link>
                   ))}
                 </List>

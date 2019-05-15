@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Tooltip from '@material-ui/core/Tooltip';
 import withStyles from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import LayoutProvider from '../layout/LayoutProvider';
@@ -81,25 +82,27 @@ class Dialog extends Component {
                       route={`/${projectId}/dialog/${myDialog.id}`}
                       key={myDialog.id}
                     >
-                      <ListItem
-                        className={classNames({
-                          [classes.listItemActive]: this.activeDialog(
-                            myDialog.id
-                          )
-                        })}
-                        button
-                      >
-                        <ListItemText
-                          primary={myDialog.title}
-                          primaryTypographyProps={{
-                            className: classNames({
-                              [classes.listItemTextActive]: this.activeDialog(
-                                myDialog.id
-                              )
-                            })
-                          }}
-                        />
-                      </ListItem>
+                      <Tooltip title={myDialog.title} placement="right">
+                        <ListItem
+                          className={classes.listItem}
+                          dense
+                          divider
+                          button
+                        >
+                          <ListItemText
+                            primary={myDialog.title}
+                            primaryTypographyProps={{
+                              variant: 'body2',
+                              noWrap: true,
+                              className: classNames({
+                                [classes.listItemTextActive]: this.activeDialog(
+                                  myDialog.id
+                                )
+                              })
+                            }}
+                          />
+                        </ListItem>
+                      </Tooltip>
                     </Link>
                   ))}
                 </List>

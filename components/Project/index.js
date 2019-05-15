@@ -46,14 +46,7 @@ const Project = props => {
       <React.Fragment>
         <List>
           {!collapse ? (
-            <Tooltip
-              title="Project"
-              classes={{
-                tooltip: classes.lightTooltip,
-                popper: classes.lightPopper
-              }}
-              placement="right"
-            >
+            <Tooltip title="Project" placement="right">
               <ListItem
                 button
                 onClick={() => {
