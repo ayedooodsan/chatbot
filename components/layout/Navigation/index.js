@@ -73,14 +73,7 @@ class Navigation extends React.Component {
           {routes.map(route => (
             <Link route={`/${projectId}${route.route}`} key={route.name}>
               {!this.state.open ? (
-                <Tooltip
-                  title={route.name}
-                  classes={{
-                    tooltip: classes.lightTooltip,
-                    popper: classes.lightPopper
-                  }}
-                  placement="right"
-                >
+                <Tooltip title={route.name} placement="right">
                   <ListItem
                     button
                     className={classNames({

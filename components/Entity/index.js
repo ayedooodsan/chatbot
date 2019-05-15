@@ -81,17 +81,11 @@ class Entity extends Component {
                       route={`/${projectId}/entity/${myEntity.id}`}
                       key={myEntity.id}
                     >
-                      <ListItem
-                        className={classNames({
-                          [classes.listItemActive]: this.activeEntity(
-                            myEntity.id
-                          )
-                        })}
-                        button
-                      >
+                      <ListItem dense button>
                         <ListItemText
                           primary={myEntity.title}
                           primaryTypographyProps={{
+                            noWrap: true,
                             className: classNames({
                               [classes.listItemTextActive]: this.activeEntity(
                                 myEntity.id

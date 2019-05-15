@@ -1,5 +1,6 @@
 import { graphql, compose } from 'react-apollo';
 import exportProjectGql from './exportProject.gql';
+import importProjectGql from './importProject.gql';
 
 const withExportProject = graphql(exportProjectGql, {
   name: 'exportProject',
@@ -12,4 +13,19 @@ const withExportProject = graphql(exportProjectGql, {
   })
 });
 
-export default comp => compose(withExportProject)(comp);
+const withImportProject = graphql(importProjectGql, {
+  name: 'importProject',
+  props: ({ importProject }) => ({
+    importProject: ({ id, file }) =>
+      importProject({
+        variables: { id, file },
+        refetchQueries: ['myProjects']
+      })
+  })
+});
+
+export default comp =>
+  compose(
+    withExportProject,
+    withImportProject
+  )(comp);

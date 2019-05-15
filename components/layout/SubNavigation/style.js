@@ -49,6 +49,9 @@ const style = theme => ({
   },
   containerClose: {
     display: 'none'
+  },
+  insideScrollbar: {
+    paddingRight: 5
   }
 });
 
