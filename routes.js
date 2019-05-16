@@ -10,6 +10,7 @@ routes.add('intent', '/:projectId/intent/:intentId?', 'intent');
 routes.add('entity', '/:projectId/entity/:entityId?', 'entity');
 routes.add('training', '/:projectId/training/:trainingId?', 'training');
 routes.add('setting', '/:projectId/setting/:settingType?', 'setting');
+routes.add('analytic', '/:projectId/analytic', 'analytic');
 // @RANEndRoutes
 // ------------ ROUTES ---------------
 //

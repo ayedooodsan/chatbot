@@ -5,14 +5,18 @@ import style from './style';
 const LayoutProvider = ({ navigation, subNavigation, children, classes }) => (
   <div className={classes.root}>
     {navigation()}
-    {subNavigation()}
+    {subNavigation && subNavigation()}
     <div className={classes.children}>{children}</div>
   </div>
 );
 
+LayoutProvider.defaultProps = {
+  subNavigation: null
+};
+
 LayoutProvider.propTypes = {
   navigation: PropTypes.func.isRequired,
-  subNavigation: PropTypes.func.isRequired,
+  subNavigation: PropTypes.func,
   children: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
   classes: PropTypes.object.isRequired
 };
