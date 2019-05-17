@@ -64,6 +64,7 @@ const Project = props => {
                   secondary={activeProject.title}
                   className={classes.listItemText}
                   primaryTypographyProps={{
+                    variant: 'subtitle2',
                     className: classNames(classes.listItemTextTyp, {
                       [classes.listItemTextTypClose]: !collapse
                     })
@@ -98,6 +99,7 @@ const Project = props => {
                 secondary={activeProject.title}
                 className={classes.listItemText}
                 primaryTypographyProps={{
+                  variant: 'subtitle2',
                   className: classNames(classes.listItemTextTyp, {
                     [classes.listItemTextTypClose]: !collapse
                   })
