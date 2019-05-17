@@ -9,5 +9,6 @@ query dialogAnalytics (
     responseMessage
     requestTime
     responseTime
+    groupid
   } 
 }
