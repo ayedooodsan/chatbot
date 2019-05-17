@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { FlexibleWidthXYPlot, XAxis, VerticalRectSeries } from 'react-vis';
+import { XYPlot, XAxis, VerticalRectSeries } from 'react-vis';
+import withStyles from '@material-ui/core/styles/withStyles';
+import style from './style';
 
 const toMoment = date => moment(date, 'YYYY-MM-DD HH:mm:ss');
 
 const DialogAnalytic = props => {
-  const { messages } = props;
+  const { messages, classes } = props;
   const { length } = messages;
   messages.sort((firstMessage, secondMessage) => {
     if (
@@ -35,7 +37,8 @@ const DialogAnalytic = props => {
 
     plot = messages.reduce(
       (currentPlot, message) => {
-        const currentData = currentPlot.data;
+        const currentBotData = currentPlot.botData;
+        const currentUserData = currentPlot.userData;
         const currentXLabel = currentPlot.xLabel;
         const currentXAxis = currentPlot.xAxis;
         let startSec = offsetTime.diff(startTime, 'seconds');
@@ -43,7 +46,7 @@ const DialogAnalytic = props => {
         const { requestTime, responseTime } = message;
         if (!offsetTime.isSame(requestTime)) {
           diffSec = toMoment(requestTime).diff(offsetTime, 'seconds');
-          currentData.push({
+          currentUserData.push({
             y0: 0.1,
             y: 0.3,
             x0: startSec / dialogSec,
@@ -58,7 +61,8 @@ const DialogAnalytic = props => {
 
           startSec += diffSec;
           diffSec = toMoment(responseTime).diff(requestTime, 'seconds');
-          currentData.push({
+          diffSec = diffSec === 0 ? 0.3 : diffSec;
+          currentBotData.push({
             y0: 0.05,
             y: 0.35,
             x0: startSec / dialogSec,
@@ -71,7 +75,8 @@ const DialogAnalytic = props => {
           ).format('h:mm:ss');
         } else {
           diffSec = toMoment(responseTime).diff(offsetTime, 'seconds');
-          currentData.push({
+          diffSec = diffSec === 0 ? 0.3 : diffSec;
+          currentBotData.push({
             y0: 0.1,
             y: 0.3,
             x0: startSec / dialogSec,
@@ -85,13 +90,15 @@ const DialogAnalytic = props => {
         }
         offsetTime = toMoment(message.responseTime);
         return {
-          data: currentData,
+          userData: currentUserData,
+          botData: currentBotData,
           xLabel: currentXLabel,
           xAxis: currentXAxis
         };
       },
       {
-        data: [],
+        userData: [],
+        botData: [],
         xLabel: {},
         xAxis: []
       }
@@ -102,19 +109,23 @@ const DialogAnalytic = props => {
   }
 
   return (
-    <FlexibleWidthXYPlot
+    <XYPlot
+      className={classes.root}
       height={80}
+      width={700}
+      xDomain={[0, 1]}
       margin={{ left: 20, right: 20 }}
       colorType="literal"
     >
-      <VerticalRectSeries data={plot.data} />
+      <VerticalRectSeries data={plot.userData} />
+      <VerticalRectSeries data={plot.botData} />
       <XAxis
         hideLine
         labelValues={plot.xLabel}
         tickValues={[0, 1]}
-        tickFormat={v => `${v * 100}%`}
+        tickFormat={v => plot.xLabel[v]}
       />
-    </FlexibleWidthXYPlot>
+    </XYPlot>
   );
 };
 
@@ -123,7 +134,8 @@ DialogAnalytic.defaultProps = {
 };
 
 DialogAnalytic.propTypes = {
+  classes: PropTypes.object.isRequired,
   messages: PropTypes.array
 };
 
-export default DialogAnalytic;
+export default withStyles(style)(DialogAnalytic);

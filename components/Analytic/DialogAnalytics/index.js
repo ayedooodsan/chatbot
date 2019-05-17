@@ -12,7 +12,7 @@ import moment from 'moment';
 import style from './style';
 import DialogAnalytic from '../DialogAnalytic';
 
-import connect from './storeDumb';
+import connect from './store';
 
 const DialogAnalytics = props => {
   const { dialogAnalytics, classes } = props;
@@ -22,25 +22,27 @@ const DialogAnalytics = props => {
         currentdialogAnalyticGroup =>
           currentdialogAnalyticGroup.groupid === dialogAnalytic.groupid
       );
-      if (foundDialogAnalyticGroup) {
-        foundDialogAnalyticGroup.messages.push({
-          message: dialogAnalytic.message,
-          responseMessage: dialogAnalytic.responseMessage,
-          requestTime: dialogAnalytic.requestTime,
-          responseTime: dialogAnalytic.responseTime
-        });
-      } else {
-        currentdialogAnalyticGroups.push({
-          groupid: dialogAnalytic.groupid,
-          messages: [
-            {
-              message: dialogAnalytic.message,
-              responseMessage: dialogAnalytic.responseMessage,
-              requestTime: dialogAnalytic.requestTime,
-              responseTime: dialogAnalytic.responseTime
-            }
-          ]
-        });
+      if (dialogAnalytic.responseTime !== null) {
+        if (foundDialogAnalyticGroup) {
+          foundDialogAnalyticGroup.messages.push({
+            message: dialogAnalytic.message,
+            responseMessage: dialogAnalytic.responseMessage,
+            requestTime: dialogAnalytic.requestTime,
+            responseTime: dialogAnalytic.responseTime
+          });
+        } else {
+          currentdialogAnalyticGroups.push({
+            groupid: dialogAnalytic.groupid,
+            messages: [
+              {
+                message: dialogAnalytic.message,
+                responseMessage: dialogAnalytic.responseMessage,
+                requestTime: dialogAnalytic.requestTime,
+                responseTime: dialogAnalytic.responseTime
+              }
+            ]
+          });
+        }
       }
       return currentdialogAnalyticGroups;
     },
@@ -48,7 +50,7 @@ const DialogAnalytics = props => {
   );
 
   return (
-    <React.Fragment>
+    <div className={classes.root}>
       <Typography variant="h6">Dialog</Typography>
       <Paper elevation={1}>
         <Table className={classes.table}>
@@ -61,38 +63,52 @@ const DialogAnalytics = props => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {dialogAnalyticGroups.map(dialogAnalyticGroup => (
-              <TableRow key={dialogAnalyticGroup.groupid}>
-                <TableCell component="th" scope="row">
-                  {dialogAnalyticGroup.groupid}
-                </TableCell>
-                <TableCell align="center">
-                  {dialogAnalyticGroup.messages.length}
-                </TableCell>
-                <TableCell align="center">
-                  {dialogAnalyticGroup.messages.reduce((total, message) => {
-                    const newTotal =
-                      total +
-                      moment(message.responseTime, 'YYYY-MM-DD HH:mm:ss').diff(
-                        moment(message.requestTime, 'YYYY-MM-DD HH:mm:ss'),
-                        'seconds'
-                      );
-                    return newTotal;
-                  }, 0) / dialogAnalyticGroup.messages.length}{' '}
-                  seconds
-                </TableCell>
-                <TableCell align="right">
-                  <DialogAnalytic
-                    key={dialogAnalyticGroup.groupid}
-                    messages={dialogAnalyticGroup.messages}
-                  />
+            {dialogAnalyticGroups.map(dialogAnalyticGroup => {
+              const avgs =
+                dialogAnalyticGroup.messages.reduce((total, message) => {
+                  const newTotal =
+                    total +
+                    moment(message.responseTime, 'YYYY-MM-DD HH:mm:ss').diff(
+                      moment(message.requestTime, 'YYYY-MM-DD HH:mm:ss'),
+                      'seconds'
+                    );
+                  return newTotal;
+                }, 0) / dialogAnalyticGroup.messages.length;
+              return (
+                <TableRow key={dialogAnalyticGroup.groupid}>
+                  <TableCell component="th" scope="row">
+                    {dialogAnalyticGroup.groupid}
+                  </TableCell>
+                  <TableCell align="center">
+                    {dialogAnalyticGroup.messages.length}
+                  </TableCell>
+                  <TableCell align="center">
+                    {avgs === 0
+                      ? 'under 1 second'
+                      : `${avgs.toFixed(3)} seconds`}
+                  </TableCell>
+                  <TableCell align="right">
+                    <DialogAnalytic
+                      key={dialogAnalyticGroup.groupid}
+                      messages={dialogAnalyticGroup.messages.filter(
+                        message => message.responseTime !== null
+                      )}
+                    />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+            {dialogAnalyticGroups.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={4} align="center">
+                  No data available
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </Paper>
-    </React.Fragment>
+    </div>
   );
 };
 

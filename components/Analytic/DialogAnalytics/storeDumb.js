@@ -98,17 +98,17 @@ const storeDumb = [
     from: 'hfKJ8rkljc1PTaVqG6veKHwzn504GhYq',
     message:
       'Natures Health Echinacea 250mg\nBe the first to review this product',
-    responseMessage: 'Kami menemukan produk yang Anda cari!',
+    responseMessage: null,
     requestTime: '2019-03-29 16:28:50',
-    responseTime: '2019-03-29 16:31:31',
+    responseTime: null,
     groupid: '17923507'
   },
   {
     from: 'hfKJ8rkljc1PTaVqG6veKHwzn504GhYq',
     message: 'Natures Health Echinacea 250mg',
-    responseMessage: 'Kami menemukan produk yang Anda cari!',
+    responseMessage: null,
     requestTime: '2019-03-29 16:30:58',
-    responseTime: '2019-03-29 16:31:31',
+    responseTime: null,
     groupid: '17923507'
   },
   {
@@ -122,65 +122,65 @@ const storeDumb = [
   {
     from: 'hfKJ8rkljc1PTaVqG6veKHwzn504GhYq',
     message: 'PrenagenÂ EsensisÂ VelvetyÂ ChocolateÂ 360gr',
-    responseMessage: 'Kami menemukan produk yang Anda cari!',
+    responseMessage: null,
     requestTime: '2019-03-29 16:33:28',
-    responseTime: '2019-03-29 17:38:20',
+    responseTime: null,
     groupid: '17923507'
   },
   {
     from: 'hfKJ8rkljc1PTaVqG6veKHwzn504GhYq',
     message: 'PrenagenÂ EsensisÂ VelvetyÂ ChocolateÂ 180gr',
-    responseMessage: 'Kami menemukan produk yang Anda cari!',
+    responseMessage: null,
     requestTime: '2019-03-29 16:35:25',
-    responseTime: '2019-03-29 17:38:20',
+    responseTime: null,
     groupid: '17923507'
   },
   {
     from: 'hfKJ8rkljc1PTaVqG6veKHwzn504GhYq',
     message: 'PrenagenÂ EsensisÂ VelvetyÂ ChocolateÂ 180gr',
-    responseMessage: 'Kami menemukan produk yang Anda cari!',
+    responseMessage: null,
     requestTime: '2019-03-29 16:36:50',
-    responseTime: '2019-03-29 17:38:20',
+    responseTime: null,
     groupid: '17923507'
   },
   {
     from: 'hfKJ8rkljc1PTaVqG6veKHwzn504GhYq',
     message: 'PrenagenÂ EsensisÂ VelvetyÂ ChocolateÂ 180gr',
-    responseMessage: 'Kami menemukan produk yang Anda cari!',
+    responseMessage: null,
     requestTime: '2019-03-29 16:38:03',
-    responseTime: '2019-03-29 17:38:20',
+    responseTime: null,
     groupid: '17923507'
   },
   {
     from: 'hfKJ8rkljc1PTaVqG6veKHwzn504GhYq',
     message: 'PrenagenÂ EsensisÂ VelvetyÂ ChocolateÂ 180gr',
-    responseMessage: 'Kami menemukan produk yang Anda cari!',
+    responseMessage: null,
     requestTime: '2019-03-29 17:32:23',
-    responseTime: '2019-03-29 17:38:20',
+    responseTime: null,
     groupid: '17923507'
   },
   {
     from: 'hfKJ8rkljc1PTaVqG6veKHwzn504GhYq',
     message: 'diabetasol',
-    responseMessage: 'Kami menemukan produk yang Anda cari!',
+    responseMessage: null,
     requestTime: '2019-03-29 17:33:36',
-    responseTime: '2019-03-29 17:38:20',
+    responseTime: null,
     groupid: '17923507'
   },
   {
     from: 'hfKJ8rkljc1PTaVqG6veKHwzn504GhYq',
     message: 'diabetasol',
-    responseMessage: 'Kami menemukan produk yang Anda cari!',
+    responseMessage: null,
     requestTime: '2019-03-29 17:35:29',
-    responseTime: '2019-03-29 17:38:20',
+    responseTime: null,
     groupid: '17923507'
   },
   {
     from: 'hfKJ8rkljc1PTaVqG6veKHwzn504GhYq',
     message: 'diabetasol',
-    responseMessage: 'Kami menemukan produk yang Anda cari!',
+    responseMessage: null,
     requestTime: '2019-03-29 17:36:37',
-    responseTime: '2019-03-29 17:38:20',
+    responseTime: null,
     groupid: '17923507'
   },
   {
@@ -194,9 +194,9 @@ const storeDumb = [
   {
     from: 'hfKJ8rkljc1PTaVqG6veKHwzn504GhYq',
     message: 'PrenagenÂ EsensisÂ VelvetyÂ ChocolateÂ 180gr',
-    responseMessage: 'Kami menemukan produk yang Anda cari!',
+    responseMessage: null,
     requestTime: '2019-03-29 17:38:31',
-    responseTime: '2019-03-29 17:39:47',
+    responseTime: null,
     groupid: '17923507'
   },
   {
@@ -210,9 +210,9 @@ const storeDumb = [
   {
     from: 'hfKJ8rkljc1PTaVqG6veKHwzn504GhYq',
     message: 'PrenagenÂ EsensisÂ VelvetyÂ ChocolateÂ 360gr',
-    responseMessage: 'Kami menemukan produk yang Anda cari!',
+    responseMessage: null,
     requestTime: '2019-03-29 17:40:54',
-    responseTime: '2019-03-29 17:42:06',
+    responseTime: null,
     groupid: '17923507'
   },
   {
@@ -226,9 +226,9 @@ const storeDumb = [
   {
     from: 'hfKJ8rkljc1PTaVqG6veKHwzn504GhYq',
     message: 'PrenagenÂ EsensisÂ VelvetyÂ ChocolateÂ 360gr',
-    responseMessage: 'Kami menemukan produk yang Anda cari!',
+    responseMessage: null,
     requestTime: '2019-03-29 17:42:15',
-    responseTime: '2019-03-29 17:44:43',
+    responseTime: null,
     groupid: '17923507'
   },
   {

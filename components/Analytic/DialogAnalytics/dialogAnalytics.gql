@@ -9,6 +9,5 @@ query dialogAnalytics (
     responseMessage
     requestTime
     responseTime
-    diffTime
   } 
 }
