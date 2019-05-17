@@ -14,7 +14,7 @@ const IntentProduct = props => {
   const onSave = getIntentProduct => {
     return () => {
       const { title, productValues, subProductValues } = getIntentProduct(
-        el => el.text !== 0
+        el => el.text !== ''
       );
       updateIntent({
         id: intentId,
