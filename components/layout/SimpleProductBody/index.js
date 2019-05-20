@@ -10,7 +10,7 @@ const SimpleProductBody = props => {
   return (
     <div className={classes.root}>
       <div className={classes.container}>
-        <Scrollbar>
+        <Scrollbar contentProps={{ style: { width: '100%' } }}>
           <div className={classes.inScrollbar}>{children}</div>
         </Scrollbar>
       </div>

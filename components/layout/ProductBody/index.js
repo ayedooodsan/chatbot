@@ -25,7 +25,7 @@ const ProductBody = props => {
         </div>
       )}
       <div className={classes.formList}>
-        <Scrollbar>
+        <Scrollbar contentProps={{ style: { width: '100%' } }}>
           <div className={classes.inScrollbar}>
             {values.map((value, index) => (
               <div key={JSON.stringify(value)}>
