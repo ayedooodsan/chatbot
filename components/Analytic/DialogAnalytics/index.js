@@ -33,6 +33,7 @@ const DialogAnalytics = props => {
         } else {
           currentdialogAnalyticGroups.push({
             groupid: dialogAnalytic.groupid,
+            from: dialogAnalytic.from,
             messages: [
               {
                 message: dialogAnalytic.message,
@@ -56,7 +57,7 @@ const DialogAnalytics = props => {
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
-              <TableCell>Session Id</TableCell>
+              <TableCell>User</TableCell>
               <TableCell align="center">User Messages</TableCell>
               <TableCell align="center">Response Time Avgs</TableCell>
               <TableCell align="center">Response Time</TableCell>
@@ -66,18 +67,22 @@ const DialogAnalytics = props => {
             {dialogAnalyticGroups.map(dialogAnalyticGroup => {
               const avgs =
                 dialogAnalyticGroup.messages.reduce((total, message) => {
-                  const newTotal =
-                    total +
-                    moment(message.responseTime, 'YYYY-MM-DD HH:mm:ss').diff(
-                      moment(message.requestTime, 'YYYY-MM-DD HH:mm:ss'),
-                      'seconds'
-                    );
+                  let diffSec = moment(
+                    message.responseTime,
+                    'YYYY-MM-DD HH:mm:ss'
+                  ).diff(
+                    moment(message.requestTime, 'YYYY-MM-DD HH:mm:ss'),
+                    'seconds'
+                  );
+                  diffSec = diffSec === 0 ? 0.1 : diffSec;
+                  const newTotal = total + diffSec;
                   return newTotal;
                 }, 0) / dialogAnalyticGroup.messages.length;
               return (
                 <TableRow key={dialogAnalyticGroup.groupid}>
                   <TableCell component="th" scope="row">
-                    {dialogAnalyticGroup.groupid}
+                    {dialogAnalyticGroup.groupid} <br />
+                    {dialogAnalyticGroup.from}
                   </TableCell>
                   <TableCell align="center">
                     {dialogAnalyticGroup.messages.length}
@@ -89,6 +94,7 @@ const DialogAnalytics = props => {
                   </TableCell>
                   <TableCell align="right">
                     <DialogAnalytic
+                      from={dialogAnalyticGroup.from}
                       key={dialogAnalyticGroup.groupid}
                       messages={dialogAnalyticGroup.messages.filter(
                         message => message.responseTime !== null
