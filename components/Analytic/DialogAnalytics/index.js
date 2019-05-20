@@ -12,7 +12,7 @@ import moment from 'moment';
 import style from './style';
 import DialogAnalytic from '../DialogAnalytic';
 
-import connect from './storeDumb';
+import connect from './store';
 
 const toMoment = date => moment(date, 'YYYY-MM-DD HH:mm:ss');
 
