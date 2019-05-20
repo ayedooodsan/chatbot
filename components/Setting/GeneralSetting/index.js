@@ -50,7 +50,23 @@ const GeneralSetting = props => {
   const title = useField('title', form);
   return (
     <SimpleProductLayoutProvider
-      header={() => <SimpleProductHead title="General Setting" />}
+      header={() => (
+        <SimpleProductHead
+          title="General Setting"
+          renderButtons={() => (
+            <div>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.whiteColor}
+              >
+                Save
+              </Button>
+            </div>
+          )}
+        />
+      )}
       product={() => (
         <SimpleProductBody>
           <React.Fragment>
