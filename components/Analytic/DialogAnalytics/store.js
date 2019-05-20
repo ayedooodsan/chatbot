@@ -6,7 +6,8 @@ const withDialogAnalytics = graphql(dialogAnalyticsGql, {
   options: props => ({
     variables: {
       date: props.date
-    }
+    },
+    fetchPolicy: 'network-only'
   }),
   props: ({ dialogAnalytics: { loading, dialogAnalytics, error } }) => ({
     loading,

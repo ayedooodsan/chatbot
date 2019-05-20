@@ -270,7 +270,7 @@ class DialogProduct extends Component {
             </div>
           )}
           {rawMessages.length > 0 && (
-            <Scrollbar>
+            <Scrollbar contentProps={{ style: { width: '100%' } }}>
               {isViewUnsatifiedParam
                 ? viewedUnsatifiedDialog.map((messages, index) =>
                     messages[0].type === 'USER' ? (
