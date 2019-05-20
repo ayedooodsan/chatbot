@@ -5,6 +5,8 @@ import MomentUtils from '@date-io/moment';
 import moment from 'moment';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
+import IconButton from '@material-ui/core/IconButton';
+import Refresh from '@material-ui/icons/Refresh';
 import withStyles from '@material-ui/core/styles/withStyles';
 import style from './style';
 import SimpleProductLayoutProvider from '../../layout/SimpleProductLayoutProvider';
@@ -16,9 +18,24 @@ import DialogAnalytics from '../DialogAnalytics';
 const AnalyticProduct = props => {
   const { classes } = props;
   const [date, setDate] = useState(moment());
+  const [time, setTime] = useState(moment());
   return (
     <SimpleProductLayoutProvider
-      header={() => <SimpleProductHead title="Analytics" noButton />}
+      header={() => (
+        <SimpleProductHead
+          title="Analytics"
+          renderButtons={() => (
+            <IconButton
+              color="primary"
+              onClick={() => {
+                setTime(moment().format());
+              }}
+            >
+              <Refresh />
+            </IconButton>
+          )}
+        />
+      )}
       product={() => (
         <SimpleProductBody>
           <Typography variant="subtitle2">Filter</Typography>
@@ -33,7 +50,7 @@ const AnalyticProduct = props => {
               />
             </MuiPickersUtilsProvider>
           </Paper>
-          <DialogAnalytics date={date.format('YYYY-MM-DD')} />
+          <DialogAnalytics key={time} date={date.format('YYYY-MM-DD')} />
         </SimpleProductBody>
       )}
     />

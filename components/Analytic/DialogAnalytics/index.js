@@ -12,10 +12,23 @@ import moment from 'moment';
 import style from './style';
 import DialogAnalytic from '../DialogAnalytic';
 
-import connect from './store';
+import connect from './storeDumb';
+
+const toMoment = date => moment(date, 'YYYY-MM-DD HH:mm:ss');
 
 const DialogAnalytics = props => {
   const { dialogAnalytics, classes } = props;
+  dialogAnalytics.sort((firstMessage, secondMessage) => {
+    if (
+      toMoment(firstMessage.requestTime).isBefore(secondMessage.requestTime)
+    ) {
+      return 1;
+    }
+    if (toMoment(firstMessage.requestTime).isAfter(secondMessage.requestTime)) {
+      return -1;
+    }
+    return 0;
+  });
   const dialogAnalyticGroups = dialogAnalytics.reduce(
     (currentdialogAnalyticGroups, dialogAnalytic) => {
       const foundDialogAnalyticGroup = currentdialogAnalyticGroups.find(

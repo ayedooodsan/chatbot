@@ -136,7 +136,7 @@ const DialogAnalytic = props => {
       },
       position: {
         x: (dataPoint.x + dataPoint.x0) / 2,
-        y: dataPoint.y0 - 0.05
+        y: dataPoint.y + 0.05
       },
       meta: dataPoint.meta
     });
@@ -166,7 +166,7 @@ const DialogAnalytic = props => {
           className={classes.hintRoot}
           value={hint.position}
           align={{
-            vertical: 'bottom',
+            vertical: 'top',
             horizontal: 'auto'
           }}
         >
@@ -181,7 +181,9 @@ const DialogAnalytic = props => {
               <b>Bot says: </b>
             </Typography>
             <Typography align="left" variant="caption">
-              {hint.meta.botMessage}
+              {hint.meta.botMessage.length > 115
+                ? `${hint.meta.botMessage.slice(0, 115)}...`
+                : hint.meta.botMessage}
             </Typography>
             <Typography align="left" variant="overline">
               <b>Response time: </b>

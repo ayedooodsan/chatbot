@@ -4,7 +4,7 @@ const style = {
   },
   hint: {
     padding: '5px 10px',
-    width: '300px'
+    width: '400px'
   },
   hintRoot: {
     zIndex: 10000
