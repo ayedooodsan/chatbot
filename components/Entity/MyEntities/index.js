@@ -1,18 +1,18 @@
 import PropTypes from 'prop-types';
 import connect from './store';
 
-const MyEntites = ({ children, myEntities, loading }) =>
+const MyEntities = ({ children, myEntities, loading }) =>
   children(myEntities, loading);
 
-MyEntites.defaultProps = {
+MyEntities.defaultProps = {
   myEntities: null,
   loading: false
 };
 
-MyEntites.propTypes = {
+MyEntities.propTypes = {
   children: PropTypes.func.isRequired,
   myEntities: PropTypes.object,
   loading: PropTypes.bool
 };
 
-export default connect(MyEntites);
+export default connect(MyEntities);
