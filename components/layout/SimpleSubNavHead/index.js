@@ -65,10 +65,10 @@ const SimpleSubNavHead = props => {
       {openSearch && (
         <TextField
           value={keyword}
-          onChange={setKeyword}
+          onChange={event => setKeyword(event.target.value)}
           inputRef={searchInputRef}
           autoFocus
-          placeholder="Keyword"
+          label="Keyword"
           margin="dense"
           variant="outlined"
           fullWidth
