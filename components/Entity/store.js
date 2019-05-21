@@ -1,5 +1,6 @@
 import { graphql, compose } from 'react-apollo';
 import createEntityGql from './createEntity.gql';
+import updateEntityQuery from './MyEntities/updateEntityQuery';
 
 const withCreateEntity = graphql(createEntityGql, {
   name: 'createEntity',
@@ -7,7 +8,8 @@ const withCreateEntity = graphql(createEntityGql, {
     createEntity: ({ title, projectId }) =>
       createEntity({
         variables: { title, projectId },
-        refetchQueries: ['myEntities']
+        refetchQueries: ['myEntities'],
+        update: updateEntityQuery
       })
   })
 });

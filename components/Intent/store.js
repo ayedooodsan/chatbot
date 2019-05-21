@@ -1,5 +1,6 @@
 import { graphql, compose } from 'react-apollo';
 import createIntentGql from './createIntent.gql';
+import updateIntentQuery from './MyIntents/updateIntentQuery';
 
 const withCreateIntent = graphql(createIntentGql, {
   name: 'createIntent',
@@ -7,7 +8,8 @@ const withCreateIntent = graphql(createIntentGql, {
     createIntent: ({ title, projectId }) =>
       createIntent({
         variables: { title, projectId },
-        refetchQueries: ['myIntents']
+        refetchQueries: ['myIntents'],
+        update: updateIntentQuery
       })
   })
 });

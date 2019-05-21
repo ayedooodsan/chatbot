@@ -19,7 +19,7 @@ import connect from './store';
 import { Link } from '../../routes';
 import style from './style';
 import redirect from '../../libraries/redirect';
-import MyTraining from './MyTraining';
+import MyTrainings from './MyTrainings';
 
 class Training extends Component {
   state = {
@@ -89,7 +89,7 @@ class Training extends Component {
     const { keyword, pagination, uploadProductDialogStatus } = this.state;
     const { projectId, trainingId, classes } = this.props;
     return (
-      <MyTraining
+      <MyTrainings
         keyword={keyword}
         projectId={projectId}
         limit={pagination.limit}
@@ -181,7 +181,7 @@ class Training extends Component {
             </LayoutProvider>
           )
         }
-      </MyTraining>
+      </MyTrainings>
     );
   }
 }

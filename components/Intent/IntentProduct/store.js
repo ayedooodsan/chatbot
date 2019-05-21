@@ -2,6 +2,7 @@ import { graphql, compose } from 'react-apollo';
 import intentGql from './intent.gql';
 import updateIntentGql from './updateIntent.gql';
 import deleteIntentGql from './deleteIntent.gql';
+import updateIntentQuery from '../MyIntents/updateIntentQuery';
 
 const withIntent = graphql(intentGql, {
   name: 'intent',
@@ -42,7 +43,8 @@ const withDeleteIntent = graphql(deleteIntentGql, {
     deleteIntent: ({ id }) =>
       deleteIntent({
         variables: { id },
-        refetchQueries: ['myIntents']
+        refetchQueries: ['myIntents'],
+        update: updateIntentQuery
       })
   })
 });

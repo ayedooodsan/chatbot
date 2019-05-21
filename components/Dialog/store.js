@@ -1,5 +1,6 @@
 import { graphql, compose } from 'react-apollo';
 import createDialogGql from './createDialog.gql';
+import updateDialogQuery from './MyDialogs/updateDialogQuery';
 
 const withCreateDialog = graphql(createDialogGql, {
   name: 'createDialog',
@@ -7,7 +8,8 @@ const withCreateDialog = graphql(createDialogGql, {
     createDialog: ({ title, projectId }) =>
       createDialog({
         variables: { title, projectId },
-        refetchQueries: ['myDialogs']
+        refetchQueries: ['myDialogs'],
+        update: updateDialogQuery
       })
   })
 });

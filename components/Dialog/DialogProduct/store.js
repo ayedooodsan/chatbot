@@ -2,6 +2,7 @@ import { graphql, compose } from 'react-apollo';
 import dialogGql from './dialog.gql';
 import deleteDialogGql from './deleteDialog.gql';
 import updateDialogGql from './updateDialog.gql';
+import updateDialogQuery from '../MyDialogs/updateDialogQuery';
 
 const withDialog = graphql(dialogGql, {
   name: 'dialog',
@@ -42,7 +43,8 @@ const withDeleteDialog = graphql(deleteDialogGql, {
     deleteDialog: ({ id }) =>
       deleteDialog({
         variables: { id },
-        refetchQueries: ['myDialogs']
+        refetchQueries: ['myDialogs'],
+        update: updateDialogQuery
       })
   })
 });

@@ -2,6 +2,7 @@ import { graphql, compose } from 'react-apollo';
 import entityGql from './entity.gql';
 import updateEntityGql from './updateEntity.gql';
 import deleteEntityGql from './deleteEntity.gql';
+import updateEntityQuery from '../MyEntities/updateEntityQuery';
 
 const withEntity = graphql(entityGql, {
   name: 'entity',
@@ -42,7 +43,8 @@ const withDeleteEntity = graphql(deleteEntityGql, {
     deleteEntity: ({ id }) =>
       deleteEntity({
         variables: { id },
-        refetchQueries: ['myEntities']
+        refetchQueries: ['myEntities'],
+        update: updateEntityQuery
       })
   })
 });
