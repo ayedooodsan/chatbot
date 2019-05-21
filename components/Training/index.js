@@ -19,13 +19,14 @@ import connect from './store';
 import { Link } from '../../routes';
 import style from './style';
 import redirect from '../../libraries/redirect';
+import MyTraining from './MyTraining';
 
 class Training extends Component {
   state = {
     keyword: '',
     pagination: {
-      limit: 10000,
-      offset: 1
+      limit: 20,
+      offset: 0
     },
     uploadProductDialogStatus: false
   };
@@ -86,84 +87,101 @@ class Training extends Component {
 
   render() {
     const { keyword, pagination, uploadProductDialogStatus } = this.state;
-    const { myTrainings, projectId, trainingId, classes } = this.props;
+    const { projectId, trainingId, classes } = this.props;
     return (
-      <LayoutProvider
-        navigation={() => <Navigation />}
-        subNavigation={() => (
-          <SubNavigation
-            header={() => (
-              <SimpleHeader
-                title="Trainings"
-                onAddItem={this.openCreateItemDialog}
-                handleClickPagination={this.setOffsetPagination}
-                pagination={{ ...pagination, dataLength: myTrainings.length }}
-                keyword={keyword}
-                setKeyword={this.setKeyword}
-              />
-            )}
-            body={() =>
-              myTrainings && (
-                <List component="nav">
-                  {myTrainings.map(myTraining => (
-                    <Link
-                      route={`/${projectId}/training/${myTraining.id}`}
-                      key={myTraining.id}
-                    >
-                      <Tooltip title={myTraining.title} placement="right">
-                        <ListItem
-                          className={classes.listItem}
-                          divider
-                          dense
-                          button
-                        >
-                          <ListItemText
-                            primary={myTraining.title}
-                            primaryTypographyProps={{
-                              variant: 'body2',
-                              noWrap: true,
-                              className: classNames({
-                                [classes.listItemPrimaryTextActive]: this.activeTraining(
-                                  myTraining.id
-                                )
-                              })
-                            }}
-                            secondary={moment(myTraining.createdAt).format(
-                              'MM/DD/YYYY'
-                            )}
-                            secondaryTypographyProps={{
-                              variant: 'caption',
-                              className: classNames({
-                                [classes.listItemSecondaryTextActive]: this.activeTraining(
-                                  myTraining.id
-                                )
-                              })
-                            }}
-                          />
-                        </ListItem>
-                      </Tooltip>
-                    </Link>
-                  ))}
-                </List>
-              )
-            }
-          />
-        )}
+      <MyTraining
+        keyword={keyword}
+        projectId={projectId}
+        limit={pagination.limit}
+        offset={pagination.offset}
       >
-        {trainingId && (
-          <TrainingProduct trainingId={trainingId} projectId={projectId} />
-        )}
-        <UploadProductDialog
-          placeholder="Choose User Input File"
-          message="Upload User Input"
-          submessage="You can upload user inputs to the Training tool in one .xlsx file (follow the template below)."
-          open={uploadProductDialogStatus}
-          handleClose={this.closeCreateItemDialog}
-          handleConfirm={this.createItem}
-        >
-          <UploadFileTemplate />
-        </UploadProductDialog>
-      </LayoutProvider>
+        {myTrainings =>
+          myTrainings && (
+            <LayoutProvider
+              navigation={() => <Navigation />}
+              subNavigation={() => (
+                <SubNavigation
+                  header={() => (
+                    <SimpleHeader
+                      title="Trainings"
+                      onAddItem={this.openCreateItemDialog}
+                      handleClickPagination={this.setOffsetPagination}
+                      pagination={{
+                        ...pagination,
+                        dataLength: myTrainings.pageInfo.total
+                      }}
+                      keyword={keyword}
+                      setKeyword={this.setKeyword}
+                    />
+                  )}
+                  body={() =>
+                    myTrainings && (
+                      <List component="nav">
+                        {myTrainings.trainings.map(myTraining => (
+                          <Link
+                            route={`/${projectId}/training/${myTraining.id}`}
+                            key={myTraining.id}
+                          >
+                            <Tooltip title={myTraining.title} placement="right">
+                              <ListItem
+                                className={classes.listItem}
+                                divider
+                                dense
+                                button
+                              >
+                                <ListItemText
+                                  primary={myTraining.title}
+                                  primaryTypographyProps={{
+                                    variant: 'body2',
+                                    noWrap: true,
+                                    className: classNames({
+                                      [classes.listItemPrimaryTextActive]: this.activeTraining(
+                                        myTraining.id
+                                      )
+                                    })
+                                  }}
+                                  secondary={moment(
+                                    myTraining.createdAt
+                                  ).format('MM/DD/YYYY')}
+                                  secondaryTypographyProps={{
+                                    variant: 'caption',
+                                    className: classNames({
+                                      [classes.listItemSecondaryTextActive]: this.activeTraining(
+                                        myTraining.id
+                                      )
+                                    })
+                                  }}
+                                />
+                              </ListItem>
+                            </Tooltip>
+                          </Link>
+                        ))}
+                      </List>
+                    )
+                  }
+                />
+              )}
+            >
+              {trainingId && (
+                <TrainingProduct
+                  trainingId={trainingId}
+                  projectId={projectId}
+                />
+              )}
+              <UploadProductDialog
+                placeholder="Choose User Input File"
+                message="Upload User Input"
+                submessage="You can upload user inputs to the Training tool in one .xlsx file (follow the template below)."
+                open={uploadProductDialogStatus}
+                handleClose={this.closeCreateItemDialog}
+                handleConfirm={this.createItem}
+              >
+                <UploadFileTemplate />
+              </UploadProductDialog>
+            </LayoutProvider>
+          )
+        }
+      </MyTraining>
     );
   }
 }
