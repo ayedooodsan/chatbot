@@ -125,7 +125,11 @@ class Intent extends Component {
             )}
           >
             {intentId && (
-              <IntentProduct intentId={intentId} projectId={projectId} />
+              <IntentProduct
+                key={intentId}
+                intentId={intentId}
+                projectId={projectId}
+              />
             )}
             <CreateProductDialog
               placeholder="Intent Name"

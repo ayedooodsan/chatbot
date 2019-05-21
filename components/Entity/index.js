@@ -126,7 +126,11 @@ class Entity extends Component {
             )}
           >
             {entityId && (
-              <EntityProduct entityId={entityId} projectId={projectId} />
+              <EntityProduct
+                key={entityId}
+                entityId={entityId}
+                projectId={projectId}
+              />
             )}
             <CreateProductDialog
               placeholder="Entity Name"
