@@ -40,21 +40,23 @@ class Training extends Component {
 
   createTrainingInput = rows => {
     rows.splice(0, 1);
-    const trainingInputs = rows.reduce((currentTrainingInputs, row) => {
-      const [title, userSay] = row;
-      const foundTrainingInput = currentTrainingInputs.find(
-        currentTrainingInput => currentTrainingInput.title === title
-      );
-      if (!foundTrainingInput) {
-        currentTrainingInputs.push({
-          title,
-          userSays: [userSay]
-        });
-      } else {
-        foundTrainingInput.userSays.push(userSay);
-      }
-      return currentTrainingInputs;
-    }, []);
+    const trainingInputs = rows
+      .filter(row => row.every(cell => cell))
+      .reduce((currentTrainingInputs, row) => {
+        const [title, userSay] = row;
+        const foundTrainingInput = currentTrainingInputs.find(
+          currentTrainingInput => currentTrainingInput.title === title
+        );
+        if (!foundTrainingInput) {
+          currentTrainingInputs.push({
+            title,
+            userSays: [userSay.toString()]
+          });
+        } else {
+          foundTrainingInput.userSays.push(userSay.toString());
+        }
+        return currentTrainingInputs;
+      }, []);
     return trainingInputs;
   };
 

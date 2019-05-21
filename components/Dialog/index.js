@@ -125,7 +125,11 @@ class Dialog extends Component {
             )}
           >
             {dialogId && (
-              <DialogProduct dialogId={dialogId} projectId={projectId} />
+              <DialogProduct
+                key={dialogId}
+                dialogId={dialogId}
+                projectId={projectId}
+              />
             )}
             <CreateProductDialog
               placeholder="Dialog Name"
