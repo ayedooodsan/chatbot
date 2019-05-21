@@ -16,13 +16,14 @@ import connect from './store';
 import { Link } from '../../routes';
 import style from './style';
 import redirect from '../../libraries/redirect';
+import MyDialogs from './MyDialogs';
 
 class Dialog extends Component {
   state = {
     keyword: '',
     pagination: {
-      limit: 10000,
-      offset: 1
+      limit: 20,
+      offset: 0
     },
     createItemDialogStatus: false
   };
@@ -58,76 +59,89 @@ class Dialog extends Component {
 
   render() {
     const { keyword, pagination, createItemDialogStatus } = this.state;
-    const { myDialogs, projectId, dialogId, classes } = this.props;
+    const { projectId, dialogId, classes } = this.props;
     return (
-      <LayoutProvider
-        navigation={() => <Navigation />}
-        subNavigation={() => (
-          <SubNavigation
-            header={() => (
-              <SimpleHeader
-                title="Dialogs"
-                onAddItem={this.openCreateItemDialog}
-                handleClickPagination={this.setOffsetPagination}
-                pagination={{ ...pagination, dataLength: myDialogs.length }}
-                keyword={keyword}
-                setKeyword={this.setKeyword}
+      <MyDialogs
+        projectId={projectId}
+        keyword={keyword}
+        offset={pagination.offset}
+        limit={pagination.limit}
+      >
+        {myDialogs => (
+          <LayoutProvider
+            navigation={() => <Navigation />}
+            subNavigation={() => (
+              <SubNavigation
+                header={() =>
+                  myDialogs && (
+                    <SimpleHeader
+                      title="Dialogs"
+                      onAddItem={this.openCreateItemDialog}
+                      handleClickPagination={this.setOffsetPagination}
+                      pagination={{
+                        ...pagination,
+                        dataLength: myDialogs.pageInfo.total
+                      }}
+                      keyword={keyword}
+                      setKeyword={this.setKeyword}
+                    />
+                  )
+                }
+                body={() =>
+                  myDialogs && (
+                    <List component="nav">
+                      {myDialogs.dialogs.map(myDialog => (
+                        <Link
+                          route={`/${projectId}/dialog/${myDialog.id}`}
+                          key={myDialog.id}
+                        >
+                          <Tooltip title={myDialog.title} placement="right">
+                            <ListItem
+                              className={classes.listItem}
+                              dense
+                              divider
+                              button
+                            >
+                              <ListItemText
+                                primary={myDialog.title}
+                                primaryTypographyProps={{
+                                  variant: 'body2',
+                                  noWrap: true,
+                                  className: classNames({
+                                    [classes.listItemTextActive]: this.activeDialog(
+                                      myDialog.id
+                                    )
+                                  })
+                                }}
+                              />
+                            </ListItem>
+                          </Tooltip>
+                        </Link>
+                      ))}
+                    </List>
+                  )
+                }
               />
             )}
-            body={() =>
-              myDialogs && (
-                <List component="nav">
-                  {myDialogs.map(myDialog => (
-                    <Link
-                      route={`/${projectId}/dialog/${myDialog.id}`}
-                      key={myDialog.id}
-                    >
-                      <Tooltip title={myDialog.title} placement="right">
-                        <ListItem
-                          className={classes.listItem}
-                          dense
-                          divider
-                          button
-                        >
-                          <ListItemText
-                            primary={myDialog.title}
-                            primaryTypographyProps={{
-                              variant: 'body2',
-                              noWrap: true,
-                              className: classNames({
-                                [classes.listItemTextActive]: this.activeDialog(
-                                  myDialog.id
-                                )
-                              })
-                            }}
-                          />
-                        </ListItem>
-                      </Tooltip>
-                    </Link>
-                  ))}
-                </List>
-              )
-            }
-          />
+          >
+            {dialogId && (
+              <DialogProduct dialogId={dialogId} projectId={projectId} />
+            )}
+            <CreateProductDialog
+              placeholder="Dialog Name"
+              message="Add new dialog"
+              open={createItemDialogStatus}
+              handleClose={this.closeCreateItemDialog}
+              handleConfirm={this.createItem}
+            />
+          </LayoutProvider>
         )}
-      >
-        {dialogId && (
-          <DialogProduct dialogId={dialogId} projectId={projectId} />
-        )}
-        <CreateProductDialog
-          placeholder="Dialog Name"
-          message="Add new dialog"
-          open={createItemDialogStatus}
-          handleClose={this.closeCreateItemDialog}
-          handleConfirm={this.createItem}
-        />
-      </LayoutProvider>
+      </MyDialogs>
     );
   }
 }
 
 Dialog.defaultProps = {
-  myDialogs: [],
   dialogId: null
 };
 
@@ -135,8 +149,7 @@ Dialog.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
   createDialog: PropTypes.func.isRequired,
-  dialogId: PropTypes.string,
-  myDialogs: PropTypes.array
+  dialogId: PropTypes.string
 };
 
 export default withStyles(style)(connect(Dialog));

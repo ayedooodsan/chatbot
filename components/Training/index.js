@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Tooltip from '@material-ui/core/Tooltip';
 import withStyles from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import readXlsxFile from 'read-excel-file';
@@ -107,35 +108,38 @@ class Training extends Component {
                       route={`/${projectId}/training/${myTraining.id}`}
                       key={myTraining.id}
                     >
-                      <ListItem
-                        className={classNames({
-                          [classes.listItemActive]: this.activeTraining(
-                            myTraining.id
-                          )
-                        })}
-                        button
-                      >
-                        <ListItemText
-                          primary={myTraining.title}
-                          primaryTypographyProps={{
-                            className: classNames({
-                              [classes.listItemPrimaryTextActive]: this.activeTraining(
-                                myTraining.id
-                              )
-                            })
-                          }}
-                          secondary={moment(myTraining.createdAt).format(
-                            'MM/DD/YYYY'
-                          )}
-                          secondaryTypographyProps={{
-                            className: classNames({
-                              [classes.listItemSecondaryTextActive]: this.activeTraining(
-                                myTraining.id
-                              )
-                            })
-                          }}
-                        />
-                      </ListItem>
+                      <Tooltip title={myTraining.title} placement="right">
+                        <ListItem
+                          className={classes.listItem}
+                          divider
+                          dense
+                          button
+                        >
+                          <ListItemText
+                            primary={myTraining.title}
+                            primaryTypographyProps={{
+                              variant: 'body2',
+                              noWrap: true,
+                              className: classNames({
+                                [classes.listItemPrimaryTextActive]: this.activeTraining(
+                                  myTraining.id
+                                )
+                              })
+                            }}
+                            secondary={moment(myTraining.createdAt).format(
+                              'MM/DD/YYYY'
+                            )}
+                            secondaryTypographyProps={{
+                              variant: 'caption',
+                              className: classNames({
+                                [classes.listItemSecondaryTextActive]: this.activeTraining(
+                                  myTraining.id
+                                )
+                              })
+                            }}
+                          />
+                        </ListItem>
+                      </Tooltip>
                     </Link>
                   ))}
                 </List>

@@ -1,39 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import style from './style';
 
 const SimpleProductHead = props => {
-  const { classes, title, noButton } = props;
+  const { classes, title, noButton, renderButtons } = props;
   return (
     <Paper className={classes.root}>
       <Typography variant="h6">{title}</Typography>
-      {!noButton && (
-        <div>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            className={classes.whiteColor}
-          >
-            Save
-          </Button>
-        </div>
-      )}
+      {!noButton && renderButtons()}
     </Paper>
   );
 };
 
 SimpleProductHead.defaultProps = {
-  noButton: false
+  noButton: false,
+  renderButtons: () => null
 };
 
 SimpleProductHead.propTypes = {
   classes: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
+  renderButtons: PropTypes.func,
   noButton: PropTypes.bool
 };
 

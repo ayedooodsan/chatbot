@@ -16,13 +16,15 @@ import connect from './store';
 import { Link } from '../../routes';
 import style from './style';
 import redirect from '../../libraries/redirect';
+import MyEntities from './MyEntities';
 
 class Entity extends Component {
   state = {
     keyword: '',
     pagination: {
-      limit: 10000,
-      offset: 1
+      limit: 20,
+      offset: 0,
+      total: 1000
     },
     createItemDialogStatus: false
   };
@@ -58,76 +60,89 @@ class Entity extends Component {
 
   render() {
     const { keyword, pagination, createItemDialogStatus } = this.state;
-    const { myEntities, projectId, entityId, classes } = this.props;
+    const { projectId, entityId, classes } = this.props;
     return (
-      <LayoutProvider
-        navigation={() => <Navigation />}
-        subNavigation={() => (
-          <SubNavigation
-            header={() => (
-              <SimpleHeader
-                title="Entities"
-                onAddItem={this.openCreateItemDialog}
-                handleClickPagination={this.setOffsetPagination}
-                pagination={{ ...pagination, dataLength: myEntities.length }}
-                keyword={keyword}
-                setKeyword={this.setKeyword}
+      <MyEntities
+        projectId={projectId}
+        limit={pagination.limit}
+        offset={pagination.offset}
+        keyword={keyword}
+      >
+        {myEntities => (
+          <LayoutProvider
+            navigation={() => <Navigation />}
+            subNavigation={() => (
+              <SubNavigation
+                header={() =>
+                  myEntities && (
+                    <SimpleHeader
+                      title="Entities"
+                      onAddItem={this.openCreateItemDialog}
+                      handleClickPagination={this.setOffsetPagination}
+                      pagination={{
+                        ...pagination,
+                        dataLength: myEntities.pageInfo.total
+                      }}
+                      keyword={keyword}
+                      setKeyword={this.setKeyword}
+                    />
+                  )
+                }
+                body={() =>
+                  myEntities && (
+                    <List component="nav">
+                      {myEntities.entities.map(myEntity => (
+                        <Link
+                          route={`/${projectId}/entity/${myEntity.id}`}
+                          key={myEntity.id}
+                        >
+                          <Tooltip title={myEntity.title} placement="right">
+                            <ListItem
+                              className={classes.listItem}
+                              dense
+                              variant
+                              button
+                            >
+                              <ListItemText
+                                primary={myEntity.title}
+                                primaryTypographyProps={{
+                                  variant: 'body2',
+                                  noWrap: true,
+                                  className: classNames({
+                                    [classes.listItemTextActive]: this.activeEntity(
+                                      myEntity.id
+                                    )
+                                  })
+                                }}
+                              />
+                            </ListItem>
+                          </Tooltip>
+                        </Link>
+                      ))}
+                    </List>
+                  )
+                }
               />
             )}
-            body={() =>
-              myEntities && (
-                <List component="nav">
-                  {myEntities.map(myEntity => (
-                    <Link
-                      route={`/${projectId}/entity/${myEntity.id}`}
-                      key={myEntity.id}
-                    >
-                      <Tooltip title={myEntity.title} placement="right">
-                        <ListItem
-                          className={classes.listItem}
-                          dense
-                          variant
-                          button
-                        >
-                          <ListItemText
-                            primary={myEntity.title}
-                            primaryTypographyProps={{
-                              variant: 'body2',
-                              noWrap: true,
-                              className: classNames({
-                                [classes.listItemTextActive]: this.activeEntity(
-                                  myEntity.id
-                                )
-                              })
-                            }}
-                          />
-                        </ListItem>
-                      </Tooltip>
-                    </Link>
-                  ))}
-                </List>
-              )
-            }
-          />
+          >
+            {entityId && (
+              <EntityProduct entityId={entityId} projectId={projectId} />
+            )}
+            <CreateProductDialog
+              placeholder="Entity Name"
+              message="Add new entity"
+              open={createItemDialogStatus}
+              handleClose={this.closeCreateItemDialog}
+              handleConfirm={this.createItem}
+            />
+          </LayoutProvider>
         )}
-      >
-        {entityId && (
-          <EntityProduct entityId={entityId} projectId={projectId} />
-        )}
-        <CreateProductDialog
-          placeholder="Entity Name"
-          message="Add new entity"
-          open={createItemDialogStatus}
-          handleClose={this.closeCreateItemDialog}
-          handleConfirm={this.createItem}
-        />
-      </LayoutProvider>
+      </MyEntities>
     );
   }
 }
 
 Entity.defaultProps = {
-  myEntities: [],
   entityId: null
 };
 
@@ -135,8 +150,7 @@ Entity.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
   createEntity: PropTypes.func.isRequired,
-  entityId: PropTypes.string,
-  myEntities: PropTypes.array
+  entityId: PropTypes.string
 };
 
 export default withStyles(style)(connect(Entity));

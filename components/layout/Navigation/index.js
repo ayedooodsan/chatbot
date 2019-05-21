@@ -86,6 +86,7 @@ class Navigation extends React.Component {
                     <ListItemText
                       primary={route.name}
                       primaryTypographyProps={{
+                        variant: 'subtitle2',
                         className: classNames(classes.listItemText, {
                           [classes.listItemTextClose]: !this.state.open
                         })
@@ -106,6 +107,7 @@ class Navigation extends React.Component {
                   <ListItemText
                     primary={route.name}
                     primaryTypographyProps={{
+                      variant: 'subtitle2',
                       className: classNames(classes.listItemText, {
                         [classes.listItemTextClose]: !this.state.open
                       })

@@ -2,7 +2,7 @@ const subNavgationWidth = 300;
 
 const style = theme => ({
   root: {
-    backgroundColor: '#f4f5f7',
+    backgroundColor: '#ffffff',
     position: 'relative',
     width: subNavgationWidth,
     flexShrink: 0,

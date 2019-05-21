@@ -1,0 +1,21 @@
+query myEntities (
+  $projectId: String!
+  $limit: Int
+  $offset: Int
+  $keyword: String
+) {
+  myEntities (
+    projectId: $projectId
+    limit: $limit
+    offset: $offset
+    keyword: $keyword
+  ) {
+    entities {
+    	id
+      title
+    }
+    pageInfo {
+      total
+    }
+  }
+}

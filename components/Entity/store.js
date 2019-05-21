@@ -1,5 +1,4 @@
 import { graphql, compose } from 'react-apollo';
-import getMyEntitiesGql from './myEntities.gql';
 import createEntityGql from './createEntity.gql';
 
 const withCreateEntity = graphql(createEntityGql, {
@@ -13,22 +12,4 @@ const withCreateEntity = graphql(createEntityGql, {
   })
 });
 
-const withMyEntities = graphql(getMyEntitiesGql, {
-  name: 'myEntities',
-  options: props => ({
-    variables: {
-      projectId: props.projectId
-    }
-  }),
-  props: ({ myEntities: { loading, myEntities, error } }) => ({
-    loading,
-    myEntities,
-    error
-  })
-});
-
-export default comp =>
-  compose(
-    withCreateEntity,
-    withMyEntities
-  )(comp);
+export default comp => compose(withCreateEntity)(comp);
