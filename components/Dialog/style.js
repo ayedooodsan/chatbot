@@ -1,7 +1,7 @@
 const style = theme => ({
   listItem: {
     '&:nth-child(odd)': {
-      backgroundColor: '#f4f5f7'
+      backgroundColor: '#fbfbfb'
     },
     '&:hover': {
       backgroundColor: '#e1e2e4'
