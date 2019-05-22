@@ -3,6 +3,7 @@ import intentGql from './intent.gql';
 import updateIntentGql from './updateIntent.gql';
 import deleteIntentGql from './deleteIntent.gql';
 import updateIntentQuery from '../MyIntents/updateIntentQuery';
+import updateSearchResultQuery from '../SearchIntents/updateSearchResultQuery';
 
 const withIntent = graphql(intentGql, {
   name: 'intent',
@@ -44,7 +45,10 @@ const withDeleteIntent = graphql(deleteIntentGql, {
       deleteIntent({
         variables: { id },
         refetchQueries: ['myIntents'],
-        update: updateIntentQuery
+        update: cache => {
+          updateIntentQuery(cache);
+          updateSearchResultQuery(cache);
+        }
       })
   })
 });

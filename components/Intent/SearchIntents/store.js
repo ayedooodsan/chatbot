@@ -5,10 +5,12 @@ import withDebouncedProps from '../../../libraries/withDebouncedProps';
 
 const withSearchIntents = graphql(getSearchIntentsGql, {
   name: 'searchIntents',
-  options: ({ projectId, keyword }) => ({
+  options: ({ projectId, keyword, offset, limit }) => ({
     variables: {
       projectId,
-      keyword
+      keyword,
+      offset,
+      limit
     }
   }),
   props: ({ searchIntents: { loading, searchIntents, error } }) => ({

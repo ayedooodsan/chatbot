@@ -11,7 +11,7 @@ SearchIntents.defaultProps = {
 
 SearchIntents.propTypes = {
   children: PropTypes.func.isRequired,
-  searchIntents: PropTypes.array,
+  searchIntents: PropTypes.object,
   loading: PropTypes.bool
 };
 
