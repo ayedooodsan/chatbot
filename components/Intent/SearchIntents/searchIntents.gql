@@ -1,0 +1,13 @@
+query searchIntents (
+  $projectId: String!
+  $keyword: String
+) {
+  searchIntents (
+    projectId: $projectId
+    keyword: $keyword
+  ) {
+    id
+    title
+    searchResult
+  }
+}

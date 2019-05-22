@@ -20,6 +20,7 @@ import MyEntities from './MyEntities';
 
 class Entity extends Component {
   state = {
+    openSearch: false,
     keyword: '',
     pagination: {
       limit: 20,
@@ -27,6 +28,10 @@ class Entity extends Component {
       total: 1000
     },
     createItemDialogStatus: false
+  };
+
+  setOpenSearch = value => {
+    this.setState({ openSearch: value });
   };
 
   openCreateItemDialog = () => {
@@ -59,7 +64,12 @@ class Entity extends Component {
   activeEntity = currentEntityId => currentEntityId === this.props.entityId;
 
   render() {
-    const { keyword, pagination, createItemDialogStatus } = this.state;
+    const {
+      keyword,
+      pagination,
+      createItemDialogStatus,
+      openSearch
+    } = this.state;
     const { projectId, entityId, classes } = this.props;
     return (
       <MyEntities
@@ -76,6 +86,8 @@ class Entity extends Component {
                 header={() =>
                   myEntities && (
                     <SimpleHeader
+                      openSearch={openSearch}
+                      setOpenSearch={this.setOpenSearch}
                       title="Entities"
                       onAddItem={this.openCreateItemDialog}
                       handleClickPagination={this.setOffsetPagination}

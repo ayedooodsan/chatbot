@@ -6,7 +6,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Tooltip from '@material-ui/core/Tooltip';
 import classNames from 'classnames';
+import SearchView from './SearchView';
 import MyIntents from './MyIntents';
+import SearchIntents from './SearchIntents';
 import LayoutProvider from '../layout/LayoutProvider';
 import Navigation from '../layout/Navigation';
 import SubNavigation from '../layout/SubNavigation';
@@ -20,12 +22,22 @@ import redirect from '../../libraries/redirect';
 
 class Intent extends Component {
   state = {
+    openSearch: false,
     keyword: '',
     pagination: {
       limit: 20,
       offset: 0
     },
+    advancedSearch: false,
     createItemDialogStatus: false
+  };
+
+  setOpenSearch = value => {
+    this.setState({ openSearch: value });
+  };
+
+  setAdvancedSearch = value => {
+    this.setState({ advancedSearch: value });
   };
 
   openCreateItemDialog = () => {
@@ -58,9 +70,77 @@ class Intent extends Component {
   activeIntent = currentIntentId => currentIntentId === this.props.intentId;
 
   render() {
-    const { keyword, pagination, createItemDialogStatus } = this.state;
+    const {
+      keyword,
+      pagination,
+      createItemDialogStatus,
+      advancedSearch,
+      openSearch
+    } = this.state;
     const { projectId, intentId, classes } = this.props;
-    return (
+    return advancedSearch ? (
+      <SearchIntents projectId={projectId} keyword={keyword}>
+        {searchIntents => (
+          <LayoutProvider
+            navigation={() => <Navigation />}
+            subNavigation={() => (
+              <SubNavigation
+                header={() => (
+                  <SimpleHeader
+                    openSearch={openSearch}
+                    setOpenSearch={this.setOpenSearch}
+                    hasAdvanceSearch
+                    advancedSearch={advancedSearch}
+                    setAdvancedSearch={this.setAdvancedSearch}
+                    title="Intents"
+                    onAddItem={this.openCreateItemDialog}
+                    noPagination
+                    keyword={keyword}
+                    setKeyword={this.setKeyword}
+                  />
+                )}
+                body={() =>
+                  searchIntents && (
+                    <List component="nav">
+                      {searchIntents.map((searchIntent, index) => (
+                        <Link
+                          route={`/${projectId}/intent/${searchIntent.id}`}
+                          key={searchIntent.id}
+                        >
+                          <Tooltip title={searchIntent.title} placement="right">
+                            <SearchView
+                              activeId={intentId}
+                              index={index}
+                              id={searchIntent.id}
+                              searchResult={searchIntent.searchResult}
+                            />
+                          </Tooltip>
+                        </Link>
+                      ))}
+                    </List>
+                  )
+                }
+              />
+            )}
+          >
+            {intentId && (
+              <IntentProduct
+                key={intentId}
+                intentId={intentId}
+                projectId={projectId}
+              />
+            )}
+            <CreateProductDialog
+              placeholder="Intent Name"
+              message="Add new intent"
+              open={createItemDialogStatus}
+              handleClose={this.closeCreateItemDialog}
+              handleConfirm={this.createItem}
+            />
+          </LayoutProvider>
+        )}
+      </SearchIntents>
+    ) : (
       <MyIntents
         offset={pagination.offset}
         limit={pagination.limit}
@@ -75,6 +155,11 @@ class Intent extends Component {
                 header={() =>
                   myIntents && (
                     <SimpleHeader
+                      openSearch={openSearch}
+                      setOpenSearch={this.setOpenSearch}
+                      hasAdvanceSearch
+                      advancedSearch={advancedSearch}
+                      setAdvancedSearch={this.setAdvancedSearch}
                       title="Intents"
                       onAddItem={this.openCreateItemDialog}
                       handleClickPagination={this.setOffsetPagination}

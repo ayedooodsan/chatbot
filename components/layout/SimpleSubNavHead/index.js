@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography';
@@ -8,11 +8,12 @@ import Clear from '@material-ui/icons/Clear';
 import Add from '@material-ui/icons/Add';
 import TextField from '@material-ui/core/TextField';
 import Pagination from 'material-ui-flat-pagination';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import style from './style';
 
 const SimpleSubNavHead = props => {
-  const [openSearch, setOpenSearch] = useState(false);
   const {
     pagination,
     classes,
@@ -20,7 +21,13 @@ const SimpleSubNavHead = props => {
     setKeyword,
     keyword,
     onAddItem,
-    title
+    title,
+    hasAdvanceSearch,
+    setAdvancedSearch,
+    noPagination,
+    advancedSearch,
+    openSearch,
+    setOpenSearch
   } = props;
   const searchInputRef = useRef(null);
 
@@ -36,6 +43,9 @@ const SimpleSubNavHead = props => {
 
   const hideSearch = () => {
     setOpenSearch(false);
+    if (hasAdvanceSearch) {
+      setAdvancedSearch(false);
+    }
     setKeyword('');
   };
 
@@ -63,18 +73,32 @@ const SimpleSubNavHead = props => {
         </div>
       </div>
       {openSearch && (
-        <TextField
-          value={keyword}
-          onChange={event => setKeyword(event.target.value)}
-          inputRef={searchInputRef}
-          autoFocus
-          label="Keyword"
-          margin="dense"
-          variant="outlined"
-          fullWidth
-        />
+        <React.Fragment>
+          <TextField
+            value={keyword}
+            onChange={event => setKeyword(event.target.value)}
+            inputRef={searchInputRef}
+            autoFocus
+            label="Keyword"
+            margin="dense"
+            variant="outlined"
+            fullWidth
+          />
+          {hasAdvanceSearch && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={advancedSearch}
+                  onChange={event => setAdvancedSearch(event.target.checked)}
+                  color="primary"
+                />
+              }
+              label="Advanced search"
+            />
+          )}
+        </React.Fragment>
       )}
-      {pagination.limit < pagination.dataLength && (
+      {!noPagination && pagination.limit < pagination.dataLength && (
         <Pagination
           className={classes.pagination}
           limit={pagination.limit}
@@ -90,14 +114,29 @@ const SimpleSubNavHead = props => {
   );
 };
 
+SimpleSubNavHead.defaultProps = {
+  hasAdvanceSearch: false,
+  advancedSearch: false,
+  setAdvancedSearch: null,
+  noPagination: false,
+  pagination: {},
+  handleClickPagination: null
+};
+
 SimpleSubNavHead.propTypes = {
-  pagination: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  handleClickPagination: PropTypes.func.isRequired,
   setKeyword: PropTypes.func.isRequired,
   onAddItem: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  keyword: PropTypes.string.isRequired
+  keyword: PropTypes.string.isRequired,
+  openSearch: PropTypes.bool.isRequired,
+  setOpenSearch: PropTypes.func.isRequired,
+  pagination: PropTypes.object,
+  handleClickPagination: PropTypes.func,
+  hasAdvanceSearch: PropTypes.bool,
+  advancedSearch: PropTypes.bool,
+  setAdvancedSearch: PropTypes.func,
+  noPagination: PropTypes.bool
 };
 
 export default withStyles(style)(SimpleSubNavHead);

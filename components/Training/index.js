@@ -23,12 +23,17 @@ import MyTrainings from './MyTrainings';
 
 class Training extends Component {
   state = {
+    openSearch: false,
     keyword: '',
     pagination: {
       limit: 20,
       offset: 0
     },
     uploadProductDialogStatus: false
+  };
+
+  setOpenSearch = value => {
+    this.setState({ openSearch: value });
   };
 
   openCreateItemDialog = () => {
@@ -86,7 +91,12 @@ class Training extends Component {
     currentTrainingId === this.props.trainingId;
 
   render() {
-    const { keyword, pagination, uploadProductDialogStatus } = this.state;
+    const {
+      keyword,
+      pagination,
+      uploadProductDialogStatus,
+      openSearch
+    } = this.state;
     const { projectId, trainingId, classes } = this.props;
     return (
       <MyTrainings
@@ -103,6 +113,8 @@ class Training extends Component {
                 <SubNavigation
                   header={() => (
                     <SimpleHeader
+                      openSearch={openSearch}
+                      setOpenSearch={this.setOpenSearch}
                       title="Trainings"
                       onAddItem={this.openCreateItemDialog}
                       handleClickPagination={this.setOffsetPagination}

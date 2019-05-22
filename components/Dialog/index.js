@@ -20,12 +20,17 @@ import MyDialogs from './MyDialogs';
 
 class Dialog extends Component {
   state = {
+    openSearch: false,
     keyword: '',
     pagination: {
       limit: 20,
       offset: 0
     },
     createItemDialogStatus: false
+  };
+
+  setOpenSearch = value => {
+    this.setState({ openSearch: value });
   };
 
   openCreateItemDialog = () => {
@@ -58,7 +63,12 @@ class Dialog extends Component {
   activeDialog = currentDialogId => currentDialogId === this.props.dialogId;
 
   render() {
-    const { keyword, pagination, createItemDialogStatus } = this.state;
+    const {
+      keyword,
+      pagination,
+      createItemDialogStatus,
+      openSearch
+    } = this.state;
     const { projectId, dialogId, classes } = this.props;
     return (
       <MyDialogs
@@ -75,6 +85,8 @@ class Dialog extends Component {
                 header={() =>
                   myDialogs && (
                     <SimpleHeader
+                      openSearch={openSearch}
+                      setOpenSearch={this.setOpenSearch}
                       title="Dialogs"
                       onAddItem={this.openCreateItemDialog}
                       handleClickPagination={this.setOffsetPagination}
