@@ -17,7 +17,7 @@ const withCreateProject = graphql(createProjectGql, {
     createProject: ({ title }) =>
       createProject({
         variables: { title },
-        refetchQueries: ['myProjects']
+        refetchQueries: ['myProjects', 'project']
       })
   })
 });

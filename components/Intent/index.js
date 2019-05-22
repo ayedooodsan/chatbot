@@ -5,8 +5,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 import classNames from 'classnames';
-import SearchView from './SearchView';
+import SearchView from '../common/SearchView';
 import MyIntents from './MyIntents';
 import SearchIntents from './SearchIntents';
 import LayoutProvider from '../layout/LayoutProvider';
@@ -118,7 +119,7 @@ class Intent extends Component {
                   )
                 }
                 body={() =>
-                  intentProvider && (
+                  intentProvider && intentProvider.intents.length > 0 ? (
                     <List component="nav">
                       {intentProvider.intents.map((myIntent, index) => (
                         <Link
@@ -128,6 +129,7 @@ class Intent extends Component {
                           <Tooltip title={myIntent.title} placement="right">
                             {advancedSearch ? (
                               <SearchView
+                                productTitle={myIntent.title}
                                 activeId={intentId}
                                 index={index}
                                 id={myIntent.id}
@@ -158,6 +160,14 @@ class Intent extends Component {
                         </Link>
                       ))}
                     </List>
+                  ) : (
+                    <Typography
+                      variant="caption"
+                      className={classes.noData}
+                      color="primary"
+                    >
+                      No data available.
+                    </Typography>
                   )
                 }
               />

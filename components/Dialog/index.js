@@ -4,6 +4,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import LayoutProvider from '../layout/LayoutProvider';
@@ -100,7 +101,7 @@ class Dialog extends Component {
                   )
                 }
                 body={() =>
-                  myDialogs && (
+                  myDialogs && myDialogs.dialogs.length > 0 ? (
                     <List component="nav">
                       {myDialogs.dialogs.map(myDialog => (
                         <Link
@@ -131,6 +132,14 @@ class Dialog extends Component {
                         </Link>
                       ))}
                     </List>
+                  ) : (
+                    <Typography
+                      variant="caption"
+                      className={classes.noData}
+                      color="primary"
+                    >
+                      No data available.
+                    </Typography>
                   )
                 }
               />

@@ -2,8 +2,8 @@ import { graphql, compose } from 'react-apollo';
 import intentGql from './intent.gql';
 import updateIntentGql from './updateIntent.gql';
 import deleteIntentGql from './deleteIntent.gql';
-import updateIntentQuery from '../MyIntents/updateIntentQuery';
-import updateSearchResultQuery from '../SearchIntents/updateSearchResultQuery';
+import invalidateAllIntent from '../../../libraries/updateApolloCache/invalidateAllIntent';
+import invalidateAllSearchResult from '../../../libraries/updateApolloCache/invalidateAllSearchResult';
 
 const withIntent = graphql(intentGql, {
   name: 'intent',
@@ -33,7 +33,7 @@ const withUpdateIntent = graphql(updateIntentGql, {
     updateIntent: ({ id, title, values, params }) =>
       updateIntent({
         variables: { id, title, values, params },
-        refetchQueries: ['myIntents', 'intent']
+        refetchQueries: ['myIntents', 'intent', 'searchIntents']
       })
   })
 });
@@ -44,10 +44,10 @@ const withDeleteIntent = graphql(deleteIntentGql, {
     deleteIntent: ({ id }) =>
       deleteIntent({
         variables: { id },
-        refetchQueries: ['myIntents'],
+        refetchQueries: ['myIntents', 'searchIntents'],
         update: cache => {
-          updateIntentQuery(cache);
-          updateSearchResultQuery(cache);
+          invalidateAllIntent(cache);
+          invalidateAllSearchResult(cache);
         }
       })
   })

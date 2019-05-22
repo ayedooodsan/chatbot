@@ -2,7 +2,8 @@ import { graphql, compose } from 'react-apollo';
 import entityGql from './entity.gql';
 import updateEntityGql from './updateEntity.gql';
 import deleteEntityGql from './deleteEntity.gql';
-import updateEntityQuery from '../MyEntities/updateEntityQuery';
+import invalidateAllEntity from '../../../libraries/updateApolloCache/invalidateAllEntity';
+import invalidateAllSearchResult from '../../../libraries/updateApolloCache/invalidateAllSearchResult';
 
 const withEntity = graphql(entityGql, {
   name: 'entity',
@@ -32,7 +33,7 @@ const withUpdateEntity = graphql(updateEntityGql, {
     updateEntity: ({ id, title, values }) =>
       updateEntity({
         variables: { id, title, values },
-        refetchQueries: ['myEntities', 'entity']
+        refetchQueries: ['myEntities', 'entity', 'searchEntities']
       })
   })
 });
@@ -43,8 +44,11 @@ const withDeleteEntity = graphql(deleteEntityGql, {
     deleteEntity: ({ id }) =>
       deleteEntity({
         variables: { id },
-        refetchQueries: ['myEntities'],
-        update: updateEntityQuery
+        refetchQueries: ['myEntities', 'searchEntities'],
+        update: cache => {
+          invalidateAllEntity(cache);
+          invalidateAllSearchResult(cache);
+        }
       })
   })
 });

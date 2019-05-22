@@ -4,6 +4,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import LayoutProvider from '../layout/LayoutProvider';
@@ -17,6 +18,8 @@ import { Link } from '../../routes';
 import style from './style';
 import redirect from '../../libraries/redirect';
 import MyEntities from './MyEntities';
+import SearchEntities from './SearchEntities';
+import SearchView from '../common/SearchView';
 
 class Entity extends Component {
   state = {
@@ -27,11 +30,22 @@ class Entity extends Component {
       offset: 0,
       total: 1000
     },
+    advancedSearch: false,
     createItemDialogStatus: false
   };
 
   setOpenSearch = value => {
     this.setState({ openSearch: value });
+  };
+
+  setAdvancedSearch = value => {
+    this.setState({
+      advancedSearch: value,
+      pagination: {
+        limit: 20,
+        offset: 0
+      }
+    });
   };
 
   openCreateItemDialog = () => {
@@ -68,32 +82,37 @@ class Entity extends Component {
       keyword,
       pagination,
       createItemDialogStatus,
-      openSearch
+      openSearch,
+      advancedSearch
     } = this.state;
     const { projectId, entityId, classes } = this.props;
+    const EntitiesProvider = advancedSearch ? SearchEntities : MyEntities;
     return (
-      <MyEntities
-        projectId={projectId}
-        limit={pagination.limit}
-        offset={pagination.offset}
-        keyword={keyword}
-      >
-        {myEntities => (
-          <LayoutProvider
-            navigation={() => <Navigation />}
-            subNavigation={() => (
+      <LayoutProvider
+        navigation={() => <Navigation />}
+        subNavigation={() => (
+          <EntitiesProvider
+            offset={pagination.offset}
+            limit={pagination.limit}
+            projectId={projectId}
+            keyword={keyword}
+          >
+            {entityProvider => (
               <SubNavigation
                 header={() =>
-                  myEntities && (
+                  entityProvider && (
                     <SimpleHeader
                       openSearch={openSearch}
                       setOpenSearch={this.setOpenSearch}
+                      hasAdvanceSearch
+                      advancedSearch={advancedSearch}
+                      setAdvancedSearch={this.setAdvancedSearch}
                       title="Entities"
                       onAddItem={this.openCreateItemDialog}
                       handleClickPagination={this.setOffsetPagination}
                       pagination={{
                         ...pagination,
-                        dataLength: myEntities.pageInfo.total
+                        dataLength: entityProvider.pageInfo.total
                       }}
                       keyword={keyword}
                       setKeyword={this.setKeyword}
@@ -101,59 +120,77 @@ class Entity extends Component {
                   )
                 }
                 body={() =>
-                  myEntities && (
+                  entityProvider && entityProvider.entities.length > 0 ? (
                     <List component="nav">
-                      {myEntities.entities.map(myEntity => (
+                      {entityProvider.entities.map((myEntity, index) => (
                         <Link
                           route={`/${projectId}/entity/${myEntity.id}`}
                           key={myEntity.id}
                         >
                           <Tooltip title={myEntity.title} placement="right">
-                            <ListItem
-                              className={classes.listItem}
-                              dense
-                              variant
-                              button
-                            >
-                              <ListItemText
-                                primary={myEntity.title}
-                                primaryTypographyProps={{
-                                  variant: 'body2',
-                                  noWrap: true,
-                                  className: classNames({
-                                    [classes.listItemTextActive]: this.activeEntity(
-                                      myEntity.id
-                                    )
-                                  })
-                                }}
+                            {advancedSearch ? (
+                              <SearchView
+                                productTitle={myEntity.title}
+                                activeId={entityId}
+                                index={index}
+                                id={myEntity.id}
+                                searchResult={myEntity.searchResult}
                               />
-                            </ListItem>
+                            ) : (
+                              <ListItem
+                                className={classes.listItem}
+                                dense
+                                variant
+                                button
+                              >
+                                <ListItemText
+                                  primary={myEntity.title}
+                                  primaryTypographyProps={{
+                                    variant: 'body2',
+                                    noWrap: true,
+                                    className: classNames({
+                                      [classes.listItemTextActive]: this.activeEntity(
+                                        myEntity.id
+                                      )
+                                    })
+                                  }}
+                                />
+                              </ListItem>
+                            )}
                           </Tooltip>
                         </Link>
                       ))}
                     </List>
+                  ) : (
+                    <Typography
+                      variant="caption"
+                      className={classes.noData}
+                      color="primary"
+                    >
+                      No data available.
+                    </Typography>
                   )
                 }
               />
             )}
-          >
-            {entityId && (
-              <EntityProduct
-                key={entityId}
-                entityId={entityId}
-                projectId={projectId}
-              />
-            )}
-            <CreateProductDialog
-              placeholder="Entity Name"
-              message="Add new entity"
-              open={createItemDialogStatus}
-              handleClose={this.closeCreateItemDialog}
-              handleConfirm={this.createItem}
-            />
-          </LayoutProvider>
+          </EntitiesProvider>
         )}
-      </MyEntities>
+      >
+        {entityId && (
+          <EntityProduct
+            key={entityId}
+            entityId={entityId}
+            projectId={projectId}
+          />
+        )}
+        <CreateProductDialog
+          placeholder="Entity Name"
+          message="Add new entity"
+          open={createItemDialogStatus}
+          handleClose={this.closeCreateItemDialog}
+          handleConfirm={this.createItem}
+        />
+      </LayoutProvider>
     );
   }
 }

@@ -4,6 +4,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import readXlsxFile from 'read-excel-file';
@@ -127,7 +128,7 @@ class Training extends Component {
                     />
                   )}
                   body={() =>
-                    myTrainings && (
+                    myTrainings && myTrainings.trainings.length > 0 ? (
                       <List component="nav">
                         {myTrainings.trainings.map(myTraining => (
                           <Link
@@ -169,6 +170,14 @@ class Training extends Component {
                           </Link>
                         ))}
                       </List>
+                    ) : (
+                      <Typography
+                        variant="caption"
+                        className={classes.noData}
+                        color="primary"
+                      >
+                        No data available.
+                      </Typography>
                     )
                   }
                 />

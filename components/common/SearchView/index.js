@@ -13,12 +13,20 @@ import KeyboardArraowUp from '@material-ui/icons/KeyboardArrowUp';
 import style from './style';
 
 const SearchView = props => {
-  const { classes, activeId, id, title, searchResult, index, onClick } = props;
+  const {
+    classes,
+    activeId,
+    id,
+    productTitle,
+    searchResult,
+    index,
+    ...otherProps
+  } = props;
   const [collapse, setCollapse] = useState(true);
   return (
     <React.Fragment>
       <ListItem
-        onClick={onClick}
+        {...otherProps}
         className={classNames({
           [classes.listItem]: index % 2 === 0
         })}
@@ -27,7 +35,7 @@ const SearchView = props => {
         button
       >
         <ListItemText
-          primary={title}
+          primary={productTitle}
           primaryTypographyProps={{
             variant: 'body2',
             noWrap: true,
@@ -36,17 +44,19 @@ const SearchView = props => {
             })
           }}
         />
-        <ListItemSecondaryAction>
-          <IconButton
-            className={classes.secondaryAction}
-            aria-label="Collapse"
-            onClick={() => {
-              setCollapse(!collapse);
-            }}
-          >
-            {collapse ? <KeyboardArraowDown /> : <KeyboardArraowUp />}
-          </IconButton>
-        </ListItemSecondaryAction>
+        {searchResult.length > 0 && (
+          <ListItemSecondaryAction>
+            <IconButton
+              className={classes.secondaryAction}
+              aria-label="Collapse"
+              onClick={() => {
+                setCollapse(!collapse);
+              }}
+            >
+              {collapse ? <KeyboardArraowDown /> : <KeyboardArraowUp />}
+            </IconButton>
+          </ListItemSecondaryAction>
+        )}
       </ListItem>
       <Collapse in={collapse} timeout="auto" unmountOnExit>
         <List component="div" disablePadding dense>
@@ -70,7 +80,7 @@ const SearchView = props => {
 SearchView.propTypes = {
   onClick: PropTypes.func.isRequired,
   activeId: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
+  productTitle: PropTypes.string.isRequired,
   searchResult: PropTypes.array.isRequired,
   id: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,

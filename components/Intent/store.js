@@ -1,7 +1,7 @@
 import { graphql, compose } from 'react-apollo';
 import createIntentGql from './createIntent.gql';
-import updateIntentQuery from './MyIntents/updateIntentQuery';
-import updateSearchResultQuery from './SearchIntents/updateSearchResultQuery';
+import invalidateAllIntent from '../../libraries/updateApolloCache/invalidateAllIntent';
+import invalidateAllSearchResult from '../../libraries/updateApolloCache/invalidateAllSearchResult';
 
 const withCreateIntent = graphql(createIntentGql, {
   name: 'createIntent',
@@ -9,10 +9,10 @@ const withCreateIntent = graphql(createIntentGql, {
     createIntent: ({ title, projectId }) =>
       createIntent({
         variables: { title, projectId },
-        refetchQueries: ['myIntents'],
+        refetchQueries: ['myIntents', 'searchIntents'],
         update: cache => {
-          updateIntentQuery(cache);
-          updateSearchResultQuery(cache);
+          invalidateAllIntent(cache);
+          invalidateAllSearchResult(cache);
         }
       })
   })

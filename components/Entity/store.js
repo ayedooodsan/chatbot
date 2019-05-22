@@ -1,6 +1,7 @@
 import { graphql, compose } from 'react-apollo';
 import createEntityGql from './createEntity.gql';
-import updateEntityQuery from './MyEntities/updateEntityQuery';
+import invalidateAllEntity from '../../libraries/updateApolloCache/invalidateAllEntity';
+import invalidateAllSearchResult from '../../libraries/updateApolloCache/invalidateAllSearchResult';
 
 const withCreateEntity = graphql(createEntityGql, {
   name: 'createEntity',
@@ -8,8 +9,11 @@ const withCreateEntity = graphql(createEntityGql, {
     createEntity: ({ title, projectId }) =>
       createEntity({
         variables: { title, projectId },
-        refetchQueries: ['myEntities'],
-        update: updateEntityQuery
+        refetchQueries: ['myEntities', 'searchEntities'],
+        update: cache => {
+          invalidateAllSearchResult(cache);
+          invalidateAllEntity(cache);
+        }
       })
   })
 });

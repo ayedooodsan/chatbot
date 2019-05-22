@@ -1,7 +1,7 @@
 const style = theme => ({
   listItem: {
     '&:nth-child(odd)': {
-      backgroundColor: '#fbfbfb'
+      backgroundColor: '#f4f5f7'
     },
     '&:hover': {
       backgroundColor: '#e1e2e4'
@@ -14,6 +14,9 @@ const style = theme => ({
   listItemSecondaryTextActive: {
     color: theme.palette.primary.light,
     fontWeight: 500
+  },
+  noData: {
+    padding: 15
   }
 });
 

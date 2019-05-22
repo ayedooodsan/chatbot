@@ -1,6 +1,6 @@
 const style = theme => ({
   listItem: {
-    backgroundColor: '#fbfbfb',
+    backgroundColor: '#f4f5f7',
     '&:hover': {
       backgroundColor: '#e1e2e4'
     }
