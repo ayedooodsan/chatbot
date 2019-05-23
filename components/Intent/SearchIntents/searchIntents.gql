@@ -1,0 +1,22 @@
+query searchIntents (
+  $projectId: String!
+  $keyword: String
+  $limit: Int
+  $offset: Int
+) {
+  searchIntents (
+    projectId: $projectId
+    keyword: $keyword
+    limit: $limit
+    offset: $offset
+  ) {
+    intents {
+    	id
+      title
+      searchResult
+    }
+    pageInfo {
+      total
+    }
+  }
+}

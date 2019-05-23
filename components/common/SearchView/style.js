@@ -1,8 +1,6 @@
 const style = theme => ({
   listItem: {
-    '&:nth-child(odd)': {
-      backgroundColor: '#f4f5f7'
-    },
+    backgroundColor: '#f4f5f7',
     '&:hover': {
       backgroundColor: '#e1e2e4'
     }
@@ -11,8 +9,8 @@ const style = theme => ({
     color: theme.palette.primary.main,
     fontWeight: 500
   },
-  noData: {
-    padding: 15
+  secondaryAction: {
+    padding: 5
   }
 });
 

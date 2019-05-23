@@ -4,6 +4,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import LayoutProvider from '../layout/LayoutProvider';
@@ -16,15 +17,21 @@ import connect from './store';
 import { Link } from '../../routes';
 import style from './style';
 import redirect from '../../libraries/redirect';
+import MyDialogs from './MyDialogs';
 
 class Dialog extends Component {
   state = {
+    openSearch: false,
     keyword: '',
     pagination: {
-      limit: 10000,
-      offset: 1
+      limit: 20,
+      offset: 0
     },
     createItemDialogStatus: false
+  };
+
+  setOpenSearch = value => {
+    this.setState({ openSearch: value });
   };
 
   openCreateItemDialog = () => {
@@ -57,77 +64,109 @@ class Dialog extends Component {
   activeDialog = currentDialogId => currentDialogId === this.props.dialogId;
 
   render() {
-    const { keyword, pagination, createItemDialogStatus } = this.state;
-    const { myDialogs, projectId, dialogId, classes } = this.props;
+    const {
+      keyword,
+      pagination,
+      createItemDialogStatus,
+      openSearch
+    } = this.state;
+    const { projectId, dialogId, classes } = this.props;
     return (
-      <LayoutProvider
-        navigation={() => <Navigation />}
-        subNavigation={() => (
-          <SubNavigation
-            header={() => (
-              <SimpleHeader
-                title="Dialogs"
-                onAddItem={this.openCreateItemDialog}
-                handleClickPagination={this.setOffsetPagination}
-                pagination={{ ...pagination, dataLength: myDialogs.length }}
-                keyword={keyword}
-                setKeyword={this.setKeyword}
+      <MyDialogs
+        projectId={projectId}
+        keyword={keyword}
+        offset={pagination.offset}
+        limit={pagination.limit}
+      >
+        {myDialogs => (
+          <LayoutProvider
+            navigation={() => <Navigation />}
+            subNavigation={() => (
+              <SubNavigation
+                header={() =>
+                  myDialogs && (
+                    <SimpleHeader
+                      openSearch={openSearch}
+                      setOpenSearch={this.setOpenSearch}
+                      title="Dialogs"
+                      onAddItem={this.openCreateItemDialog}
+                      handleClickPagination={this.setOffsetPagination}
+                      pagination={{
+                        ...pagination,
+                        dataLength: myDialogs.pageInfo.total
+                      }}
+                      keyword={keyword}
+                      setKeyword={this.setKeyword}
+                    />
+                  )
+                }
+                body={() =>
+                  myDialogs && myDialogs.dialogs.length > 0 ? (
+                    <List component="nav">
+                      {myDialogs.dialogs.map(myDialog => (
+                        <Link
+                          route={`/${projectId}/dialog/${myDialog.id}`}
+                          key={myDialog.id}
+                        >
+                          <Tooltip title={myDialog.title} placement="right">
+                            <ListItem
+                              className={classes.listItem}
+                              dense
+                              divider
+                              button
+                            >
+                              <ListItemText
+                                primary={myDialog.title}
+                                primaryTypographyProps={{
+                                  variant: 'body2',
+                                  noWrap: true,
+                                  className: classNames({
+                                    [classes.listItemTextActive]: this.activeDialog(
+                                      myDialog.id
+                                    )
+                                  })
+                                }}
+                              />
+                            </ListItem>
+                          </Tooltip>
+                        </Link>
+                      ))}
+                    </List>
+                  ) : (
+                    <Typography
+                      variant="caption"
+                      className={classes.noData}
+                      color="primary"
+                    >
+                      No data available.
+                    </Typography>
+                  )
+                }
               />
             )}
-            body={() =>
-              myDialogs && (
-                <List component="nav">
-                  {myDialogs.map(myDialog => (
-                    <Link
-                      route={`/${projectId}/dialog/${myDialog.id}`}
-                      key={myDialog.id}
-                    >
-                      <Tooltip title={myDialog.title} placement="right">
-                        <ListItem
-                          className={classes.listItem}
-                          dense
-                          divider
-                          button
-                        >
-                          <ListItemText
-                            primary={myDialog.title}
-                            primaryTypographyProps={{
-                              variant: 'body2',
-                              noWrap: true,
-                              className: classNames({
-                                [classes.listItemTextActive]: this.activeDialog(
-                                  myDialog.id
-                                )
-                              })
-                            }}
-                          />
-                        </ListItem>
-                      </Tooltip>
-                    </Link>
-                  ))}
-                </List>
-              )
-            }
-          />
+          >
+            {dialogId && (
+              <DialogProduct
+                key={dialogId}
+                dialogId={dialogId}
+                projectId={projectId}
+              />
+            )}
+            <CreateProductDialog
+              placeholder="Dialog Name"
+              message="Add new dialog"
+              open={createItemDialogStatus}
+              handleClose={this.closeCreateItemDialog}
+              handleConfirm={this.createItem}
+            />
+          </LayoutProvider>
         )}
-      >
-        {dialogId && (
-          <DialogProduct dialogId={dialogId} projectId={projectId} />
-        )}
-        <CreateProductDialog
-          placeholder="Dialog Name"
-          message="Add new dialog"
-          open={createItemDialogStatus}
-          handleClose={this.closeCreateItemDialog}
-          handleConfirm={this.createItem}
-        />
-      </LayoutProvider>
+      </MyDialogs>
     );
   }
 }
 
 Dialog.defaultProps = {
-  myDialogs: [],
   dialogId: null
 };
 
@@ -135,8 +174,7 @@ Dialog.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
   createDialog: PropTypes.func.isRequired,
-  dialogId: PropTypes.string,
-  myDialogs: PropTypes.array
+  dialogId: PropTypes.string
 };
 
 export default withStyles(style)(connect(Dialog));

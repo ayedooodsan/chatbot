@@ -4,6 +4,7 @@ import trainingGql from './training.gql';
 import updateTrainingGql from './updateTraining.gql';
 import approveTrainingGql from './approveTraining.gql';
 import deleteTrainingGql from './deleteTraining.gql';
+import updateTrainingQuery from '../MyTrainings/updateTrainingQuery';
 
 const withTraining = graphql(trainingGql, {
   name: 'training',
@@ -64,7 +65,8 @@ const withDeleteTraining = graphql(deleteTrainingGql, {
     deleteTraining: ({ id }) =>
       deleteTraining({
         variables: { id },
-        refetchQueries: ['myTrainings']
+        refetchQueries: ['myTrainings'],
+        update: updateTrainingQuery
       })
   })
 });
