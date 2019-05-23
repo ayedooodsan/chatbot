@@ -46,7 +46,6 @@ const EntityField = props => {
             inputProps={{
               onBlur: handleKeywordBlur
             }}
-            autoFocus
             fullWidth
             className={classes.input}
             placeholder="Keyword"
