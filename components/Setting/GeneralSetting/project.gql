@@ -5,5 +5,8 @@ query project (
     id: $id
   ) {
     title
+    description
+    language
+    timeZone
   }
 }
