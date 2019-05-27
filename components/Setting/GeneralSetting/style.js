@@ -20,6 +20,12 @@ const style = {
   input: {
     marginLeft: 8,
     flex: 1
+  },
+  rowGroup: {
+    paddingLeft: 15
+  },
+  timeZone: {
+    padding: '10px 0 8px 15px'
   }
 };
 

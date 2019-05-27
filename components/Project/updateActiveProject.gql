@@ -1,0 +1,3 @@
+mutation updateActiveProject( $id: String! ) {
+  updateActiveProject( id: $id )
+}
