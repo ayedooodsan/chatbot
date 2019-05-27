@@ -1,12 +1,15 @@
 import { graphql, compose } from 'react-apollo';
 import myProjectsGql from './myProjects.gql';
 import createProjectGql from './createProject.gql';
+import updateActiveProjectGql from './updateActiveProject.gql';
+import invalidateStore from '../../libraries/updateApolloCache/invalidateStore';
 
 const withMyProjects = graphql(myProjectsGql, {
   name: 'myProjects',
-  props: ({ myProjects: { loading, myProjects, error } }) => ({
+  props: ({ myProjects: { loading, myProjects, error, refetch } }) => ({
     loading,
     myProjects,
+    refetchMyProject: refetch,
     error
   })
 });
@@ -16,8 +19,19 @@ const withCreateProject = graphql(createProjectGql, {
   props: ({ createProject }) => ({
     createProject: ({ title }) =>
       createProject({
-        variables: { title },
-        refetchQueries: ['myProjects', 'project']
+        variables: { title }
+      })
+  })
+});
+
+const withUpdateActiveProjectGql = graphql(updateActiveProjectGql, {
+  name: 'updateActiveProject',
+  props: ({ updateActiveProject }) => ({
+    updateActiveProject: ({ id }) =>
+      updateActiveProject({
+        variables: { id },
+        refetch: [{ query: myProjectsGql }],
+        update: invalidateStore
       })
   })
 });
@@ -25,5 +39,6 @@ const withCreateProject = graphql(createProjectGql, {
 export default comp =>
   compose(
     withMyProjects,
-    withCreateProject
+    withCreateProject,
+    withUpdateActiveProjectGql
   )(comp);

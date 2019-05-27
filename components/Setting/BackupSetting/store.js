@@ -1,6 +1,7 @@
 import { graphql, compose } from 'react-apollo';
 import exportProjectGql from './exportProject.gql';
 import importProjectGql from './importProject.gql';
+import invalidateStore from '../../../libraries/updateApolloCache/invalidateStore';
 
 const withExportProject = graphql(exportProjectGql, {
   name: 'exportProject',
@@ -19,7 +20,8 @@ const withImportProject = graphql(importProjectGql, {
     importProject: ({ id, file }) =>
       importProject({
         variables: { id, file },
-        refetchQueries: ['myProjects']
+        refetchQueries: ['myProjects'],
+        update: invalidateStore
       })
   })
 });

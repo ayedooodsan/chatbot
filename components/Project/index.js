@@ -16,7 +16,6 @@ import RootRef from '@material-ui/core/RootRef';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import CreateProductDialog from '../common/CreateProductDialog';
-import { Link } from '../../routes';
 import connect from './store';
 import style from './style';
 import redirect from '../../libraries/redirect';
@@ -41,6 +40,15 @@ const Project = props => {
       redirect({}, `/${id}/entity`);
     });
   };
+
+  const toProject = newProjectId => {
+    props.updateActiveProject({ id: newProjectId }).then(response => {
+      if (response.data.updateActiveProject) {
+        redirect({}, `/${newProjectId}/entity`);
+      }
+    });
+  };
+
   return (
     <RootRef rootRef={rootRef}>
       <React.Fragment>
@@ -134,19 +142,18 @@ const Project = props => {
                   <Divider />
                   <List component="nav" dense>
                     {myProjects.map(myProject => (
-                      <Link
+                      <ListItem
+                        button
                         key={myProject.id}
-                        route={`/${myProject.id}/entity`}
+                        onClick={() => toProject(myProject.id)}
                       >
-                        <ListItem button>
-                          <ListItemIcon className={classes.listItemIcon}>
-                            <Avatar className={classes.avatar}>
-                              {getInitialProject(myProject.title)}
-                            </Avatar>
-                          </ListItemIcon>
-                          <ListItemText primary={myProject.title} />
-                        </ListItem>
-                      </Link>
+                        <ListItemIcon className={classes.listItemIcon}>
+                          <Avatar className={classes.avatar}>
+                            {getInitialProject(myProject.title)}
+                          </Avatar>
+                        </ListItemIcon>
+                        <ListItemText primary={myProject.title} />
+                      </ListItem>
                     ))}
                   </List>
                   <Divider />
@@ -190,6 +197,8 @@ Project.propTypes = {
   classes: PropTypes.object.isRequired,
   collapse: PropTypes.bool.isRequired,
   createProject: PropTypes.func.isRequired,
+  updateActiveProject: PropTypes.func.isRequired,
+  refetchMyProject: PropTypes.func.isRequired,
   myProjects: PropTypes.array
 };
 

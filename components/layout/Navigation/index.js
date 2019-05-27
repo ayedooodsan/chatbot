@@ -69,9 +69,13 @@ class Navigation extends React.Component {
             </IconButton>
           )}
         </div>
-        <Project projectId={projectId} collapse={this.state.open} />
+        <Project
+          projectId={projectId}
+          key={projectId}
+          collapse={this.state.open}
+        />
         {routeGroup.map(routes => (
-          <React.Fragment>
+          <React.Fragment key={routes[0].name}>
             <List>
               {routes.map(route => (
                 <Link
@@ -138,7 +142,6 @@ Navigation.defaultProps = {
 
 Navigation.propTypes = {
   classes: PropTypes.object.isRequired,
-  actions: PropTypes.object.isRequired,
   router: PropTypes.object
 };
 
