@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -14,7 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { withRouter } from 'next/router';
 import Project from '../../Project';
 import style from './style';
-import routes from './routes';
+import routeGroup from './routes';
 import { Link } from '../../../routes';
 
 class Navigation extends React.Component {
@@ -69,55 +70,63 @@ class Navigation extends React.Component {
           )}
         </div>
         <Project projectId={projectId} collapse={this.state.open} />
-        <List>
-          {routes.map(route => (
-            <Link route={`/${projectId}${route.route}`} key={route.name}>
-              {!this.state.open ? (
-                <Tooltip title={route.name} placement="right">
-                  <ListItem
-                    button
-                    className={classNames({
-                      [classes.listItemActive]: activeRoute(route.route)
-                    })}
-                  >
-                    <ListItemIcon className={classes.listItemIcon}>
-                      {route.icon}
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={route.name}
-                      primaryTypographyProps={{
-                        variant: 'subtitle2',
-                        className: classNames(classes.listItemText, {
-                          [classes.listItemTextClose]: !this.state.open
-                        })
-                      }}
-                    />
-                  </ListItem>
-                </Tooltip>
-              ) : (
-                <ListItem
-                  button
-                  className={classNames({
-                    [classes.listItemActive]: activeRoute(route.route)
-                  })}
+        {routeGroup.map(routes => (
+          <React.Fragment>
+            <List>
+              {routes.map(route => (
+                <Link
+                  route={route.route ? `/${projectId}${route.route}` : '/'}
+                  key={route.name}
                 >
-                  <ListItemIcon className={classes.listItemIcon}>
-                    {route.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={route.name}
-                    primaryTypographyProps={{
-                      variant: 'subtitle2',
-                      className: classNames(classes.listItemText, {
-                        [classes.listItemTextClose]: !this.state.open
-                      })
-                    }}
-                  />
-                </ListItem>
-              )}
-            </Link>
-          ))}
-        </List>
+                  {!this.state.open ? (
+                    <Tooltip title={route.name} placement="right">
+                      <ListItem
+                        button
+                        className={classNames({
+                          [classes.listItemActive]: activeRoute(route.route)
+                        })}
+                      >
+                        <ListItemIcon className={classes.listItemIcon}>
+                          {route.icon}
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={route.name}
+                          primaryTypographyProps={{
+                            variant: 'subtitle2',
+                            className: classNames(classes.listItemText, {
+                              [classes.listItemTextClose]: !this.state.open
+                            })
+                          }}
+                        />
+                      </ListItem>
+                    </Tooltip>
+                  ) : (
+                    <ListItem
+                      button
+                      className={classNames({
+                        [classes.listItemActive]: activeRoute(route.route)
+                      })}
+                    >
+                      <ListItemIcon className={classes.listItemIcon}>
+                        {route.icon}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={route.name}
+                        primaryTypographyProps={{
+                          variant: 'subtitle2',
+                          className: classNames(classes.listItemText, {
+                            [classes.listItemTextClose]: !this.state.open
+                          })
+                        }}
+                      />
+                    </ListItem>
+                  )}
+                </Link>
+              ))}
+            </List>
+            <Divider />
+          </React.Fragment>
+        ))}
       </Drawer>
     );
   }
@@ -129,6 +138,7 @@ Navigation.defaultProps = {
 
 Navigation.propTypes = {
   classes: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired,
   router: PropTypes.object
 };
 
