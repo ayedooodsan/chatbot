@@ -1,0 +1,14 @@
+mutation inviteUsers (
+  $id: String!
+  $userIds: [String!]!
+) {
+  inviteUsers (
+    id: $id
+    userIds: $userIds
+  ) {
+    invitedUsers {
+      id
+      username
+    }
+  }
+}
