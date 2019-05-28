@@ -2,5 +2,10 @@ query myProjects {
   myProjects {
     id
     title
+    sharedProject
+    user {
+      id
+      username
+    }
   }
 }
