@@ -16,7 +16,7 @@ import SimpleProductBody from '../../layout/SimpleProductBody';
 import DialogAnalytics from '../DialogAnalytics';
 
 const AnalyticProduct = props => {
-  const { classes } = props;
+  const { classes, projectId } = props;
   const [date, setDate] = useState(moment());
   const [time, setTime] = useState(moment());
   return (
@@ -50,7 +50,11 @@ const AnalyticProduct = props => {
               />
             </MuiPickersUtilsProvider>
           </Paper>
-          <DialogAnalytics key={time} date={date.format('YYYY-MM-DD')} />
+          <DialogAnalytics
+            key={time}
+            id={projectId}
+            date={date.format('YYYY-MM-DD')}
+          />
         </SimpleProductBody>
       )}
     />
@@ -58,7 +62,8 @@ const AnalyticProduct = props => {
 };
 
 AnalyticProduct.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  projectId: PropTypes.string.isRequired
 };
 
 export default withStyles(style)(AnalyticProduct);

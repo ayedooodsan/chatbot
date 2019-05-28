@@ -1,0 +1,10 @@
+query userSuggestions(
+  $keyword: String
+) {
+  userSuggestions (
+    keyword: $keyword
+  ) {
+    id
+    username
+  }
+}

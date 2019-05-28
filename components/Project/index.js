@@ -152,7 +152,14 @@ const Project = props => {
                             {getInitialProject(myProject.title)}
                           </Avatar>
                         </ListItemIcon>
-                        <ListItemText primary={myProject.title} />
+                        <ListItemText
+                          secondary={
+                            myProject.sharedProject
+                              ? `by ${myProject.user.username}`
+                              : null
+                          }
+                          primary={myProject.title}
+                        />
                       </ListItem>
                     ))}
                   </List>

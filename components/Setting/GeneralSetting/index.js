@@ -189,8 +189,9 @@ const GeneralSetting = props => {
                       elevation={1}
                     >
                       <SimpleAutoComplete
+                        key={project.timeZone}
                         className={classes.timeZone}
-                        onChange={language.input.onChange}
+                        onChange={timeZone.input.onChange}
                         placeholder="Time zone"
                         initialInputValue={project.timeZone}
                         initialValue={project.timeZone}

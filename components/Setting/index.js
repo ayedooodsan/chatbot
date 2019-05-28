@@ -12,12 +12,14 @@ import { Link } from '../../routes';
 import style from './style';
 import GeneralSetting from './GeneralSetting';
 import BackupSetting from './BackupSetting';
+import ShareSetting from './ShareSetting';
 
 const Setting = props => {
   const { projectId, classes, settingType } = props;
   const settingMenu = [
     { name: 'General', type: 'general' },
-    { name: 'Backup', type: 'backup' }
+    { name: 'Backup', type: 'backup' },
+    { name: 'Share', type: 'share' }
   ];
 
   const activeSettingType = currentSettingType =>
@@ -32,6 +34,10 @@ const Setting = props => {
       }
       case 'backup': {
         SettingProduct = BackupSetting;
+        break;
+      }
+      case 'share': {
+        SettingProduct = ShareSetting;
         break;
       }
       default: {
@@ -68,6 +74,7 @@ const Setting = props => {
                     <ListItemText
                       primary={currentSetting.name}
                       primaryTypographyProps={{
+                        variant: 'body2',
                         className: classNames({
                           [classes.listItemTextActive]: activeSettingType(
                             currentSetting.type

@@ -1,7 +1,9 @@
 query dialogAnalytics (
+  $id: String!
   $date: String!
 ) {
   dialogAnalytics (
+    id: $id
     date: $date
   ) {
     from

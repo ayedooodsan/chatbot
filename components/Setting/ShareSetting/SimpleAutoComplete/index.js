@@ -30,19 +30,19 @@ function renderSuggestion({
   inputValue
 }) {
   const isHighlighted = highlightedIndex === index;
-  const isSelected = (inputValue || '').indexOf(suggestion) > -1;
+  const isSelected = (inputValue || '').indexOf(suggestion.username) > -1;
 
   return (
     <MenuItem
       {...itemProps}
-      key={suggestion}
+      key={suggestion.id + suggestion.title}
       selected={isHighlighted}
       component="div"
       style={{
         fontWeight: isSelected ? 500 : 400
       }}
     >
-      {suggestion}
+      {suggestion.username}
     </MenuItem>
   );
 }
@@ -96,6 +96,7 @@ function SimpleAutoComplete(props) {
       onChange={selectedItem => {
         onChange(selectedItem);
       }}
+      itemToString={item => (item ? item.username : '')}
       initialSelectedItem={initialValue}
       initialInputValue={initialInputValue}
     >
@@ -149,15 +150,17 @@ function SimpleAutoComplete(props) {
                 }}
               >
                 <div className={classes.suggestions}>
-                  {suggestions(inputValue).map((suggestion, index) =>
-                    renderSuggestion({
-                      suggestion,
-                      index,
-                      itemProps: getItemProps({ item: suggestion }),
-                      highlightedIndex,
-                      selectedItem
-                    })
-                  )}
+                  {suggestions(inputValue, result => {
+                    return result.map((suggestion, index) =>
+                      renderSuggestion({
+                        suggestion,
+                        index,
+                        itemProps: getItemProps({ item: suggestion }),
+                        highlightedIndex,
+                        selectedItem
+                      })
+                    );
+                  })}
                 </div>
               </Paper>
             </div>
@@ -170,7 +173,7 @@ function SimpleAutoComplete(props) {
 
 SimpleAutoComplete.defaultProps = {
   error: false,
-  initialValue: '',
+  initialValue: null,
   initialInputValue: '',
   className: '',
   label: ''
@@ -184,7 +187,7 @@ SimpleAutoComplete.propTypes = {
   label: PropTypes.string,
   className: PropTypes.string,
   error: PropTypes.bool,
-  initialValue: PropTypes.string,
+  initialValue: PropTypes.object,
   initialInputValue: PropTypes.string
 };
 
