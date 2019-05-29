@@ -81,11 +81,13 @@ function createClient(headers, token, initialState, reduxStore) {
   });
 }
 
-export default (headers, token, initialState, reduxStore) => {
+export default (headers, token, initialState, reduxStore, resetStore) => {
   if (!process.browser) {
     return createClient(headers, token, initialState, reduxStore);
   }
-  if (apolloClient) {
+  if (resetStore) {
+    apolloClient = createClient(headers, token, initialState, reduxStore);
+  } else if (apolloClient) {
     const currentState = apolloClient.cache.extract();
     apolloClient = createClient(headers, token, currentState, reduxStore);
   } else {

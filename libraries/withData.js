@@ -16,6 +16,7 @@ export default Component =>
       apolloState: PropTypes.object.isRequired,
       reduxState: PropTypes.object.isRequired,
       headers: PropTypes.object.isRequired,
+      resetStore: PropTypes.bool.isRequired,
       accessToken: PropTypes.object
     };
 
@@ -30,7 +31,8 @@ export default Component =>
         this.props.headers,
         this.props.accessToken,
         this.props.apolloState,
-        this.reduxStore
+        this.reduxStore,
+        this.props.resetStore
       );
     }
 
@@ -50,6 +52,7 @@ export default Component =>
       }
 
       const props = {
+        resetStore: ctx.pathname === '/',
         router: {
           url: { query: ctx.query, pathname: ctx.pathname }
         },
@@ -62,14 +65,14 @@ export default Component =>
         const store = reduxStore(undefined, token);
         const client = apolloClient(headers || {}, token, {}, store);
         try {
-          const app = (
+          const App = (
             <ApolloProvider client={client}>
               <ReduxProvider store={store}>
                 <Component {...props} />
               </ReduxProvider>
             </ApolloProvider>
           );
-          await getDataFromTree(app);
+          await getDataFromTree(App);
         } catch (error) {
           // Prevent Apollo Client GraphQL errors from crashing SSR.
           // Handle them in components via the data.error prop:

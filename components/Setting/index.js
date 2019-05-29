@@ -13,14 +13,18 @@ import style from './style';
 import GeneralSetting from './GeneralSetting';
 import BackupSetting from './BackupSetting';
 import ShareSetting from './ShareSetting';
+import connect from './store';
 
 const Setting = props => {
-  const { projectId, classes, settingType } = props;
+  const { projectId, classes, settingType, project } = props;
   const settingMenu = [
     { name: 'General', type: 'general' },
-    { name: 'Backup', type: 'backup' },
-    { name: 'Share', type: 'share' }
+    { name: 'Backup', type: 'backup' }
   ];
+
+  if (!project.sharedProject) {
+    settingMenu.push({ name: 'Share', type: 'share' });
+  }
 
   const activeSettingType = currentSettingType =>
     currentSettingType === settingType;
@@ -96,13 +100,15 @@ const Setting = props => {
 };
 
 Setting.defaultProps = {
-  settingType: null
+  settingType: null,
+  project: {}
 };
 
 Setting.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
+  project: PropTypes.object,
   settingType: PropTypes.string
 };
 
-export default withStyles(style)(Setting);
+export default withStyles(style)(connect(Setting));
