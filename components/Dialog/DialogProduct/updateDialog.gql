@@ -1,0 +1,28 @@
+mutation updateDialog (
+  $id: String!
+  $title: String
+  $messages: [MessageInput!]
+) {
+  updateDialog (
+    id: $id
+    title: $title
+    messages: $messages
+  ) {
+    id
+    title
+    messages {
+      id
+      parentId
+      type
+      title
+      intent {
+        id
+        title
+        values {
+          text
+        }
+      }
+      payload
+    }
+  }
+}

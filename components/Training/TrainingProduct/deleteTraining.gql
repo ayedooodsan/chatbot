@@ -1,0 +1,7 @@
+mutation deleteTraining (
+  $id: String!
+) {
+  deleteTraining (
+    id: $id
+  )
+}

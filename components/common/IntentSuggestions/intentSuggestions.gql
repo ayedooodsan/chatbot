@@ -1,0 +1,15 @@
+query intentSuggestions(
+  $projectId: String!
+  $keyword: String
+) {
+  intentSuggestions(
+    projectId: $projectId
+    keyword: $keyword
+  ){
+    id
+    title
+    values {
+      text
+    }
+  }
+}

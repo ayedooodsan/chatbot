@@ -1,0 +1,11 @@
+mutation createDialog (
+  $title: String!
+  $projectId: String!
+) {
+  createDialog (
+    title: $title
+    projectId: $projectId
+  ) {
+    id
+  }
+}

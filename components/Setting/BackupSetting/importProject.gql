@@ -1,0 +1,9 @@
+mutation importProject (
+  $id: String!
+  $file: Upload!
+) {
+  importProject (
+    id: $id
+    file: $file
+  )
+}

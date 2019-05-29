@@ -1,0 +1,13 @@
+query entity (
+  $id: String!
+) {
+  entity (
+    id: $id
+  ) {
+    title
+    values {
+      keyword
+      synonyms
+    }
+  }
+}

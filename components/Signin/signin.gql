@@ -1,0 +1,17 @@
+mutation signup(
+  $login: String!
+  $password: String!
+) {
+  signIn (
+    login: $login
+    password: $password
+  ) {
+    token
+    refreshToken
+    me {
+      activeProject {
+        id
+      }
+    }
+  } 
+}

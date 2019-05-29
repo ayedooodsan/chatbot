@@ -1,0 +1,15 @@
+import App from '../components/App';
+import withData from '../libraries/withData';
+
+export default withData(props =>
+  <App>
+    <Helmet>
+      <title>{{filename}}</title>
+    </Helmet>
+    <div>
+      <h1>{{filename}}</h1>
+      <p>HELLO WORLD! HELLO FROM RAN!</p>
+      <hr />
+    </div>
+  </App>
+);

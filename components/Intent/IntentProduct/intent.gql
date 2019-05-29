@@ -1,0 +1,25 @@
+query intent (
+  $id: String!
+) {
+  intent (
+    id: $id
+  ) {
+    title
+    values {
+      text
+      entityRanges {
+        offset
+        length
+        paramKey
+      }
+    }
+    params {
+      name
+      entity {
+        id
+        title
+      }
+      key
+    }
+  }
+}
