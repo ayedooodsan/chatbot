@@ -40,8 +40,8 @@ const withUpdateActiveProjectGql = graphql(updateActiveProjectGql, {
 
 const mapDispatchToProps = dispatch => ({
   actions: {
-    setProjectRole(token, refreshToken) {
-      dispatch(dispatchers.setProjectRole(token, refreshToken));
+    setProjectRole(role) {
+      dispatch(dispatchers.setProjectRole(role));
     }
   }
 });

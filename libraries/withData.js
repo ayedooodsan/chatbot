@@ -55,7 +55,7 @@ export default Component =>
       }
 
       const props = {
-        errorPage: generateError(Component, ctx),
+        errorPage: await generateError(Component, ctx),
         resetStore: ctx.pathname === '/',
         router: {
           url: { query: ctx.query, pathname: ctx.pathname }
@@ -64,8 +64,6 @@ export default Component =>
           ? Component.getInitialProps(ctx)
           : {}))
       };
-
-      console.log(props);
 
       if (!process.browser) {
         const store = reduxStore(undefined, token, role);

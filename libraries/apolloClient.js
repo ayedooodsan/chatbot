@@ -22,7 +22,6 @@ function createClient(headers, token, initialState, reduxStore) {
       if (text.includes('Not authenticated as user.')) {
         promiseToObservable(
           new Promise(async resolve => {
-            console.log('remove token');
             const status = await persist.willRemoveAccessToken();
             resolve(status);
           })
