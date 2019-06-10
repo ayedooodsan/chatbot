@@ -22,6 +22,7 @@ function createClient(headers, token, initialState, reduxStore) {
       if (text.includes('Not authenticated as user.')) {
         promiseToObservable(
           new Promise(async resolve => {
+            console.log('remove token');
             const status = await persist.willRemoveAccessToken();
             resolve(status);
           })
@@ -47,6 +48,7 @@ function createClient(headers, token, initialState, reduxStore) {
       accessToken = JSON.parse(tokenCookies);
     }
   })();
+
   const authLink = new ApolloLink((operation, forward) => {
     operation.setContext({
       headers: {

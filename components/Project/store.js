@@ -1,4 +1,6 @@
 import { graphql, compose } from 'react-apollo';
+import { connect } from 'react-redux';
+import { dispatchers } from '../../redux/auth';
 import myProjectsGql from './myProjects.gql';
 import createProjectGql from './createProject.gql';
 import updateActiveProjectGql from './updateActiveProject.gql';
@@ -36,9 +38,22 @@ const withUpdateActiveProjectGql = graphql(updateActiveProjectGql, {
   })
 });
 
-export default comp =>
-  compose(
+const mapDispatchToProps = dispatch => ({
+  actions: {
+    setProjectRole(token, refreshToken) {
+      dispatch(dispatchers.setProjectRole(token, refreshToken));
+    }
+  }
+});
+
+export default comp => {
+  const compWithApollo = compose(
     withMyProjects,
     withCreateProject,
     withUpdateActiveProjectGql
   )(comp);
+  return connect(
+    null,
+    mapDispatchToProps
+  )(compWithApollo);
+};

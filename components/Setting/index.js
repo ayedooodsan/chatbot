@@ -16,13 +16,13 @@ import ShareSetting from './ShareSetting';
 import connect from './store';
 
 const Setting = props => {
-  const { projectId, classes, settingType, project } = props;
+  const { projectId, classes, settingType, role } = props;
   const settingMenu = [
     { name: 'General', type: 'general' },
     { name: 'Backup', type: 'backup' }
   ];
 
-  if (!project.sharedProject) {
+  if (role === 'Admin') {
     settingMenu.push({ name: 'Share', type: 'share' });
   }
 
@@ -101,13 +101,13 @@ const Setting = props => {
 
 Setting.defaultProps = {
   settingType: null,
-  project: {}
+  role: 'Collaborator'
 };
 
 Setting.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
-  project: PropTypes.object,
+  role: PropTypes.string,
   settingType: PropTypes.string
 };
 

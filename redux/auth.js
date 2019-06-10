@@ -4,12 +4,14 @@ import persist from '../libraries/persist';
 export const AUTH_SIGNIN = 'AUTH/SIGNIN';
 export const AUTH_SIGNOUT = 'AUTH/SIGNOUT';
 export const AUTH_SERVERERROR = 'AUTH/SERVERERROR';
+export const AUTH_PROJECT_ROLE = 'AUTH/PROJECT_ROLE';
 
 // Initial State
 const initialState = {
   authenticated: false,
   token: null,
   refreshToken: null,
+  role: null,
   error: null
 };
 
@@ -28,6 +30,8 @@ const reducer = (state = initialState, action) => {
       return { ...state, authenticated: false, token: null, error: null };
     case AUTH_SERVERERROR:
       return { ...state, authenticated: false, error: action.error };
+    case AUTH_PROJECT_ROLE:
+      return { ...state, role: action.role };
     default:
       return state;
   }
@@ -42,6 +46,10 @@ actionCreators.signIn = (token, refreshToken) => ({
   refreshToken
 });
 actionCreators.signOut = () => ({ type: AUTH_SIGNOUT });
+actionCreators.setProjectRole = role => ({
+  type: AUTH_PROJECT_ROLE,
+  role
+});
 
 // Discpatchers
 const dispatchers = {};
@@ -53,7 +61,13 @@ dispatchers.signIn = (token, refreshToken) => {
 
 dispatchers.signOut = () => {
   persist.willRemoveAccessToken();
+  persist.willRemoveProjectRole();
   return actionCreators.signOut();
+};
+
+dispatchers.setProjectRole = role => {
+  persist.willSetProjectRole(role);
+  return actionCreators.setProjectRole(role);
 };
 
 export { actionCreators, reducer, dispatchers };

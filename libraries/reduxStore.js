@@ -9,10 +9,11 @@ import persist from './persist';
 let reduxStore = null;
 const middleware = createMiddleware(thunkMiddleware);
 
-export default (initialState, tokenObj) => {
+export default (initialState, tokenObj, role) => {
   let store;
   if (!process.browser || !reduxStore) {
     store = createStore(rootReducer(), initialState, middleware);
+    console.log('store', JSON.stringify(store.getState()));
     let tokenInStore = store.getState().auth.token;
     let refreshTokenInStore = store.getState().auth.refreshToken;
     if (!tokenInStore) {
@@ -25,6 +26,12 @@ export default (initialState, tokenObj) => {
           tokenInStore = tokenObj.token;
           refreshTokenInStore = tokenObj.refreshToken;
         }
+        let roleCookies = await persist.willGetProjectRole();
+        if (!roleCookies) {
+          roleCookies = role;
+        }
+        console.log(tokenObj);
+        console.log({ tokenInStore });
         if (
           typeof tokenInStore === 'string' &&
           !tokenInStore.includes('Error')
@@ -33,10 +40,13 @@ export default (initialState, tokenObj) => {
             store.dispatch(
               dispatchers.signIn(tokenInStore, refreshTokenInStore)
             );
+            store.dispatch(dispatchers.setProjectRole(roleCookies));
           } else {
+            console.log('sign out');
             store.dispatch(dispatchers.signOut());
           }
         } else {
+          console.log('sign out');
           store.dispatch(dispatchers.signOut());
         }
       })();
