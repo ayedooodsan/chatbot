@@ -1,0 +1,10 @@
+query invitedUsers (
+  $id: String!
+) {
+  project(id: $id) {
+    invitedUsers {
+      id
+      username
+    }
+  }
+}

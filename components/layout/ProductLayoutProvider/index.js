@@ -184,7 +184,8 @@ class ProductLayoutProvider extends Component {
               this.onAddProductValue,
               this.onDeleteProductValue,
               this.updateSubProductFromProduct,
-              subProductValues
+              subProductValues,
+              this.getProduct
             )}
           </div>
           {subProductValues.length !== 0 && (

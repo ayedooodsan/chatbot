@@ -26,7 +26,9 @@ const ParamField = props => {
   return (
     <ParamEditor
       onDelete={onParamDelete}
-      onChange={onChange}
+      onChange={name => {
+        onChange(name, 'name');
+      }}
       initialValue={initialValue}
     />
   );
@@ -42,8 +44,7 @@ ParamField.propTypes = {
   initialValue: PropTypes.object,
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  updateIntents: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired
+  updateIntents: PropTypes.func.isRequired
 };
 
 export default ParamField;

@@ -164,7 +164,7 @@ function SimpleAutoComplete(props) {
                 if (!hasParamLabel) {
                   hasParamLabel = true;
                   return (
-                    <React.Fragment>
+                    <React.Fragment key={suggestion.id}>
                       {result.length !== 0 && filteredParam.length !== 0 && (
                         <Typography
                           color="primary"
@@ -189,7 +189,7 @@ function SimpleAutoComplete(props) {
                 if (!hasEntityLabel && hasParamLabel && !suggestion.key) {
                   hasEntityLabel = true;
                   return (
-                    <React.Fragment>
+                    <React.Fragment key={suggestion.id}>
                       {result.length !== 0 && filteredParam.length !== 0 && (
                         <React.Fragment>
                           <Divider

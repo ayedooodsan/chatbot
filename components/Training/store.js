@@ -1,19 +1,17 @@
-const myTrainings = [
-  {
-    id: '0',
-    title: 'Dialog A',
-    date: '2019-04-30'
-  },
-  {
-    id: '1',
-    title: 'Dialog B',
-    date: '2019-05-01'
-  }
-];
-const createTraining = training => myTrainings.push(training);
+import { graphql, compose } from 'react-apollo';
+import createTrainingsGql from './createTrainings.gql';
+import updateTrainingQuery from './MyTrainings/updateTrainingQuery';
 
-const connect = Comp => props => (
-  <Comp createTraining={createTraining} myTrainings={myTrainings} {...props} />
-);
+const withCreateTrainings = graphql(createTrainingsGql, {
+  name: 'createTrainings',
+  props: ({ createTrainings }) => ({
+    createTrainings: ({ trainings, projectId }) =>
+      createTrainings({
+        variables: { trainings, projectId },
+        refetchQueries: ['myTrainings'],
+        update: updateTrainingQuery
+      })
+  })
+});
 
-export default connect;
+export default comp => compose(withCreateTrainings)(comp);

@@ -1,6 +1,7 @@
 // Constants
 export const ENQUEUE_SNACKBAR = 'ENQUEUE_SNACKBAR';
 export const REMOVE_SNACKBAR = 'REMOVE_SNACKBAR';
+export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR';
 // Initial State
 const initialState = {
   notifications: []
@@ -15,9 +16,20 @@ const reducer = (state = initialState, action) => {
         notifications: [
           ...state.notifications,
           {
+            key: action.key,
             ...action.notification
           }
         ]
+      };
+
+    case CLOSE_SNACKBAR:
+      return {
+        ...state,
+        notifications: state.notifications.map(notification =>
+          action.dismissAll || notification.key === action.key
+            ? { ...notification, dismissed: true }
+            : { ...notification }
+        )
       };
 
     case REMOVE_SNACKBAR:
@@ -36,16 +48,26 @@ const reducer = (state = initialState, action) => {
 // Action creators
 const actionCreators = {};
 
-actionCreators.enqueueSnackbar = notification => ({
-  type: ENQUEUE_SNACKBAR,
-  notification: {
-    key: new Date().getTime() + Math.random(),
-    ...notification
-  }
-});
+actionCreators.enqueueSnackbar = notification => {
+  const key = notification.options && notification.options.key;
+
+  return {
+    type: ENQUEUE_SNACKBAR,
+    notification: {
+      ...notification,
+      key: key || new Date().getTime() + Math.random()
+    }
+  };
+};
 
 actionCreators.removeSnackbar = key => ({
   type: REMOVE_SNACKBAR,
+  key
+});
+
+actionCreators.closeSnackbar = key => ({
+  type: CLOSE_SNACKBAR,
+  dismissAll: !key, // dismiss all if no key has been defined
   key
 });
 
@@ -58,6 +80,10 @@ dispatchers.enqueueSnackbar = notification => {
 
 dispatchers.removeSnackbar = key => {
   return actionCreators.removeSnackbar(key);
+};
+
+dispatchers.closeSnackbar = key => {
+  return actionCreators.closeSnackbar(key);
 };
 
 export { actionCreators, reducer, dispatchers };
