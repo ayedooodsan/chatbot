@@ -21,7 +21,14 @@ import style from './style';
 import redirect from '../../libraries/redirect';
 
 const Project = props => {
-  const { projectId, myProjects, classes, collapse, createProject } = props;
+  const {
+    projectId,
+    myProjects,
+    classes,
+    collapse,
+    createProject,
+    actions: { setProjectRole }
+  } = props;
   const rootRef = useRef(null);
   const activeProject = myProjects.find(
     myProject => myProject.id === projectId
@@ -30,7 +37,13 @@ const Project = props => {
     title.split(' ').reduce((initial, word) => initial + word.charAt(0), '');
   const [open, setOpen] = useState(false);
   useEffect(() => {
-    setOpen(false);
+    if (projectId && myProjects.length > 0) {
+      setOpen(false);
+      const newActiveProject = myProjects.find(
+        myProject => myProject.id === projectId
+      );
+      setProjectRole(newActiveProject.sharedProject ? 'Collaborator' : 'Admin');
+    }
   }, [projectId]);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const createItem = title => {
@@ -202,6 +215,7 @@ Project.defaultProps = {
 Project.propTypes = {
   projectId: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired,
   collapse: PropTypes.bool.isRequired,
   createProject: PropTypes.func.isRequired,
   updateActiveProject: PropTypes.func.isRequired,

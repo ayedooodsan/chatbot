@@ -1,8 +1,10 @@
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { ApolloLink } from 'apollo-client-preset';
+import { ApolloLink, from } from 'apollo-client-preset';
 import { onError } from 'apollo-link-error';
 import { createUploadLink } from 'apollo-upload-client';
+import IconButton from '@material-ui/core/IconButton';
+import Close from '@material-ui/icons/Close';
 import promiseToObservable from './promiseToObservable';
 import { dispatchers } from '../redux/notifier';
 import persist from './persist';
@@ -31,7 +33,17 @@ function createClient(headers, token, initialState, reduxStore) {
         dispatchers.enqueueSnackbar({
           message: text,
           options: {
-            variant: 'warning'
+            key: new Date().getTime() + Math.random(),
+            variant: 'warning',
+            action: key => (
+              <IconButton
+                onClick={() =>
+                  reduxStore.dispatch(dispatchers.closeSnackbar(key))
+                }
+              >
+                <Close />
+              </IconButton>
+            )
           }
         })
       );
@@ -47,6 +59,42 @@ function createClient(headers, token, initialState, reduxStore) {
       accessToken = JSON.parse(tokenCookies);
     }
   })();
+
+  const loadingLink = new ApolloLink((operation, forward) => {
+    if (process.browser) {
+      const loadingSnackbarKey = new Date().getTime() + Math.random();
+      reduxStore.dispatch(
+        dispatchers.enqueueSnackbar({
+          message: `waiting for ${operation.operationName} operation ...`,
+          options: {
+            key: loadingSnackbarKey,
+            variant: 'info',
+            autoHideDuration: 120000
+          }
+        })
+      );
+      return forward(operation).map(response => {
+        reduxStore.dispatch(dispatchers.closeSnackbar(loadingSnackbarKey));
+        if (!response.errors) {
+          reduxStore.dispatch(
+            dispatchers.enqueueSnackbar({
+              message: `${
+                operation.operationName
+              } operation successfully completed.`,
+              options: {
+                key: new Date().getTime() + Math.random(),
+                variant: 'success',
+                autoHideDuration: 3000
+              }
+            })
+          );
+        }
+        return response;
+      });
+    }
+    return forward(operation);
+  });
+
   const authLink = new ApolloLink((operation, forward) => {
     operation.setContext({
       headers: {
@@ -70,22 +118,24 @@ function createClient(headers, token, initialState, reduxStore) {
 
       return response;
     });
-  }).concat(httpLink);
+  });
 
   return new ApolloClient({
     headers,
-    link: errorLink.concat(authLink),
+    link: errorLink.concat(from([loadingLink, authLink, httpLink])),
     connectToDevTools: process.browser,
     ssrMode: !process.browser,
     cache: new InMemoryCache().restore(initialState || {})
   });
 }
 
-export default (headers, token, initialState, reduxStore) => {
+export default (headers, token, initialState, reduxStore, resetStore) => {
   if (!process.browser) {
     return createClient(headers, token, initialState, reduxStore);
   }
-  if (apolloClient) {
+  if (resetStore) {
+    apolloClient = createClient(headers, token, initialState, reduxStore);
+  } else if (apolloClient) {
     const currentState = apolloClient.cache.extract();
     apolloClient = createClient(headers, token, currentState, reduxStore);
   } else {

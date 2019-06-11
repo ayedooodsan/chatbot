@@ -22,10 +22,12 @@ const App = ({ children }) => {
 
   return (
     <SnackbarProvider
-      maxSnack={1}
+      preventDuplicate
+      hideIconVariant
+      maxSnack={10}
       anchorOrigin={{
         vertical: 'bottom',
-        horizontal: 'left'
+        horizontal: 'right'
       }}
     >
       <Notifier />
