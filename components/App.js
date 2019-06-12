@@ -27,7 +27,7 @@ const App = ({ children }) => {
       maxSnack={10}
       anchorOrigin={{
         vertical: 'bottom',
-        horizontal: 'right'
+        horizontal: 'left'
       }}
     >
       <Notifier />

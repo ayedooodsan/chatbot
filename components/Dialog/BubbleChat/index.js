@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Face from '@material-ui/icons/Face';
 import Android from '@material-ui/icons/Android';
@@ -7,9 +8,13 @@ import PlayArrow from '@material-ui/icons/PlayArrow';
 import style from './style';
 
 const BubbleChat = props => {
-  const { classes, type, children } = props;
+  const { classes, type, children, selected } = props;
   return type === 'other' ? (
-    <div className={`${classes.li} ${classes.bubbleOther}`}>
+    <div
+      className={classNames(classes.li, classes.bubbleOther, {
+        [classes.selectedLi]: selected
+      })}
+    >
       <div className={classes.avatarOther}>
         <div className={classes.img}>
           <Face className={classes.icon} />
@@ -22,7 +27,11 @@ const BubbleChat = props => {
       </div>
     </div>
   ) : (
-    <div className={`${classes.li} ${classes.bubbleSelf}`}>
+    <div
+      className={classNames(classes.li, classes.bubbleSelf, {
+        [classes.selectedLi]: selected
+      })}
+    >
       <div className={classes.avatarSelf}>
         <div className={classes.img}>
           <Android className={classes.icon} />
@@ -37,9 +46,14 @@ const BubbleChat = props => {
   );
 };
 
+BubbleChat.defaultProps = {
+  selected: false
+};
+
 BubbleChat.propTypes = {
   classes: PropTypes.object.isRequired,
   type: PropTypes.string.isRequired,
+  selected: PropTypes.bool,
   children: PropTypes.object.isRequired
 };
 
