@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Send from '@material-ui/icons/Send';
 import Android from '@material-ui/icons/Android';
 import Add from '@material-ui/icons/Add';
-import { EDIT_ROBOT } from '../DialogInput/constant';
+import { EDIT_ROBOT, EDIT_USER_PARAM } from '../DialogInput/constant';
 import { isTypeOfString } from '../../../libraries/helpers';
 import style from './style';
 
@@ -28,10 +28,16 @@ const validate = values => {
 
 const RobotDialogInput = props => {
   const { classes, preview, type, payload } = props;
+  let messageText = '';
+  if (type === EDIT_ROBOT) {
+    messageText = payload.payload;
+  } else if (type === EDIT_USER_PARAM) {
+    messageText = payload.prompt;
+  }
   const { form, handleSubmit, prestine, submitting } = useForm({
     onSubmit: onSubmit(props),
     initialValues: {
-      message: type === EDIT_ROBOT ? payload.payload : ''
+      message: messageText
     },
     validate
   });

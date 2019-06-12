@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useForm, useField } from 'react-final-form-hooks';
+import _ from 'lodash';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -8,6 +9,10 @@ import TextField from '@material-ui/core/TextField';
 import Send from '@material-ui/icons/Send';
 import Face from '@material-ui/icons/Face';
 import { withRouter } from 'next/router';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Typography from '@material-ui/core/Typography';
 import IntentSuggestions from '../../common/IntentSuggestions';
 import SimpleAutoComplete from '../SimpleAutoComplete';
 import { isTypeOfString } from '../../../libraries/helpers';
@@ -38,18 +43,27 @@ const UserDialogInput = props => {
     onSubmit: onSubmit(props),
     initialValues: {
       intent: type === EDIT_USER ? payload.intent : null,
-      title: type === EDIT_USER ? payload.title : null
+      title: type === EDIT_USER ? payload.title : null,
+      params:
+        type === EDIT_USER
+          ? payload.params.reduce((paramString, param) => {
+              return paramString + (param.required ? `|${param.name}|` : '');
+            }, '')
+          : ''
     },
     validate
   });
+
   const title = useField('title', form);
   const intent = useField('intent', form);
+  const params = useField('params', form);
+
   return (
     <React.Fragment>
       <form onSubmit={handleSubmit} className={classes.root}>
         <div className={classes.inputContainer}>
           <div className={classes.preview}>{preview()}</div>
-          <Grid container spacing={6}>
+          <Grid container spacing={8}>
             <Grid
               item
               xs
@@ -67,8 +81,14 @@ const UserDialogInput = props => {
             </Grid>
             <Grid item xs className={classes.margin}>
               <SimpleAutoComplete
-                input={intent.input}
-                label="Intent"
+                input={{
+                  ...intent.input,
+                  onChange: event => {
+                    intent.input.onChange(event);
+                    params.input.onChange('');
+                  }
+                }}
+                label="Linked Intent"
                 initialValue={type === EDIT_USER ? payload.intent : {}}
                 initialInputValue={
                   type === EDIT_USER ? payload.intent.title : null
@@ -87,6 +107,81 @@ const UserDialogInput = props => {
               />
             </Grid>
           </Grid>
+          {_.isObject(intent.input.value) &&
+            (_.isEqual(intent.input.value, payload.intent)
+              ? payload.params.length > 0 && (
+                  <div className={classes.preview}>
+                    <Typography
+                      variant="caption"
+                      className={classes.checkboxLabel}
+                    >
+                      Required Params
+                    </Typography>
+                    <FormGroup row className={classes.checkboxes}>
+                      {payload.params.map(param => (
+                        <FormControlLabel
+                          key={param.name}
+                          control={
+                            <Checkbox
+                              color="primary"
+                              id={param.name}
+                              checked={params.input.value.includes(
+                                `|${param.name}|`
+                              )}
+                              onChange={(event, checked) => {
+                                let currentValue = params.input.value;
+                                if (checked) {
+                                  currentValue += `|${param.name}|`;
+                                } else {
+                                  currentValue = currentValue.replace(
+                                    `|${param.name}|`,
+                                    ''
+                                  );
+                                }
+                                params.input.onChange(currentValue);
+                              }}
+                            />
+                          }
+                          label={param.name}
+                        />
+                      ))}
+                    </FormGroup>
+                  </div>
+                )
+              : intent.input.value.params.length > 0 && (
+                  <div className={classes.preview}>
+                    <Typography
+                      variant="caption"
+                      className={classes.checkboxLabel}
+                    >
+                      Required Params
+                    </Typography>
+                    <FormGroup row className={classes.checkboxes}>
+                      {intent.input.value.params.map(param => (
+                        <FormControlLabel
+                          key={param.name}
+                          control={
+                            <Checkbox
+                              color="primary"
+                              id={param.name}
+                              checked={params.input.value.includes(param.name)}
+                              onChange={(event, checked) => {
+                                let currentValue = params.input.value;
+                                if (checked) {
+                                  currentValue += `|${param.name}|`;
+                                } else {
+                                  currentValue.replace(`|${param.name}|`, '');
+                                }
+                                params.input.onChange(currentValue);
+                              }}
+                            />
+                          }
+                          label={param.name}
+                        />
+                      ))}
+                    </FormGroup>
+                  </div>
+                ))}
         </div>
         <div className={classes.buttonContainer}>
           <Button

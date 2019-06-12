@@ -23,6 +23,13 @@ const style = () => ({
   },
   preview: {
     margin: '0 10px'
+  },
+  checkboxLabel: {
+    color: 'rgba(0, 0, 0, 0.54)',
+    margin: '0.4rem 0 0 1rem'
+  },
+  checkboxes: {
+    marginTop: '-0.5rem'
   }
 });
 
