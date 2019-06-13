@@ -21,7 +21,9 @@ const withCreateProject = graphql(createProjectGql, {
   props: ({ createProject }) => ({
     createProject: ({ title }) =>
       createProject({
-        variables: { title }
+        variables: { title },
+        refetch: [{ query: myProjectsGql }],
+        update: invalidateStore
       })
   })
 });

@@ -15,6 +15,9 @@ import Avatar from '@material-ui/core/Avatar';
 import RootRef from '@material-ui/core/RootRef';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import Close from '@material-ui/icons/Close';
+import Scrollbar from 'react-scrollbars-custom';
 import CreateProductDialog from '../common/CreateProductDialog';
 import connect from './store';
 import style from './style';
@@ -42,9 +45,13 @@ const Project = props => {
       const newActiveProject = myProjects.find(
         myProject => myProject.id === projectId
       );
-      setProjectRole(newActiveProject.sharedProject ? 'Collaborator' : 'Admin');
+      if (newActiveProject) {
+        setProjectRole(
+          newActiveProject.sharedProject ? 'Collaborator' : 'Admin'
+        );
+      }
     }
-  }, [projectId]);
+  }, [projectId, myProjects]);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const createItem = title => {
     createProject({ title }).then(response => {
@@ -147,50 +154,70 @@ const Project = props => {
         >
           {({ TransitionProps }) => (
             <Grow {...TransitionProps}>
-              <Paper className={classes.menuContainer}>
-                <React.Fragment>
-                  <Typography variant="overline" className={classes.menuTitle}>
-                    Switch Project
-                  </Typography>
-                  <Divider />
-                  <List component="nav" dense>
-                    {myProjects.map(myProject => (
-                      <ListItem
-                        button
-                        key={myProject.id}
-                        onClick={() => toProject(myProject.id)}
+              <div>
+                <Paper className={classes.menuContainer}>
+                  <React.Fragment>
+                    <div className={classes.menuRoot}>
+                      <Typography
+                        variant="overline"
+                        className={classes.menuTitle}
                       >
-                        <ListItemIcon className={classes.listItemIcon}>
-                          <Avatar className={classes.avatar}>
-                            {getInitialProject(myProject.title)}
-                          </Avatar>
-                        </ListItemIcon>
-                        <ListItemText
-                          secondary={
-                            myProject.sharedProject
-                              ? `by ${myProject.user.username}`
-                              : null
-                          }
-                          primary={myProject.title}
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-                  <Divider />
-                  <Button
-                    fullWidth
-                    size="small"
-                    color="primary"
-                    onClick={() => {
-                      setOpen(false);
-                      setOpenCreateDialog(true);
-                    }}
-                    className={classes.button}
-                  >
-                    Add Project
-                  </Button>
-                </React.Fragment>
-              </Paper>
+                        Switch Project
+                      </Typography>
+                      <div>
+                        <IconButton
+                          onClick={() => {
+                            setOpen(false);
+                          }}
+                        >
+                          <Close fontSize="small" />
+                        </IconButton>
+                      </div>
+                    </div>
+                    <Divider />
+                    <div className={classes.menus}>
+                      <Scrollbar contentProps={{ style: { width: '100%' } }}>
+                        <List component="nav" dense className={classes.list}>
+                          {myProjects.map(myProject => (
+                            <ListItem
+                              button
+                              key={myProject.id}
+                              onClick={() => toProject(myProject.id)}
+                            >
+                              <ListItemIcon className={classes.listItemIcon}>
+                                <Avatar className={classes.avatar}>
+                                  {getInitialProject(myProject.title)}
+                                </Avatar>
+                              </ListItemIcon>
+                              <ListItemText
+                                secondary={
+                                  myProject.sharedProject
+                                    ? `by ${myProject.user.username}`
+                                    : null
+                                }
+                                primary={myProject.title}
+                              />
+                            </ListItem>
+                          ))}
+                        </List>
+                      </Scrollbar>
+                    </div>
+                    <Divider />
+                    <Button
+                      fullWidth
+                      size="small"
+                      color="primary"
+                      onClick={() => {
+                        setOpen(false);
+                        setOpenCreateDialog(true);
+                      }}
+                      className={classes.button}
+                    >
+                      Add Project
+                    </Button>
+                  </React.Fragment>
+                </Paper>
+              </div>
             </Grow>
           )}
         </Popper>
