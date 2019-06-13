@@ -183,7 +183,7 @@ const DialogInput = props => {
             <PreviewMessage
               title="DELETE USER SAYS:"
               subtitle={payload.title}
-              footTitle="Type the title and click the send button."
+              footTitle="Type the first word title and click the send button."
               reset={reset}
             />
           )}
