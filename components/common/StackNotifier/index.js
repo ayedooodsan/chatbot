@@ -129,7 +129,11 @@ class ConsecutiveSnackbars extends React.Component {
           aria-describedby="client-snackbar"
           message={
             <span id="client-snackbar" className={classes.message}>
-              <Icon className={classNames(classes.icon, classes.iconVariant)} />
+              {Icon && (
+                <Icon
+                  className={classNames(classes.icon, classes.iconVariant)}
+                />
+              )}
               {message}
             </span>
           }
