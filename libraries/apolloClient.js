@@ -3,8 +3,6 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloLink, from } from 'apollo-client-preset';
 import { onError } from 'apollo-link-error';
 import { createUploadLink } from 'apollo-upload-client';
-import IconButton from '@material-ui/core/IconButton';
-import Close from '@material-ui/icons/Close';
 import promiseToObservable from './promiseToObservable';
 import { dispatchers } from '../redux/notifier';
 import persist from './persist';
@@ -34,16 +32,7 @@ function createClient(headers, token, initialState, reduxStore) {
           message: text,
           options: {
             key: new Date().getTime() + Math.random(),
-            variant: 'warning',
-            action: key => (
-              <IconButton
-                onClick={() =>
-                  reduxStore.dispatch(dispatchers.closeSnackbar(key))
-                }
-              >
-                <Close />
-              </IconButton>
-            )
+            variant: 'warning'
           }
         })
       );
@@ -61,7 +50,8 @@ function createClient(headers, token, initialState, reduxStore) {
   })();
 
   const loadingLink = new ApolloLink((operation, forward) => {
-    if (process.browser) {
+    const operationType = operation.query.definitions[0].operation;
+    if (process.browser && operationType !== 'query') {
       const loadingSnackbarKey = new Date().getTime() + Math.random();
       reduxStore.dispatch(
         dispatchers.enqueueSnackbar({
@@ -84,7 +74,7 @@ function createClient(headers, token, initialState, reduxStore) {
               options: {
                 key: new Date().getTime() + Math.random(),
                 variant: 'success',
-                autoHideDuration: 3000
+                autoHideDuration: 2000
               }
             })
           );

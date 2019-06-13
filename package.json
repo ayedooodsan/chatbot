@@ -80,7 +80,6 @@
     "next-cookies": "github:Sly777/next-cookies#master",
     "next-nprogress": "^1.4.0",
     "next-routes": "1.4.2",
-    "notistack": "^0.8.6",
     "offline-plugin": "5.0.6",
     "prop-types": "15.7.2",
     "react": "16.8.6",
