@@ -14,7 +14,7 @@ import {
 import { findLastIndex } from '../../../libraries/helpers';
 
 const generateParams = ({ payload, values }) => {
-  if (payload.intent !== null && payload.intent.id === values.intent.id) {
+  if (payload.intent && payload.intent.id === values.intent.id) {
     return payload.params.map(param => {
       const isRequired = values.params.includes(`|${param.name}|`);
       return {
@@ -41,7 +41,7 @@ const sendAction = (
   { type, payload },
   values
 ) => {
-  const computedRawMessages = _.cloneDeep(rawMessages);
+  let computedRawMessages = _.cloneDeep(rawMessages);
   let computedViewedDialog = _.cloneDeep(viewedDialog);
   let computedActiveMessageIds = _.cloneDeep(activeMessageIds);
   let newParentId = null;
@@ -112,6 +112,7 @@ const sendAction = (
       if (selectedParentMessageIndex === -1) {
         computedActiveMessageIds = [];
         computedViewedDialog = [];
+        computedRawMessages = [];
         newParentId = null;
       } else {
         computedActiveMessageIds.splice(
@@ -209,6 +210,7 @@ const sendAction = (
       if (selectedParentMessageIndex === -1) {
         computedActiveMessageIds = [];
         computedViewedDialog = [];
+        computedRawMessages = [];
         newParentId = null;
       } else {
         computedActiveMessageIds.splice(

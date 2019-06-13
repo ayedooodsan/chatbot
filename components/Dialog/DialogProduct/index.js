@@ -227,7 +227,7 @@ class DialogProduct extends Component {
     updateDialog({
       id: dialogId,
       title,
-      messages: messages.length === 0 ? null : messages
+      messages
     });
   };
 
