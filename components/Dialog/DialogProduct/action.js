@@ -13,6 +13,29 @@ import {
 } from '../DialogInput/constant';
 import { findLastIndex } from '../../../libraries/helpers';
 
+const generateParams = ({ payload, values }) => {
+  if (payload.intent !== null && payload.intent.id === values.intent.id) {
+    return payload.params.map(param => {
+      const isRequired = values.params.includes(`|${param.name}|`);
+      return {
+        name: param.name,
+        required: isRequired,
+        prompt: param.prompt
+      };
+    });
+  }
+  return values.intent.params
+    ? values.intent.params.map(param => {
+        const isRequired = values.params.includes(`|${param.name}|`);
+        return {
+          name: param.name,
+          required: isRequired,
+          prompt: null
+        };
+      })
+    : [];
+};
+
 const sendAction = (
   { rawMessages, viewedDialog, activeMessageIds },
   { type, payload },
@@ -31,6 +54,7 @@ const sendAction = (
         title: values.title,
         intentId: values.intent.id,
         intent: values.intent,
+        params: generateParams({ payload, values }),
         depth: -1
       });
       computedViewedDialog = [];
@@ -50,6 +74,7 @@ const sendAction = (
         title: values.title,
         intentId: values.intent.id,
         intent: values.intent,
+        params: generateParams({ payload, values }),
         depth: payload.depth + 1
       });
       const activeMessageIdIndex = computedActiveMessageIds.findIndex(
@@ -105,30 +130,33 @@ const sendAction = (
       const selectedMessage = computedRawMessages.find(
         message => message.id === payload.message.id
       );
-      const selectedParam = selectedMessage.intent.params.find(
+      const selectedParam = selectedMessage.params.find(
         param => param.name === payload.param.name
       );
-      selectedParam.message = values.message;
+      selectedParam.prompt = values.message;
+      newParentId = computedRawMessages[computedRawMessages.length - 1].id;
       break;
     }
     case EDIT_USER_PARAM: {
       const selectedMessage = computedRawMessages.find(
         message => message.id === payload.message.id
       );
-      const selectedParam = selectedMessage.intent.params.find(
+      const selectedParam = selectedMessage.params.find(
         param => param.name === payload.param.name
       );
-      selectedParam.message = values.message;
+      selectedParam.prompt = values.message;
+      newParentId = computedRawMessages[computedRawMessages.length - 1].id;
       break;
     }
     case DELETE_USER_PARAM: {
       const selectedMessage = computedRawMessages.find(
         message => message.id === payload.message.id
       );
-      const selectedParam = selectedMessage.intent.params.find(
+      const selectedParam = selectedMessage.params.find(
         param => param.name === payload.param.name
       );
-      selectedParam.message = null;
+      selectedParam.prompt = null;
+      newParentId = computedRawMessages[computedRawMessages.length - 1].id;
       break;
     }
     case REPLY_USER: {
@@ -165,6 +193,7 @@ const sendAction = (
       selectedMessage.title = values.title;
       selectedMessage.intentId = values.intent.id;
       selectedMessage.intent = values.intent;
+      selectedMessage.params = generateParams({ payload, values });
       newParentId = computedRawMessages[computedRawMessages.length - 1].id;
       break;
     }

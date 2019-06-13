@@ -62,7 +62,7 @@ class DialogProduct extends Component {
   }
 
   onChangeDialogInputProps = dialogInputProps => {
-    this.setState({ dialogInputProps });
+    this.setState({ dialogInputProps: _.cloneDeep(dialogInputProps) });
   };
 
   onChangeTitle = event => {
@@ -193,6 +193,10 @@ class DialogProduct extends Component {
       const newActiveMessageIds = result.activeMessageIds;
       return {
         viewedDialog: newViewedDialog,
+        viewedUnsatifiedDialog: newViewedDialog.slice(
+          0,
+          prevState.viewedUnsatifiedDialog.length
+        ),
         activeMessageIds: newActiveMessageIds,
         rawMessages: computedRawMessages
       };
@@ -207,6 +211,13 @@ class DialogProduct extends Component {
       parentId:
         rawMessage.parentId === null ? null : String(rawMessage.parentId),
       intentId: rawMessage.intent ? rawMessage.intent.id : null,
+      params: rawMessage.intent
+        ? rawMessage.params.map(param => ({
+            name: param.name,
+            required: param.required,
+            prompt: param.prompt
+          }))
+        : null,
       title: rawMessage.title,
       type: rawMessage.type,
       depth: rawMessage.depth,
@@ -329,6 +340,9 @@ class DialogProduct extends Component {
         </div>
         <Paper className={classes.footer}>
           <DialogInput
+            key={`${dialogInputProps.type}-${
+              dialogInputProps.payload ? dialogInputProps.payload.id || '' : ''
+            }`}
             {...dialogInputProps}
             reset={this.reset}
             send={this.send}

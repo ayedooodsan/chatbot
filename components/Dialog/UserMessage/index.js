@@ -46,13 +46,11 @@ const UserMessage = props => {
     message => message.id === activeMessageId
   );
 
-  const requiredParams = [];
+  const requiredParams = activeMessage.params.filter(param => param.required);
 
   let activeParam;
   if (activeParamName !== null) {
-    activeParam = activeMessage.intent.params.find(
-      param => param.name === activeParamName
-    );
+    activeParam = requiredParams.find(param => param.name === activeParamName);
   }
 
   const replyable = () =>
@@ -181,7 +179,7 @@ const UserMessage = props => {
           {requiredParams.map(param =>
             param.name === activeParamName ? (
               <Chip
-                icon={<ErrorOutline style={{ color: 'rgba(0, 0, 0, 0.87)' }} />}
+                icon={<ErrorOutline />}
                 key={param.name}
                 label={param.name}
                 className={classes.chip}
@@ -191,7 +189,7 @@ const UserMessage = props => {
               <Chip
                 variant="outlined"
                 key={param.name}
-                icon={<ErrorOutline style={{ color: 'rgba(0, 0, 0, 0.87)' }} />}
+                icon={<ErrorOutline />}
                 label={param.name}
                 className={classes.chip}
                 onClick={() => {
@@ -203,10 +201,10 @@ const UserMessage = props => {
           )}
         </div>
       )}
-      {activeParamName && activeParam.message && (
+      {activeParamName && activeParam.prompt && (
         <BubbleChat type="self">
           <div className={classes.headerBubble}>
-            <Typography variant="subtitle2">{activeParam.message}</Typography>
+            <Typography variant="caption">{activeParam.prompt}</Typography>
             <div className={classes.buttons}>
               <IconButton
                 className={classes.iconButton}

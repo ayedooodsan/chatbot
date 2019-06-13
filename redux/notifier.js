@@ -2,6 +2,7 @@
 export const ENQUEUE_SNACKBAR = 'ENQUEUE_SNACKBAR';
 export const REMOVE_SNACKBAR = 'REMOVE_SNACKBAR';
 export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR';
+export const SHIFT_SNACKBAR = 'SHIFT_SNACKBAR';
 // Initial State
 const initialState = {
   notifications: []
@@ -20,6 +21,11 @@ const reducer = (state = initialState, action) => {
             ...action.notification
           }
         ]
+      };
+    case SHIFT_SNACKBAR:
+      return {
+        ...state,
+        notifications: state.notifications.slice(1, state.notifications.length)
       };
 
     case CLOSE_SNACKBAR:
@@ -71,6 +77,10 @@ actionCreators.closeSnackbar = key => ({
   key
 });
 
+actionCreators.shiftSnackbar = () => ({
+  type: SHIFT_SNACKBAR
+});
+
 // Discpatchers
 const dispatchers = {};
 
@@ -84,6 +94,10 @@ dispatchers.removeSnackbar = key => {
 
 dispatchers.closeSnackbar = key => {
   return actionCreators.closeSnackbar(key);
+};
+
+dispatchers.shiftSnackbar = () => {
+  return actionCreators.shiftSnackbar();
 };
 
 export { actionCreators, reducer, dispatchers };

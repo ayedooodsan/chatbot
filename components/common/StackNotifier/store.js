@@ -9,6 +9,9 @@ const mapDispatchToProps = dispatch => ({
   actions: {
     removeSnackbar(key) {
       dispatch(dispatchers.removeSnackbar(key));
+    },
+    shiftSnackbar() {
+      dispatch(dispatchers.shiftSnackbar());
     }
   }
 });
