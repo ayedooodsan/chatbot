@@ -16,11 +16,13 @@ import Radio from '@material-ui/core/Radio';
 import Warning from '@material-ui/icons/Warning';
 import FileCopy from '@material-ui/icons/FileCopy';
 import Clipboard from 'react-clipboard.js';
+import DeleteProductDialog from '../../common/DeleteProductDialog';
 import SimpleAutoComplete from './SimpleAutoComplete';
 import SimpleProductLayoutProvider from '../../layout/SimpleProductLayoutProvider';
 import SimpleProductHead from '../../layout/SimpleProductHead';
 import SimpleProductBody from '../../layout/SimpleProductBody';
 import { isTypeOfString } from '../../../libraries/helpers';
+import redirect from '../../../libraries/redirect';
 import style from './style';
 import connect from './store';
 
@@ -44,7 +46,24 @@ const validate = values => {
 
 const GeneralSetting = props => {
   const [copyTooltipOpen, setCopyTooltipOpen] = useState(false);
-  const { classes, projectId, project, languages, timeZones } = props;
+  const [deteleDialogOpen, setDeteleDialogOpen] = useState(false);
+  const {
+    classes,
+    projectId,
+    project,
+    languages,
+    timeZones,
+    role,
+    deleteProject
+  } = props;
+
+  const onDelete = async () => {
+    const response = await deleteProject({ id: projectId });
+    const newActiveProjectId = response.data.deleteProject;
+    redirect({}, `/${newActiveProjectId}/entity`);
+    return response;
+  };
+
   const { form, handleSubmit } = useForm({
     onSubmit: onSubmit(props),
     initialValues: {
@@ -64,6 +83,7 @@ const GeneralSetting = props => {
           renderButtons={() => (
             <div>
               <Button
+                form="SimpleProductLayoutProvider"
                 type="submit"
                 variant="contained"
                 color="primary"
@@ -261,18 +281,35 @@ const GeneralSetting = props => {
                 </Grid>
               </Grid>
             </div>
-            <div className={classes.container}>
-              <Paper className={classes.verticalContainer} elevation={1}>
-                <Warning className={classes.icon} />
-                <Typography variant="subtitle2" gutterBottom>
-                  Danger Zone
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  This action cannot be undone. Be careful
-                </Typography>
-                <Button variant="outlined">Delete</Button>
-              </Paper>
-            </div>
+            {role === 'Admin' && (
+              <React.Fragment>
+                <div className={classes.container}>
+                  <Paper className={classes.verticalContainer} elevation={1}>
+                    <Warning className={classes.icon} />
+                    <Typography variant="subtitle2" gutterBottom>
+                      Danger Zone
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                      This action cannot be undone. Be careful
+                    </Typography>
+                    <Button
+                      onClick={() => setDeteleDialogOpen(true)}
+                      variant="outlined"
+                    >
+                      Delete
+                    </Button>
+                  </Paper>
+                </div>
+                <DeleteProductDialog
+                  open={deteleDialogOpen}
+                  handleClose={() => setDeteleDialogOpen(false)}
+                  productName={title.input.value}
+                  handleConfirm={onDelete}
+                  message={`Delete ${title.input.value} Project`}
+                  subMessage="To delete this project, please enter the first word on project title."
+                />
+              </React.Fragment>
+            )}
           </React.Fragment>
         </SimpleProductBody>
       )}
@@ -288,8 +325,10 @@ GeneralSetting.defaultProps = {
 };
 
 GeneralSetting.propTypes = {
+  deleteProject: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
+  role: PropTypes.string.isRequired,
   languages: PropTypes.array,
   timeZones: PropTypes.array,
   project: PropTypes.object

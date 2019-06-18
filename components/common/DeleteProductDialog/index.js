@@ -39,7 +39,13 @@ const DeleteProductDialog = props => {
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
     >
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={event => {
+          event.stopPropagation();
+          handleSubmit(event);
+        }}
+        id="DeleteProductDialog"
+      >
         <DialogTitle id="form-dialog-title">{message}</DialogTitle>
         <DialogContent>
           <DialogContentText>{subMessage}</DialogContentText>
@@ -58,6 +64,7 @@ const DeleteProductDialog = props => {
             Cancel
           </Button>
           <Button
+            form="DeleteProductDialog"
             disabled={firstWord !== productName.split(' ')[0]}
             type="submit"
             color="primary"

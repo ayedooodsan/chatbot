@@ -94,7 +94,9 @@ const Setting = props => {
         />
       )}
     >
-      {SettingProduct !== null && <SettingProduct projectId={projectId} />}
+      {SettingProduct !== null && (
+        <SettingProduct projectId={projectId} role={role} />
+      )}
     </LayoutProvider>
   );
 };

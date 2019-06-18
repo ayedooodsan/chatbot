@@ -4,6 +4,7 @@ import deleteProjectGql from './deleteProject.gql';
 import updateProjectGql from './updateProject.gql';
 import timeZonesGql from './timeZones.gql';
 import languagesGql from './languages.gql';
+import invalidateStore from '../../../libraries/updateApolloCache/invalidateStore';
 
 const withProject = graphql(projectGql, {
   name: 'project',
@@ -62,7 +63,8 @@ const withDeleteProject = graphql(deleteProjectGql, {
     deleteProject: ({ id }) =>
       deleteProject({
         variables: { id },
-        refetchQueries: ['myProjects']
+        refetchQueries: ['myProjects'],
+        update: invalidateStore
       })
   })
 });
