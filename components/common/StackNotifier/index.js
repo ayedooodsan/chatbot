@@ -5,8 +5,7 @@ import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import Button from '@material-ui/core/Button';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import WarningIcon from '@material-ui/icons/Warning';
 import ErrorIcon from '@material-ui/icons/Error';
@@ -138,15 +137,15 @@ class ConsecutiveSnackbars extends React.Component {
             </span>
           }
           action={[
-            <IconButton
+            <Button
               key="close"
               aria-label="Close"
               color="inherit"
               className={classes.close}
               onClick={this.handleClose}
             >
-              <CloseIcon className={classes.icon} />
-            </IconButton>
+              Close
+            </Button>
           ]}
         />
       </Snackbar>

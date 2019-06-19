@@ -54,7 +54,7 @@ const UserMessage = props => {
   }
 
   const replyable = () =>
-    !activeChildMessageId || (activeParamName && !activeParam.message);
+    !activeChildMessageId || (activeParamName && !activeParam.prompt);
   return (
     <React.Fragment>
       {messages.length > 1 && (
