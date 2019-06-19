@@ -2,10 +2,12 @@ const style = () => ({
   bubbleSelf: {
     display: 'flex',
     alignItems: 'flex-end',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    paddingLeft: '2.5rem'
   },
   bubbleOther: {
-    display: 'flex'
+    display: 'flex',
+    paddingRight: '2.5rem'
   },
   bubbleContent: {
     borderRadius: '4px',
@@ -23,9 +25,13 @@ const style = () => ({
     borderLeft: '10px solid transparent'
   },
   li: {
-    padding: '0.5rem',
+    paddingTop: '0.5rem',
+    paddingBottom: '0.5rem',
     overflow: 'hidden',
     display: 'flex'
+  },
+  selectedLi: {
+    backgroundColor: '#FFECB3'
   },
   img: {
     display: 'block',

@@ -1,8 +1,9 @@
 import { ApolloClient } from 'apollo-client';
-import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { ApolloLink } from 'apollo-client-preset';
+import { ApolloLink, from } from 'apollo-client-preset';
 import { onError } from 'apollo-link-error';
+import { createUploadLink } from 'apollo-upload-client';
+import promiseToObservable from './promiseToObservable';
 import { dispatchers } from '../redux/notifier';
 import persist from './persist';
 import uri from '../graphql-url';
@@ -10,18 +11,27 @@ import uri from '../graphql-url';
 let apolloClient = null;
 
 function createClient(headers, token, initialState, reduxStore) {
-  const httpLink = createHttpLink({
+  const httpLink = createUploadLink({
     uri,
     credentials: 'same-origin'
   });
 
-  const errorLink = onError(({ graphQLErrors }) => {
+  const errorLink = onError(({ graphQLErrors, forward, operation }) => {
     if (graphQLErrors) {
       const text = graphQLErrors.map(({ message }) => message).join('; ');
+      if (text.includes('Not authenticated as user.')) {
+        promiseToObservable(
+          new Promise(async resolve => {
+            const status = await persist.willRemoveAccessToken();
+            resolve(status);
+          })
+        ).flatMap(() => forward(operation));
+      }
       reduxStore.dispatch(
         dispatchers.enqueueSnackbar({
           message: text,
           options: {
+            key: new Date().getTime() + Math.random(),
             variant: 'warning'
           }
         })
@@ -38,6 +48,43 @@ function createClient(headers, token, initialState, reduxStore) {
       accessToken = JSON.parse(tokenCookies);
     }
   })();
+
+  const loadingLink = new ApolloLink((operation, forward) => {
+    const operationType = operation.query.definitions[0].operation;
+    if (process.browser && operationType !== 'query') {
+      const loadingSnackbarKey = new Date().getTime() + Math.random();
+      reduxStore.dispatch(
+        dispatchers.enqueueSnackbar({
+          message: `waiting for ${operation.operationName} operation ...`,
+          options: {
+            key: loadingSnackbarKey,
+            variant: 'info',
+            autoHideDuration: 120000
+          }
+        })
+      );
+      return forward(operation).map(response => {
+        reduxStore.dispatch(dispatchers.closeSnackbar(loadingSnackbarKey));
+        if (!response.errors) {
+          reduxStore.dispatch(
+            dispatchers.enqueueSnackbar({
+              message: `${
+                operation.operationName
+              } operation successfully completed.`,
+              options: {
+                key: new Date().getTime() + Math.random(),
+                variant: 'success',
+                autoHideDuration: 2000
+              }
+            })
+          );
+        }
+        return response;
+      });
+    }
+    return forward(operation);
+  });
+
   const authLink = new ApolloLink((operation, forward) => {
     operation.setContext({
       headers: {
@@ -61,22 +108,24 @@ function createClient(headers, token, initialState, reduxStore) {
 
       return response;
     });
-  }).concat(httpLink);
+  });
 
   return new ApolloClient({
     headers,
-    link: errorLink.concat(authLink),
+    link: errorLink.concat(from([loadingLink, authLink, httpLink])),
     connectToDevTools: process.browser,
     ssrMode: !process.browser,
     cache: new InMemoryCache().restore(initialState || {})
   });
 }
 
-export default (headers, token, initialState, reduxStore) => {
+export default (headers, token, initialState, reduxStore, resetStore) => {
   if (!process.browser) {
     return createClient(headers, token, initialState, reduxStore);
   }
-  if (apolloClient) {
+  if (resetStore) {
+    apolloClient = createClient(headers, token, initialState, reduxStore);
+  } else if (apolloClient) {
     const currentState = apolloClient.cache.extract();
     apolloClient = createClient(headers, token, currentState, reduxStore);
   } else {

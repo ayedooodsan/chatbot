@@ -7,6 +7,7 @@ import JssProvider from 'react-jss/lib/JssProvider';
 import NProgress from 'next-nprogress/component';
 import getPageContext from '../libraries/getPageContext';
 import 'draft-js/dist/Draft.css';
+import 'react-vis/dist/style.css';
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {

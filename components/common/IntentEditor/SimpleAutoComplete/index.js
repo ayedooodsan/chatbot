@@ -5,6 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 function renderInput(inputProps) {
@@ -54,7 +56,7 @@ renderSuggestion.defaultProps = {
   highlightedIndex: null,
   index: null,
   itemProps: null,
-  inputValue: null
+  inputValue: ''
 };
 
 renderSuggestion.propTypes = {
@@ -96,6 +98,7 @@ function SimpleAutoComplete(props) {
     initialValue,
     initialInputValue,
     suggestions,
+    params,
     autoFocus,
     onDelete
   } = props;
@@ -145,15 +148,85 @@ function SimpleAutoComplete(props) {
             {...(isOpen ? getMenuProps({}, { suppressRefError: true }) : {})}
           >
             {suggestions(inputValue, result => {
-              return result.map((suggestion, index) =>
-                renderSuggestion({
+              const filteredParam = params
+                .filter(
+                  param =>
+                    param.name.search(RegExp(inputValue || '', 'i')) !== -1
+                )
+                .map(param => ({
+                  title: param.name,
+                  id: param.entity.id,
+                  key: param.key
+                }));
+              let hasParamLabel = false;
+              let hasEntityLabel = false;
+              return [...filteredParam, ...result].map((suggestion, index) => {
+                if (!hasParamLabel) {
+                  hasParamLabel = true;
+                  return (
+                    <React.Fragment key={suggestion.id}>
+                      {result.length !== 0 && filteredParam.length !== 0 && (
+                        <Typography
+                          color="primary"
+                          variant="overline"
+                          style={{
+                            margin: '10px 0 0 16px'
+                          }}
+                        >
+                          Params
+                        </Typography>
+                      )}
+                      {renderSuggestion({
+                        suggestion,
+                        index,
+                        itemProps: getItemProps({ item: suggestion }),
+                        highlightedIndex,
+                        selectedItem
+                      })}
+                    </React.Fragment>
+                  );
+                }
+                if (!hasEntityLabel && hasParamLabel && !suggestion.key) {
+                  hasEntityLabel = true;
+                  return (
+                    <React.Fragment key={suggestion.id}>
+                      {result.length !== 0 && filteredParam.length !== 0 && (
+                        <React.Fragment>
+                          <Divider
+                            style={{
+                              marginLeft:
+                                highlightedIndex === index - 1 ? 0 : 16
+                            }}
+                          />
+                          <Typography
+                            color="primary"
+                            variant="overline"
+                            style={{
+                              margin: '10px 0 0 16px'
+                            }}
+                          >
+                            Entity
+                          </Typography>
+                        </React.Fragment>
+                      )}
+                      {renderSuggestion({
+                        suggestion,
+                        index,
+                        itemProps: getItemProps({ item: suggestion }),
+                        highlightedIndex,
+                        selectedItem
+                      })}
+                    </React.Fragment>
+                  );
+                }
+                return renderSuggestion({
                   suggestion,
                   index,
                   itemProps: getItemProps({ item: suggestion }),
                   highlightedIndex,
                   selectedItem
-                })
-              );
+                });
+              });
             })}
           </div>
         </div>
@@ -166,19 +239,21 @@ SimpleAutoComplete.defaultProps = {
   error: false,
   autoFocus: false,
   initialValue: {},
-  initialInputValue: null
+  initialInputValue: '',
+  onDelete: null
 };
 
 SimpleAutoComplete.propTypes = {
   classes: PropTypes.object.isRequired,
   suggestions: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
+  params: PropTypes.array.isRequired,
+  onDelete: PropTypes.func,
   error: PropTypes.bool,
   autoFocus: PropTypes.bool,
   initialInputValue: PropTypes.string,
-  initialValue: PropTypes.string
+  initialValue: PropTypes.object
 };
 
 export default withStyles(styles)(SimpleAutoComplete);

@@ -1,0 +1,12 @@
+query project (
+  $id: String!
+) {
+  project (
+    id: $id
+  ) {
+    title
+    description
+    language
+    timeZone
+  }
+}

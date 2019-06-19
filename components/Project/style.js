@@ -1,4 +1,4 @@
-const style = () => ({
+const style = theme => ({
   listItem: {
     paddingLeft: '14px',
     paddingRight: '14px'
@@ -31,9 +31,23 @@ const style = () => ({
   listItemTextTypSecondary: {
     fontSize: '.75rem'
   },
+  menuRoot: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 5
+  },
   menuContainer: {
     marginLeft: 10,
-    marginTop: 8
+    marginTop: 8,
+    width: 280
+  },
+  list: {
+    padding: 5
+  },
+  menus: {
+    paddingRight: 5,
+    height: 350
   },
   menuTitle: {
     padding: '12px 16px 8px'
@@ -41,6 +55,15 @@ const style = () => ({
   button: {
     paddingTop: 10,
     paddingBottom: 10
+  },
+  lightTooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 1)',
+    boxShadow: theme.shadows[1],
+    fontSize: 12
+  },
+  lightPopper: {
+    opacity: 1
   }
 });
 

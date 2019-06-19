@@ -28,7 +28,7 @@ class DialogProduct extends Component {
       viewedUnsatifiedDialog: [],
       dialogInputProps: {}
     };
-    this.propChangeCounter = 0;
+    this.afterSave = false;
   }
 
   componentDidMount() {
@@ -37,16 +37,9 @@ class DialogProduct extends Component {
     this.setState(this.updateViewedDialog(messages, null, [], []));
   }
 
-  shouldComponentUpdate(nextProps) {
-    const isMessagesEqual = _.isEqual(
-      nextProps.dialog.messages,
-      this.props.dialog.messages
-    );
-    const isTitleEqual = _.isEqual(
-      nextProps.dialog.title,
-      this.props.dialog.title
-    );
-    if ((!isTitleEqual || !isMessagesEqual) && this.propChangeCounter > 1) {
+  shouldComponentUpdate() {
+    if (this.afterSave) {
+      this.afterSave = false;
       return false;
     }
     return true;
@@ -65,12 +58,11 @@ class DialogProduct extends Component {
       const { messages, title } = this.props.dialog;
       this.setState({ rawMessages: messages, title });
       this.setState(this.updateViewedDialog(messages, null, [], []));
-      this.propChangeCounter += 1;
     }
   }
 
   onChangeDialogInputProps = dialogInputProps => {
-    this.setState({ dialogInputProps });
+    this.setState({ dialogInputProps: _.cloneDeep(dialogInputProps) });
   };
 
   onChangeTitle = event => {
@@ -201,6 +193,10 @@ class DialogProduct extends Component {
       const newActiveMessageIds = result.activeMessageIds;
       return {
         viewedDialog: newViewedDialog,
+        viewedUnsatifiedDialog: newViewedDialog.slice(
+          0,
+          prevState.viewedUnsatifiedDialog.length
+        ),
         activeMessageIds: newActiveMessageIds,
         rawMessages: computedRawMessages
       };
@@ -215,15 +211,23 @@ class DialogProduct extends Component {
       parentId:
         rawMessage.parentId === null ? null : String(rawMessage.parentId),
       intentId: rawMessage.intent ? rawMessage.intent.id : null,
+      params: rawMessage.intent
+        ? rawMessage.params.map(param => ({
+            name: param.name,
+            required: param.required,
+            prompt: param.prompt
+          }))
+        : null,
       title: rawMessage.title,
       type: rawMessage.type,
       depth: rawMessage.depth,
       payload: rawMessage.payload
     }));
+    this.afterSave = true;
     updateDialog({
       id: dialogId,
       title,
-      messages: messages.length === 0 ? null : messages
+      messages
     });
   };
 
@@ -277,7 +281,7 @@ class DialogProduct extends Component {
             </div>
           )}
           {rawMessages.length > 0 && (
-            <Scrollbar>
+            <Scrollbar contentProps={{ style: { width: '100%' } }}>
               {isViewUnsatifiedParam
                 ? viewedUnsatifiedDialog.map((messages, index) =>
                     messages[0].type === 'USER' ? (
@@ -336,6 +340,9 @@ class DialogProduct extends Component {
         </div>
         <Paper className={classes.footer}>
           <DialogInput
+            key={`${dialogInputProps.type}-${
+              dialogInputProps.payload ? dialogInputProps.payload.id || '' : ''
+            }`}
             {...dialogInputProps}
             reset={this.reset}
             send={this.send}

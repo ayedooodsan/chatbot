@@ -2,6 +2,7 @@ const subNavgationWidth = 300;
 
 const style = theme => ({
   root: {
+    backgroundColor: '#ffffff',
     position: 'relative',
     width: subNavgationWidth,
     flexShrink: 0,
@@ -13,16 +14,14 @@ const style = theme => ({
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen
-    }),
-    backgroundColor: '#f4f5f7'
+    })
   },
   rootClose: {
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen
     }),
-    width: '30px',
-    backgroundColor: '#f4f5f7'
+    width: '30px'
   },
   fab: {
     position: 'absolute',
@@ -44,8 +43,14 @@ const style = theme => ({
     flex: 1,
     overflow: 'hidden'
   },
+  noHeaderContainer: {
+    padding: '2px 25px 2px 5px'
+  },
   containerClose: {
     display: 'none'
+  },
+  insideScrollbar: {
+    paddingRight: 5
   }
 });
 

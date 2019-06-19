@@ -1,3 +1,0 @@
-mutation changeActiveProject( $projectId: String! ) {
-  changeActiveProject ( projectId: $projectId )
-}
