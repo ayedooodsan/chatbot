@@ -8,7 +8,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import LineNumber from './LineNumber';
 import style from './style';
 
-class CodeEditor extends React.Component {
+class TextsEditor extends React.Component {
   constructor(props) {
     super(props);
     this.editor = React.createRef();
@@ -80,7 +80,7 @@ class CodeEditor extends React.Component {
   };
 
   render() {
-    const { classes, error } = this.props;
+    const { classes, error, label } = this.props;
     const { focus } = this.state;
     return (
       <Paper
@@ -92,14 +92,16 @@ class CodeEditor extends React.Component {
         })}
         onClick={this.focusEditor}
       >
-        <InputLabel
-          className={classNames(classes.inputLabel, {
-            [classes.focusInputLabel]: focus,
-            [classes.errorInputLabel]: error
-          })}
-        >
-          Custom Payload
-        </InputLabel>
+        {label && (
+          <InputLabel
+            className={classNames(classes.inputLabel, {
+              [classes.focusInputLabel]: focus,
+              [classes.errorInputLabel]: error
+            })}
+          >
+            {label}
+          </InputLabel>
+        )}
         <div
           className={classNames(
             classes.inputRoot,
@@ -126,13 +128,15 @@ class CodeEditor extends React.Component {
   }
 }
 
-CodeEditor.defaultProps = {
-  error: false
+TextsEditor.defaultProps = {
+  error: false,
+  label: null
 };
 
-CodeEditor.propTypes = {
+TextsEditor.propTypes = {
   classes: PropTypes.object.isRequired,
-  error: PropTypes.bool
+  error: PropTypes.bool,
+  label: PropTypes.string
 };
 
-export default withStyles(style)(CodeEditor);
+export default withStyles(style)(TextsEditor);

@@ -19,6 +19,7 @@ const style = {
     '&:after': {
       zIndex: -1,
       width: 18,
+      height: '100%',
       content: 'attr(data-line-number)',
       position: 'absolute',
       left: 0,
@@ -29,7 +30,7 @@ const style = {
       paddingLeft: '8px',
       color: 'transparent',
       margin: '-15.5px 0',
-      padding: '15.5px 5px',
+      padding: '15.5px 5px  9.5px',
       borderTopLeftRadius: 3,
       borderBottomLeftRadius: 3
     }

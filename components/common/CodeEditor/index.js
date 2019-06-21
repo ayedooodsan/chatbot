@@ -121,7 +121,7 @@ class CodeEditor extends React.Component {
   };
 
   render() {
-    const { classes, error } = this.props;
+    const { classes, error, label } = this.props;
     const { focus } = this.state;
     return (
       <Paper
@@ -133,14 +133,16 @@ class CodeEditor extends React.Component {
         })}
         onClick={this.focusEditor}
       >
-        <InputLabel
-          className={classNames(classes.inputLabel, {
-            [classes.focusInputLabel]: focus,
-            [classes.errorInputLabel]: error
-          })}
-        >
-          Custom Payload
-        </InputLabel>
+        {label && (
+          <InputLabel
+            className={classNames(classes.inputLabel, {
+              [classes.focusInputLabel]: focus,
+              [classes.errorInputLabel]: error
+            })}
+          >
+            {label}
+          </InputLabel>
+        )}
         <Draft.Editor
           ref={this.editor}
           onFocus={() => this.setState({ focus: true })}
@@ -160,11 +162,13 @@ class CodeEditor extends React.Component {
 }
 
 CodeEditor.defaultProps = {
-  error: false
+  error: false,
+  label: null
 };
 
 CodeEditor.propTypes = {
   classes: PropTypes.object.isRequired,
+  label: PropTypes.string,
   error: PropTypes.bool
 };
 

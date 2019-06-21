@@ -9,6 +9,15 @@ const style = theme => ({
       border: `1px solid black`
     }
   },
+  lineNumberContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: 30,
+    height: 100,
+    backgroundColor: 'black',
+    border: `1px solid black`
+  },
   focusRoot: {
     border: `2px solid ${theme.palette.primary.main} !important`
   },
