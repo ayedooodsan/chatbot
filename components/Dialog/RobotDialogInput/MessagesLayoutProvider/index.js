@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Fab from '@material-ui/core/Fab';
 import Button from '@material-ui/core/Button';
@@ -11,7 +11,13 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import style from './style';
 
 const MessagesLayoutProvider = props => {
-  const { messageTypes, initialMessageValue, classes, renderMessage } = props;
+  const {
+    messageTypes,
+    initialMessageValue,
+    classes,
+    renderMessage,
+    onChange
+  } = props;
   const [messages, setMessages] = useState(props.messages);
   const [messageTypeEl, setMessageTypeEl] = React.useState(null);
 
@@ -45,6 +51,10 @@ const MessagesLayoutProvider = props => {
     messages.splice(index, 1);
     setMessages([...messages]);
   };
+
+  useEffect(() => {
+    onChange(messages);
+  }, [messages]);
 
   return (
     <div className={classes.root}>
@@ -115,7 +125,10 @@ const MessagesLayoutProvider = props => {
         onClose={closeMessageTypes}
       >
         {messageTypes.map(messageType => (
-          <MenuItem onClick={() => addMessage(messageType.value)}>
+          <MenuItem
+            key={messageType.value}
+            onClick={() => addMessage(messageType.value)}
+          >
             {messageType.label}
           </MenuItem>
         ))}
@@ -133,6 +146,7 @@ MessagesLayoutProvider.propTypes = {
   classes: PropTypes.object.isRequired,
   messageTypes: PropTypes.array.isRequired,
   initialMessageValue: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
   messages: PropTypes.array
 };
 

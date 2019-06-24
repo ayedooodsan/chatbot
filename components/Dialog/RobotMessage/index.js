@@ -16,7 +16,9 @@ const RobotMessage = props => {
   return (
     <BubbleChat type="self">
       <div className={classes.headerBubble}>
-        <Typography variant="caption">{activeMessage.payload}</Typography>
+        <Typography variant="caption">
+          {activeMessage.payload.map(JSON.stringify).join('\n')}
+        </Typography>
         <div className={classes.buttons}>
           <IconButton
             className={classes.iconButton}

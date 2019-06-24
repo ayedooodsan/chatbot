@@ -20,7 +20,7 @@ const generateParams = ({ payload, values }) => {
       return {
         name: param.name,
         required: isRequired,
-        prompt: param.prompt
+        prompts: param.prompts
       };
     });
   }
@@ -30,7 +30,7 @@ const generateParams = ({ payload, values }) => {
         return {
           name: param.name,
           required: isRequired,
-          prompt: null
+          prompts: null
         };
       })
     : [];
@@ -134,7 +134,7 @@ const sendAction = (
       const selectedParam = selectedMessage.params.find(
         param => param.name === payload.param.name
       );
-      selectedParam.prompt = values.message;
+      selectedParam.prompts = values.message;
       newParentId = computedRawMessages[computedRawMessages.length - 1].id;
       break;
     }
@@ -145,7 +145,7 @@ const sendAction = (
       const selectedParam = selectedMessage.params.find(
         param => param.name === payload.param.name
       );
-      selectedParam.prompt = values.message;
+      selectedParam.prompts = values.message;
       newParentId = computedRawMessages[computedRawMessages.length - 1].id;
       break;
     }
@@ -156,7 +156,7 @@ const sendAction = (
       const selectedParam = selectedMessage.params.find(
         param => param.name === payload.param.name
       );
-      selectedParam.prompt = null;
+      selectedParam.prompts = null;
       newParentId = computedRawMessages[computedRawMessages.length - 1].id;
       break;
     }
@@ -169,7 +169,6 @@ const sendAction = (
         id: computedRawMessages.length,
         parentId: payload.id,
         type: 'BOT',
-        templateName: 'text',
         payload: values.message,
         depth: payload.depth + 1
       });

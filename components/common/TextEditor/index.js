@@ -1,7 +1,12 @@
 import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import Draft, { RichUtils, convertToRaw, getDefaultKeyBinding } from 'draft-js';
+import Draft, {
+  RichUtils,
+  convertToRaw,
+  getDefaultKeyBinding,
+  convertFromRaw
+} from 'draft-js';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -14,9 +19,19 @@ class TextEditor extends React.Component {
     super(props);
     this.editor = React.createRef();
 
+    const { value: values } = props;
+
+    const contentState = convertFromRaw({
+      entityMap: {},
+      blocks: values.map(value => ({
+        type: '',
+        text: value
+      }))
+    });
+
     this.state = {
       focus: false,
-      editorState: Draft.EditorState.createEmpty()
+      editorState: Draft.EditorState.createWithContent(contentState)
     };
   }
 
@@ -25,7 +40,7 @@ class TextEditor extends React.Component {
     const prevContent = convertToRaw(prevState.editorState.getCurrentContent());
     const newContent = convertToRaw(this.state.editorState.getCurrentContent());
     if (!_.isEqual(prevContent, newContent)) {
-      onChange(newContent.blocks[0].map(block => block.text));
+      onChange(newContent.blocks.map(block => block.text));
     }
   }
 
@@ -135,14 +150,14 @@ class TextEditor extends React.Component {
 
 TextEditor.defaultProps = {
   error: false,
-  value: '',
+  value: [],
   label: null
 };
 
 TextEditor.propTypes = {
   classes: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.string,
+  value: PropTypes.array,
   error: PropTypes.bool,
   label: PropTypes.string
 };

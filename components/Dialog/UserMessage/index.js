@@ -54,7 +54,7 @@ const UserMessage = props => {
   }
 
   const replyable = () =>
-    !activeChildMessageId || (activeParamName && !activeParam.prompt);
+    !activeChildMessageId || (activeParamName && !activeParam.prompts);
   return (
     <React.Fragment>
       {messages.length > 1 && (
@@ -201,10 +201,10 @@ const UserMessage = props => {
           )}
         </div>
       )}
-      {activeParamName && activeParam.prompt && (
+      {activeParamName && activeParam.prompts && (
         <BubbleChat type="self">
           <div className={classes.headerBubble}>
-            <Typography variant="caption">{activeParam.prompt}</Typography>
+            <Typography variant="caption">{activeParam.prompts}</Typography>
             <div className={classes.buttons}>
               <IconButton
                 className={classes.iconButton}

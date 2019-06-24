@@ -25,9 +25,13 @@ mutation updateDialog (
       params {
         name
         required
-        prompt
+        prompts
       }
-      payload
+      payload {
+        type
+        platform
+        value
+      }
     }
   }
 }

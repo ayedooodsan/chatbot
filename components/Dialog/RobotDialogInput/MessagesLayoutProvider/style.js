@@ -1,5 +1,6 @@
 const style = {
   root: {
+    paddingTop: 10,
     position: 'relative',
     marginRight: 10
   },

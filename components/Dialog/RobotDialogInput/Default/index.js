@@ -11,20 +11,22 @@ const Default = props => {
     { value: 'text', label: 'Text Response' },
     { value: 'code', label: 'Code Response' }
   ];
-  const { messages } = props;
+  const { messages, onChange } = props;
   const renderMessage = (message, changeMessage) => {
     if (message.type === 'text') {
       return (
         <TextEditor
+          label="Text Response"
           value={message.value}
-          onChange={value => changeMessage({ type: message.type, value })}
+          onChange={value => changeMessage({ ...message, value })}
         />
       );
     }
     return (
       <CodeEditor
+        label="Code Response"
         value={message.value}
-        onChange={value => changeMessage({ type: message.type, value })}
+        onChange={value => changeMessage({ ...message, value })}
       />
     );
   };
@@ -32,14 +34,16 @@ const Default = props => {
   const initialMessageValue = messageType => {
     if (messageType === 'text') {
       return {
+        platform: 'default',
         type: messageType,
-        key: Date.now(),
+        key: Date.now() + Math.random(),
         value: ['first text response variant', 'second text response variant']
       };
     }
     return {
+      platform: 'default',
       type: 'code',
-      key: Date.now(),
+      key: Date.now() + Math.random(),
       value: '{\n    "attribute": value\n}'
     };
   };
@@ -48,7 +52,10 @@ const Default = props => {
     <MessagesLayoutProvider
       messageTypes={messageTypes}
       initialMessageValue={initialMessageValue}
-      messages={messages.map(message => ({ ...message, key: Date.now() }))}
+      messages={messages.map(message => ({
+        ...message
+      }))}
+      onChange={onChange}
       renderMessage={renderMessage}
     />
   );
@@ -59,6 +66,7 @@ Default.defaultProps = {
 };
 
 Default.propTypes = {
+  onChange: PropTypes.func.isRequired,
   messages: PropTypes.array
 };
 

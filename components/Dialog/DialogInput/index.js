@@ -62,7 +62,7 @@ const DialogInput = props => {
           preview={() => (
             <PreviewMessage
               title="EDIT ROBOT SAYS:"
-              subtitle={payload.payload}
+              subtitle={payload.payload.map(JSON.stringify).join('\n')}
               reset={reset}
             />
           )}

@@ -11,30 +11,27 @@ import styles from './style';
 class PlatformContainer extends React.Component {
   state = {
     value: 'default',
-    usedTabs: [{ value: 'default', label: 'Default' }],
-    platformMessages: {}
+    usedTabs: [{ value: 'default', label: 'Default' }]
   };
-
-  static getDerivedStateFromProps(props, state) {
-    const newPlatformMessages = _.groupBy(
-      props.messages,
-      message => message.platform
-    );
-    if (_.isEqual(newPlatformMessages, state.platformMessages)) {
-      return null;
-    }
-    return {
-      platformMessages: _.groupBy(props.messages, message => message.platform)
-    };
-  }
 
   handleChange = (event, value) => {
     this.setState({ value });
   };
 
+  onChange = newSubPlatformMessages => {
+    const { messages, onChange } = this.props;
+    const { value } = this.state;
+    onChange(
+      _.concat(
+        newSubPlatformMessages,
+        messages.filter(message => message.platform !== value)
+      )
+    );
+  };
+
   render() {
-    const { classes } = this.props;
-    const { platformMessages, value, usedTabs } = this.state;
+    const { messages, classes } = this.props;
+    const { value, usedTabs } = this.state;
 
     return (
       <div className={classes.root}>
@@ -63,7 +60,12 @@ class PlatformContainer extends React.Component {
             }}
           >
             {value === 'default' && (
-              <Default messages={platformMessages.default} />
+              <Default
+                messages={messages.filter(
+                  message => message.platform === 'default'
+                )}
+                onChange={this.onChange}
+              />
             )}
           </Scrollbar>
         </div>
@@ -73,7 +75,9 @@ class PlatformContainer extends React.Component {
 }
 
 PlatformContainer.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  messages: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(PlatformContainer);

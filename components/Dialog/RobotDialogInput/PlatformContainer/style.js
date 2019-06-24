@@ -31,7 +31,7 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3
   },
   container: {
-    paddingTop: 10
+    paddingTop: 0
   },
   insideScrollbar: {
     paddingRight: 10
