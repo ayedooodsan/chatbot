@@ -7,9 +7,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Delete from '@material-ui/icons/Delete';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
+import withStyles from '@material-ui/core/styles/withStyles';
+import style from './style';
 
 const MessagesLayoutProvider = props => {
-  const { messageTypes, messageInitialValues, classes, renderMessage } = props;
+  const { messageTypes, initialMessageValue, classes, renderMessage } = props;
   const [messages, setMessages] = useState(props.messages);
   const [messageTypeEl, setMessageTypeEl] = React.useState(null);
 
@@ -25,50 +27,86 @@ const MessagesLayoutProvider = props => {
     const tempMessage = messages[fromIndex];
     messages[fromIndex] = messages[destinationIndex];
     messages[destinationIndex] = tempMessage;
-    setMessages(messages);
+    setMessages([...messages]);
   };
 
   const addMessage = messageTypeValue => {
-    messages.push(messageInitialValues[messageTypeValue]);
-    setMessages(messages);
+    messages.push(initialMessageValue(messageTypeValue));
+    setMessages([...messages]);
+    closeMessageTypes();
+  };
+
+  const changeMessage = (message, index) => {
+    messages[index] = message;
+    setMessages([...messages]);
+  };
+
+  const deleteMessage = index => {
+    messages.splice(index, 1);
+    setMessages([...messages]);
   };
 
   return (
     <div className={classes.root}>
       {messages.map((message, index) => (
-        <div className={classes.message}>
+        <div className={classes.message} key={message.key}>
           <div className={classes.messageAction}>
-            <Fab size="small" className={classes.margin}>
-              <Delete />
+            <Fab
+              onClick={() => {
+                deleteMessage(index);
+              }}
+              classes={{
+                sizeSmall: classes.fabSmallSize,
+                root: classes.fabRoot
+              }}
+              disableRipple
+              size="small"
+              className={classes.fab}
+            >
+              <Delete fontSize="small" />
             </Fab>
-            {index === 0 && (
+            {index !== 0 && (
               <Fab
+                classes={{
+                  sizeSmall: classes.fabSmallSize,
+                  root: classes.fabRoot
+                }}
+                disableRipple
                 size="small"
-                className={classes.margin}
+                className={classes.fab}
                 onClick={() => swapMessage(index, index - 1)}
               >
-                <ArrowUpward />
+                <ArrowUpward fontSize="small" />
               </Fab>
             )}
-            {index === messages.length - 1 && (
+            {index !== messages.length - 1 && (
               <Fab
+                classes={{
+                  sizeSmall: classes.fabSmallSize,
+                  root: classes.fabRoot
+                }}
+                disableRipple
                 size="small"
-                className={classes.margin}
+                className={classes.fab}
                 onClick={() => swapMessage(index, index + 1)}
               >
-                <ArrowDownward />
+                <ArrowDownward fontSize="small" />
               </Fab>
             )}
           </div>
-          {renderMessage(message)}
+          {renderMessage(message, newMessage => {
+            changeMessage(newMessage, index);
+          })}
         </div>
       ))}
       <Button
+        variant="outlined"
+        size="medium"
         aria-owns={messageTypeEl ? 'message-types' : undefined}
         aria-haspopup="true"
         onClick={openMessageTypes}
       >
-        Open Menu
+        Add bot Response
       </Button>
       <Menu
         id="message-types"
@@ -94,8 +132,8 @@ MessagesLayoutProvider.propTypes = {
   renderMessage: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   messageTypes: PropTypes.array.isRequired,
-  messageInitialValues: PropTypes.object.isRequired,
+  initialMessageValue: PropTypes.func.isRequired,
   messages: PropTypes.array
 };
 
-export default MessagesLayoutProvider;
+export default withStyles(style)(MessagesLayoutProvider);

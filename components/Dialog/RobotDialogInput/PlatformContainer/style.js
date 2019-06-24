@@ -7,7 +7,7 @@ const styles = theme => ({
     borderBottom: '1px solid #e8e8e8'
   },
   tabsIndicator: {
-    backgroundColor: '#1890ff'
+    backgroundColor: theme.palette.primary.main
   },
   tabRoot: {
     textTransform: 'initial',
@@ -15,20 +15,26 @@ const styles = theme => ({
     fontWeight: theme.typography.fontWeightRegular,
     marginRight: theme.spacing.unit * 4,
     '&:hover': {
-      color: '#40a9ff',
+      color: theme.palette.primary.light,
       opacity: 1
     },
     '&$tabSelected': {
-      color: '#1890ff',
+      color: theme.palette.primary.main,
       fontWeight: theme.typography.fontWeightMedium
     },
     '&:focus': {
-      color: '#40a9ff'
+      color: theme.palette.primary.light
     }
   },
   tabSelected: {},
   typography: {
     padding: theme.spacing.unit * 3
+  },
+  container: {
+    paddingTop: 10
+  },
+  insideScrollbar: {
+    paddingRight: 10
   }
 });
 

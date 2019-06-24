@@ -5,10 +5,11 @@ import Draft, { RichUtils, convertToRaw, getDefaultKeyBinding } from 'draft-js';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
 import InputLabel from '@material-ui/core/InputLabel';
+import _ from 'lodash';
 import LineNumber from './LineNumber';
 import style from './style';
 
-class TextsEditor extends React.Component {
+class TextEditor extends React.Component {
   constructor(props) {
     super(props);
     this.editor = React.createRef();
@@ -19,8 +20,13 @@ class TextsEditor extends React.Component {
     };
   }
 
-  componentDidUpdate() {
-    console.log(convertToRaw(this.state.editorState.getCurrentContent()));
+  componentDidUpdate(prevProps, prevState) {
+    const { onChange } = this.props;
+    const prevContent = convertToRaw(prevState.editorState.getCurrentContent());
+    const newContent = convertToRaw(this.state.editorState.getCurrentContent());
+    if (!_.isEqual(prevContent, newContent)) {
+      onChange(newContent.blocks[0].map(block => block.text));
+    }
   }
 
   blockRendererFn = () => ({
@@ -43,7 +49,6 @@ class TextsEditor extends React.Component {
   };
 
   handleKeyCommand = (command, editorState) => {
-    console.log(command);
     let newState = null;
     if (command === 'soft-new-line') {
       newState = RichUtils.insertSoftNewline(editorState);
@@ -128,15 +133,18 @@ class TextsEditor extends React.Component {
   }
 }
 
-TextsEditor.defaultProps = {
+TextEditor.defaultProps = {
   error: false,
+  value: '',
   label: null
 };
 
-TextsEditor.propTypes = {
+TextEditor.propTypes = {
   classes: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string,
   error: PropTypes.bool,
   label: PropTypes.string
 };
 
-export default withStyles(style)(TextsEditor);
+export default withStyles(style)(TextEditor);

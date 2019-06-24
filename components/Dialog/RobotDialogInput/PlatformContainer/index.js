@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Scrollbar from 'react-scrollbars-custom';
 import { withStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -7,11 +8,9 @@ import _ from 'lodash';
 import Default from '../Default';
 import styles from './style';
 
-// const tabs = [{ value: 'default', label: 'Default' }];
-
 class PlatformContainer extends React.Component {
   state = {
-    value: 0,
+    value: 'default',
     usedTabs: [{ value: 'default', label: 'Default' }],
     platformMessages: {}
   };
@@ -46,6 +45,7 @@ class PlatformContainer extends React.Component {
         >
           {usedTabs.map(tab => (
             <Tab
+              key={tab.value}
               disableRipple
               classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
               value={tab.value}
@@ -53,7 +53,20 @@ class PlatformContainer extends React.Component {
             />
           ))}
         </Tabs>
-        {value === 'default' && <Default messages={platformMessages.default} />}
+        <div className={classes.container}>
+          <Scrollbar
+            translateContentSizeYToHolder
+            noScrollX
+            style={{
+              widt: '100%',
+              maxHeight: 'calc(50vh - 85px)'
+            }}
+          >
+            {value === 'default' && (
+              <Default messages={platformMessages.default} />
+            )}
+          </Scrollbar>
+        </div>
       </div>
     );
   }

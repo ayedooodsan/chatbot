@@ -8,6 +8,7 @@ import PrismDecorator from 'draft-js-prism';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
 import InputLabel from '@material-ui/core/InputLabel';
+import _ from 'lodash';
 import BlockNumber from './BlockNumber';
 import { setAsCodeBlock } from './editorStateFn';
 import style from './style';
@@ -15,6 +16,8 @@ import style from './style';
 class CodeEditor extends React.Component {
   constructor(props) {
     super(props);
+
+    const { value } = props;
 
     const decorator = new PrismDecorator({
       prism: Prism,
@@ -26,7 +29,7 @@ class CodeEditor extends React.Component {
       blocks: [
         {
           type: 'code-block',
-          text: '{\n  attribute: "value"\n}'
+          text: value
         }
       ]
     });
@@ -39,8 +42,13 @@ class CodeEditor extends React.Component {
     };
   }
 
-  componentDidUpdate() {
-    console.log(convertToRaw(this.state.editorState.getCurrentContent()));
+  componentDidUpdate(prevProps, prevState) {
+    const { onChange } = this.props;
+    const prevContent = convertToRaw(prevState.editorState.getCurrentContent());
+    const newContent = convertToRaw(this.state.editorState.getCurrentContent());
+    if (!_.isEqual(prevContent, newContent)) {
+      onChange(newContent.blocks[0].text);
+    }
   }
 
   blockRendererFn = () => ({
@@ -163,11 +171,14 @@ class CodeEditor extends React.Component {
 
 CodeEditor.defaultProps = {
   error: false,
+  value: '',
   label: null
 };
 
 CodeEditor.propTypes = {
   classes: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string,
   label: PropTypes.string,
   error: PropTypes.bool
 };
