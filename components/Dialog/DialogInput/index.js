@@ -32,7 +32,7 @@ const DialogInput = props => {
           preview={() => (
             <PreviewMessage
               title="REPLY ROBOT SAYS:"
-              subtitle={payload.payload}
+              subtitle={payload.title}
               reset={reset}
             />
           )}
@@ -62,7 +62,7 @@ const DialogInput = props => {
           preview={() => (
             <PreviewMessage
               title="EDIT ROBOT SAYS:"
-              subtitle={payload.payload.map(JSON.stringify).join('\n')}
+              subtitle={payload.title}
               reset={reset}
             />
           )}
@@ -79,7 +79,7 @@ const DialogInput = props => {
           preview={() => (
             <PreviewMessage
               title="DELETE ROBOT SAYS:"
-              subtitle={payload.payload}
+              subtitle={payload.title}
               footTitle="Type the the first word and click the send button."
               reset={reset}
             />

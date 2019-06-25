@@ -1,6 +1,12 @@
 const style = () => ({
   chipContainer: {
-    paddingLeft: '48px'
+    paddingLeft: '40px'
+  },
+  chipContainerBottom: {
+    paddingTop: '5px'
+  },
+  chipContainerTop: {
+    paddingBottom: '5px'
   },
   chip: {
     marginRight: '5px'

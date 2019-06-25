@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Chip from '@material-ui/core/Chip';
@@ -59,7 +60,12 @@ const UserMessage = props => {
   return (
     <React.Fragment>
       {messages.length > 1 && (
-        <div className={classes.chipContainer}>
+        <div
+          className={classNames(
+            classes.chipContainer,
+            classes.chipContainerTop
+          )}
+        >
           {messages.map(message =>
             message.id === activeMessageId ? (
               <Chip
@@ -156,7 +162,12 @@ const UserMessage = props => {
         </React.Fragment>
       </BubbleChat>
       {requiredParams.length > 0 && (
-        <div className={classes.chipContainer}>
+        <div
+          className={classNames(
+            classes.chipContainer,
+            classes.chipContainerBottom
+          )}
+        >
           {!activeParamName ? (
             <Chip
               label="Satisfied"

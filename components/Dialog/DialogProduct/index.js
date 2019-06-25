@@ -249,11 +249,13 @@ class DialogProduct extends Component {
       title: rawMessage.title,
       type: rawMessage.type,
       depth: rawMessage.depth,
-      payload: rawMessage.payload.map(payloadEl => ({
-        type: payloadEl.type,
-        platform: payloadEl.platform,
-        value: JSON.stringify(payloadEl.value)
-      }))
+      payload: rawMessage.payload
+        ? rawMessage.payload.map(payloadEl => ({
+            type: payloadEl.type,
+            platform: payloadEl.platform,
+            value: JSON.stringify(payloadEl.value)
+          }))
+        : null
     }));
     this.afterSave = true;
     updateDialog({

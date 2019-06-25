@@ -37,7 +37,7 @@ const RobotDialogInput = props => {
           <Button
             color="primary"
             variant="contained"
-            onClick={() => send({ message: messageValues })}
+            onClick={() => send({ title: titleValues, message: messageValues })}
           >
             <Android />
             <Send />
