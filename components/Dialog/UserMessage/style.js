@@ -11,7 +11,11 @@ const style = () => ({
     alignItems: 'center'
   },
   buttons: {
-    marginLeft: '15px'
+    marginLeft: 15,
+    position: 'absolute',
+    top: -13,
+    right: 10,
+    background: '#ecfffe'
   },
   iconButton: {
     padding: '5px'

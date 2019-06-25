@@ -4,6 +4,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
 import Done from '@material-ui/icons/Done';
 import ErrorOutline from '@material-ui/icons/ErrorOutline';
 import Edit from '@material-ui/icons/Edit';
@@ -92,7 +93,7 @@ const UserMessage = props => {
             <Typography variant="subtitle2" color="primary">
               {activeMessage.title}
             </Typography>
-            <div className={classes.buttons}>
+            <Paper className={classes.buttons}>
               {replyable() && (
                 <IconButton
                   className={classes.iconButton}
@@ -138,7 +139,7 @@ const UserMessage = props => {
               >
                 <Delete className={classes.miniIcon} />
               </IconButton>
-            </div>
+            </Paper>
           </div>
           <Typography variant="subtitle2">
             {activeMessage.intent.title} INTENT

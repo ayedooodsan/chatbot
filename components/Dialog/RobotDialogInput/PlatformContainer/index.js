@@ -11,6 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import Add from '@material-ui/icons/AddCircle';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import platformOptions from '../const';
 import Default from '../Default';
 import styles from './style';
 
@@ -21,10 +22,7 @@ class PlatformContainer extends React.Component {
       newPlatformEl: null,
       value: 'default',
       usedTabs: [{ value: 'default', label: 'Default' }],
-      unusedTabs: [
-        { value: 'zoho', label: 'Zoho' },
-        { value: 'fb', label: 'Facebook' }
-      ]
+      unusedTabs: platformOptions
     };
   }
 
