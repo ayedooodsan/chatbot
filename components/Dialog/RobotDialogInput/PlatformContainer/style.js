@@ -35,6 +35,12 @@ const styles = theme => ({
   },
   insideScrollbar: {
     paddingRight: 10
+  },
+  addContainer: {
+    display: 'flex'
+  },
+  textField: {
+    marginBottom: 0
   }
 });
 

@@ -5,23 +5,37 @@ import { withStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import _ from 'lodash';
+import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import Add from '@material-ui/icons/AddCircle';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import Default from '../Default';
 import styles from './style';
 
 class PlatformContainer extends React.Component {
-  state = {
-    value: 'default',
-    usedTabs: [{ value: 'default', label: 'Default' }]
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      newPlatformEl: null,
+      value: 'default',
+      usedTabs: [{ value: 'default', label: 'Default' }],
+      unusedTabs: [
+        { value: 'zoho', label: 'Zoho' },
+        { value: 'fb', label: 'Facebook' }
+      ]
+    };
+  }
 
   handleChange = (event, value) => {
     this.setState({ value });
   };
 
   onChange = newSubPlatformMessages => {
-    const { messages, onChange } = this.props;
+    const { messages, onMessagesChange } = this.props;
     const { value } = this.state;
-    onChange(
+    onMessagesChange(
       _.concat(
         newSubPlatformMessages,
         messages.filter(message => message.platform !== value)
@@ -29,27 +43,106 @@ class PlatformContainer extends React.Component {
     );
   };
 
+  openNewPlatform = event => {
+    this.setState({ newPlatformEl: event.currentTarget });
+  };
+
+  closeNewPlatform = () => {
+    this.setState({ newPlatformEl: null });
+  };
+
+  addPlatform = tabValue => {
+    this.setState({ newPlatformEl: null }, () => {
+      this.setState(prevState => {
+        const {
+          usedTabs: prevUsedTabs,
+          unusedTabs: prevUnusedTabs
+        } = prevState;
+        const newUsedTabs = _.remove(
+          prevUnusedTabs,
+          prevUnusedTab => prevUnusedTab.value === tabValue
+        );
+        return {
+          usedTabs: _.concat(prevUsedTabs, newUsedTabs),
+          unusedTabs: [...prevUnusedTabs],
+          newPlatformEl: null
+        };
+      });
+    });
+  };
+
   render() {
-    const { messages, classes } = this.props;
-    const { value, usedTabs } = this.state;
+    const { messages, classes, title, onTitleChange } = this.props;
+    const { value, usedTabs, unusedTabs, newPlatformEl } = this.state;
 
     return (
       <div className={classes.root}>
-        <Tabs
-          value={value}
-          onChange={this.handleChange}
-          classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
-        >
-          {usedTabs.map(tab => (
-            <Tab
-              key={tab.value}
-              disableRipple
-              classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-              value={tab.value}
-              label={tab.label}
+        <Grid container spacing={16} alignItems="flex-end">
+          <Grid item xs={6}>
+            <TextField
+              className={classes.textField}
+              autoFocus
+              value={title}
+              onChange={event => onTitleChange(event.target.value)}
+              label="Title"
+              margin="dense"
+              variant="outlined"
+              fullWidth
             />
-          ))}
-        </Tabs>
+          </Grid>
+          <Grid item xs={6}>
+            <Tabs
+              value={value}
+              onChange={this.handleChange}
+              classes={{
+                root: classes.tabsRoot,
+                indicator: classes.tabsIndicator
+              }}
+            >
+              {usedTabs.map(tab => (
+                <Tab
+                  key={tab.value}
+                  disableRipple
+                  classes={{
+                    root: classes.tabRoot,
+                    selected: classes.tabSelected
+                  }}
+                  value={tab.value}
+                  label={tab.label}
+                />
+              ))}
+              {unusedTabs.length > 0 && (
+                <div className={classes.addContainer}>
+                  <IconButton
+                    color="primary"
+                    variant="outlined"
+                    size="medium"
+                    aria-owns={newPlatformEl ? 'platforms' : undefined}
+                    aria-haspopup="true"
+                    onClick={this.openNewPlatform}
+                  >
+                    <Add />
+                  </IconButton>
+                  <Menu
+                    id="platforms"
+                    anchorEl={newPlatformEl}
+                    open={Boolean(newPlatformEl)}
+                    onClose={this.closeNewPlatform}
+                  >
+                    {unusedTabs.map(unusedTab => (
+                      <MenuItem
+                        key={unusedTab.value}
+                        onClick={() => this.addPlatform(unusedTab.value)}
+                      >
+                        {unusedTab.label}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </div>
+              )}
+            </Tabs>
+          </Grid>
+        </Grid>
         <div className={classes.container}>
           <Scrollbar
             translateContentSizeYToHolder
@@ -76,8 +169,10 @@ class PlatformContainer extends React.Component {
 
 PlatformContainer.propTypes = {
   classes: PropTypes.object.isRequired,
+  title: PropTypes.string.isRequired,
+  onTitleChange: PropTypes.func.isRequired,
   messages: PropTypes.array.isRequired,
-  onChange: PropTypes.func.isRequired
+  onMessagesChange: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(PlatformContainer);

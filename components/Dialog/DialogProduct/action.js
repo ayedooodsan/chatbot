@@ -96,6 +96,7 @@ const sendAction = (
         message => message.id === payload.id
       );
       selectedMessage.payload = values.message;
+      selectedMessage.title = values.title || 'Untitled Bot Response';
       newParentId =
         computedActiveMessageIds[computedActiveMessageIds.length - 1].id;
       break;
@@ -170,6 +171,7 @@ const sendAction = (
         parentId: payload.id,
         type: 'BOT',
         payload: values.message,
+        title: values.title || 'Untitled Bot Response',
         depth: payload.depth + 1
       });
       const activeMessageIdIndex = computedActiveMessageIds.findIndex(

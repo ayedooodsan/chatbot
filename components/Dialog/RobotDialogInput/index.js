@@ -11,20 +11,26 @@ import style from './style';
 const RobotDialogInput = props => {
   const { classes, preview, payload, type, send } = props;
   let messages = [];
+  let title = '';
   if (type === EDIT_ROBOT) {
     messages = payload.payload ? payload.payload : [];
+    // eslint-disable-next-line prefer-destructuring
+    title = payload.title;
   } else if (type === EDIT_USER_PARAM) {
     messages = payload.prompts;
   }
   const [messageValues, setMessageValues] = useState(messages);
+  const [titleValues, setTitleValues] = useState(title);
   return (
     <React.Fragment>
       <form className={classes.root}>
         <div className={`${classes.inputContainer} ${classes.margin}`}>
           {preview()}
           <PlatformContainer
+            title={titleValues}
+            onTitleChange={setTitleValues}
             messages={messageValues}
-            onChange={newMessageValues => setMessageValues(newMessageValues)}
+            onMessagesChange={setMessageValues}
           />
         </div>
         <div className={classes.buttonContainer}>
