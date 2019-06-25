@@ -21,18 +21,24 @@ class TextEditor extends React.Component {
 
     const { value: values } = props;
 
-    const contentState = convertFromRaw({
-      entityMap: {},
-      blocks: values.map(value => ({
-        type: '',
-        text: value
-      }))
-    });
-
-    this.state = {
-      focus: false,
-      editorState: Draft.EditorState.createWithContent(contentState)
-    };
+    if (values.length > 0) {
+      const contentState = convertFromRaw({
+        entityMap: {},
+        blocks: values.map(value => ({
+          type: '',
+          text: value
+        }))
+      });
+      this.state = {
+        focus: false,
+        editorState: Draft.EditorState.createWithContent(contentState)
+      };
+    } else {
+      this.state = {
+        focus: false,
+        editorState: Draft.EditorState.createEmpty()
+      };
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {

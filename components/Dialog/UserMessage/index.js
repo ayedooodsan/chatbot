@@ -11,6 +11,7 @@ import ErrorOutline from '@material-ui/icons/ErrorOutline';
 import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
 import Reply from '@material-ui/icons/Reply';
+import DefaultTextView from '../RobotMessage/Default/TextView';
 
 import {
   REPLY_USER,
@@ -56,7 +57,7 @@ const UserMessage = props => {
   }
 
   const replyable = () =>
-    !activeChildMessageId || (activeParamName && !activeParam.prompts);
+    activeParamName ? !activeParam.prompts : !activeChildMessageId;
   return (
     <React.Fragment>
       {messages.length > 1 && (
@@ -216,8 +217,13 @@ const UserMessage = props => {
       {activeParamName && activeParam.prompts && (
         <BubbleChat type="self">
           <div className={classes.headerBubble}>
-            <Typography variant="caption">{activeParam.prompts}</Typography>
-            <div className={classes.buttons}>
+            <div>
+              <DefaultTextView value={activeParam.prompts} />
+            </div>
+            <Paper
+              style={{ backgroundColor: 'white' }}
+              className={classes.buttons}
+            >
               <IconButton
                 className={classes.iconButton}
                 onClick={() => {
@@ -246,7 +252,7 @@ const UserMessage = props => {
               >
                 <Delete className={classes.miniIcon} />
               </IconButton>
-            </div>
+            </Paper>
           </div>
         </BubbleChat>
       )}

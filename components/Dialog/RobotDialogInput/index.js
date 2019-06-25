@@ -4,8 +4,13 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Button from '@material-ui/core/Button';
 import Send from '@material-ui/icons/Send';
 import Android from '@material-ui/icons/Android';
-import { EDIT_ROBOT, EDIT_USER_PARAM } from '../DialogInput/constant';
+import {
+  EDIT_ROBOT,
+  EDIT_USER_PARAM,
+  REPLY_USER_PARAM
+} from '../DialogInput/constant';
 import PlatformContainer from './PlatformContainer';
+import TextEditor from '../../common/TextEditor';
 import style from './style';
 
 const RobotDialogInput = props => {
@@ -17,7 +22,7 @@ const RobotDialogInput = props => {
     // eslint-disable-next-line prefer-destructuring
     title = payload.title;
   } else if (type === EDIT_USER_PARAM) {
-    messages = payload.prompts;
+    messages = payload.param.prompts;
   }
   const [messageValues, setMessageValues] = useState(messages);
   const [titleValues, setTitleValues] = useState(title);
@@ -26,12 +31,16 @@ const RobotDialogInput = props => {
       <form className={classes.root}>
         <div className={`${classes.inputContainer} ${classes.margin}`}>
           {preview()}
-          <PlatformContainer
-            title={titleValues}
-            onTitleChange={setTitleValues}
-            messages={messageValues}
-            onMessagesChange={setMessageValues}
-          />
+          {type === REPLY_USER_PARAM || type === EDIT_USER_PARAM ? (
+            <TextEditor value={messageValues} onChange={setMessageValues} />
+          ) : (
+            <PlatformContainer
+              title={titleValues}
+              onTitleChange={setTitleValues}
+              messages={messageValues}
+              onMessagesChange={setMessageValues}
+            />
+          )}
         </div>
         <div className={classes.buttonContainer}>
           <Button
