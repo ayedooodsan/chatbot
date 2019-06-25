@@ -80,6 +80,7 @@ const style = () => ({
     }
   },
   messages: {
+    minWidth: '100px',
     background: '#ecfffe',
     padding: '15px 10px',
     borderRadius: '15px',
