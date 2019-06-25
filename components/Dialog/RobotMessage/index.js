@@ -25,7 +25,7 @@ const RobotMessage = props => {
   const chats = payloadGroup[activePlatform];
   return (
     <React.Fragment>
-      {platforms.length > 1 && (
+      {platforms && platforms.length > 1 && (
         <div className={classes.chipContainer}>
           {platforms.map(platform =>
             platform === activePlatform ? (
@@ -57,57 +57,72 @@ const RobotMessage = props => {
           )}
         </div>
       )}
-      {chats.map((chat, index) => (
-        <BubbleChat type="self" key={chat.key} dense={index !== 0}>
+      {chats ? (
+        chats.map((chat, index) => (
+          <BubbleChat type="self" key={chat.key} dense={index !== 0}>
+            <React.Fragment>
+              <div className={classes.headerBubble}>
+                {index === 0 && (
+                  <React.Fragment>
+                    <Typography variant="subtitle2" color="primary">
+                      {activeMessage.title}
+                    </Typography>
+                    <Paper className={classes.buttons}>
+                      <IconButton
+                        className={classes.iconButton}
+                        onClick={() => {
+                          onChangeDialogInput({
+                            type: REPLY_ROBOT,
+                            payload: activeMessage
+                          });
+                        }}
+                      >
+                        <Reply className={classes.miniIcon} />
+                      </IconButton>
+                      <IconButton
+                        className={classes.iconButton}
+                        onClick={() => {
+                          onChangeDialogInput({
+                            type: EDIT_ROBOT,
+                            payload: activeMessage
+                          });
+                        }}
+                      >
+                        <Edit className={classes.miniIcon} />
+                      </IconButton>
+                      <IconButton
+                        className={classes.iconButton}
+                        onClick={() => {
+                          onChangeDialogInput({
+                            type: DELETE_ROBOT,
+                            payload: activeMessage
+                          });
+                        }}
+                      >
+                        <Delete className={classes.miniIcon} />
+                      </IconButton>
+                    </Paper>
+                  </React.Fragment>
+                )}
+              </div>
+              <MessageView {...chat} />
+            </React.Fragment>
+          </BubbleChat>
+        ))
+      ) : (
+        <BubbleChat type="self">
           <React.Fragment>
             <div className={classes.headerBubble}>
-              {index === 0 && (
-                <React.Fragment>
-                  <Typography variant="subtitle2" color="primary">
-                    {activeMessage.title}
-                  </Typography>
-                  <Paper className={classes.buttons}>
-                    <IconButton
-                      className={classes.iconButton}
-                      onClick={() => {
-                        onChangeDialogInput({
-                          type: REPLY_ROBOT,
-                          payload: activeMessage
-                        });
-                      }}
-                    >
-                      <Reply className={classes.miniIcon} />
-                    </IconButton>
-                    <IconButton
-                      className={classes.iconButton}
-                      onClick={() => {
-                        onChangeDialogInput({
-                          type: EDIT_ROBOT,
-                          payload: activeMessage
-                        });
-                      }}
-                    >
-                      <Edit className={classes.miniIcon} />
-                    </IconButton>
-                    <IconButton
-                      className={classes.iconButton}
-                      onClick={() => {
-                        onChangeDialogInput({
-                          type: DELETE_ROBOT,
-                          payload: activeMessage
-                        });
-                      }}
-                    >
-                      <Delete className={classes.miniIcon} />
-                    </IconButton>
-                  </Paper>
-                </React.Fragment>
-              )}
+              <Typography variant="subtitle2" color="primary">
+                {activeMessage.title}
+              </Typography>
             </div>
-            <MessageView {...chat} />
+            <Typography variant="caption">
+              <em>Empty bot response</em>
+            </Typography>
           </React.Fragment>
         </BubbleChat>
-      ))}
+      )}
     </React.Fragment>
   );
 };
