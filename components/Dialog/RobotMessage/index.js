@@ -116,6 +116,41 @@ const RobotMessage = props => {
               <Typography variant="subtitle2" color="primary">
                 {activeMessage.title}
               </Typography>
+              <Paper className={classes.buttons}>
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={() => {
+                    onChangeDialogInput({
+                      type: REPLY_ROBOT,
+                      payload: activeMessage
+                    });
+                  }}
+                >
+                  <Reply className={classes.miniIcon} />
+                </IconButton>
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={() => {
+                    onChangeDialogInput({
+                      type: EDIT_ROBOT,
+                      payload: activeMessage
+                    });
+                  }}
+                >
+                  <Edit className={classes.miniIcon} />
+                </IconButton>
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={() => {
+                    onChangeDialogInput({
+                      type: DELETE_ROBOT,
+                      payload: activeMessage
+                    });
+                  }}
+                >
+                  <Delete className={classes.miniIcon} />
+                </IconButton>
+              </Paper>
             </div>
             <Typography variant="caption">
               <em>Empty bot response</em>
