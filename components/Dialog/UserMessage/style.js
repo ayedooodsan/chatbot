@@ -6,7 +6,8 @@ const style = () => ({
     paddingTop: '5px'
   },
   chipContainerTop: {
-    paddingBottom: '5px'
+    paddingBottom: '5px',
+    paddingTop: '5px'
   },
   chip: {
     marginRight: '5px'
