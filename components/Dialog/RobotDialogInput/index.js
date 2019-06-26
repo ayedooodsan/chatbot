@@ -1,75 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useForm, useField } from 'react-final-form-hooks';
 import withStyles from '@material-ui/core/styles/withStyles';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Send from '@material-ui/icons/Send';
 import Android from '@material-ui/icons/Android';
-import Add from '@material-ui/icons/Add';
-import { EDIT_ROBOT, EDIT_USER_PARAM } from '../DialogInput/constant';
-import { isTypeOfString } from '../../../libraries/helpers';
+import {
+  EDIT_ROBOT,
+  EDIT_USER_PARAM,
+  REPLY_USER_PARAM
+} from '../DialogInput/constant';
+import PlatformContainer from './PlatformContainer';
+import TextEditor from '../../common/TextEditor';
 import style from './style';
 
-const onSubmit = props => {
-  return values => {
-    props.send(values);
-  };
-};
-
-const validate = values => {
-  const errors = {};
-  if (!values.message) {
-    errors.message = 'Message is required';
-  }
-  return errors;
-};
-
 const RobotDialogInput = props => {
-  const { classes, preview, type, payload } = props;
-  let messageText = '';
+  const { classes, preview, payload, type, send } = props;
+  let messages = [];
+  let title = '';
   if (type === EDIT_ROBOT) {
-    messageText = payload.payload;
+    messages = payload.payload ? payload.payload : [];
+    // eslint-disable-next-line prefer-destructuring
+    title = payload.title;
   } else if (type === EDIT_USER_PARAM) {
-    messageText = payload.prompt;
+    messages = payload.param.prompts;
   }
-  const { form, handleSubmit, prestine, submitting } = useForm({
-    onSubmit: onSubmit(props),
-    initialValues: {
-      message: messageText
-    },
-    validate
-  });
-  const message = useField('message', form);
+  const [messageValues, setMessageValues] = useState(messages);
+  const [titleValues, setTitleValues] = useState(title);
   return (
     <React.Fragment>
-      <form onSubmit={handleSubmit} className={classes.root}>
-        <div className={classes.buttonContainer}>
-          <IconButton color="primary">
-            <Add />
-          </IconButton>
-        </div>
+      <form className={classes.root}>
         <div className={`${classes.inputContainer} ${classes.margin}`}>
           {preview()}
-          <TextField
-            autoFocus
-            multiline
-            rowsMax="4"
-            label="Message"
-            margin="dense"
-            variant="outlined"
-            fullWidth
-            InputProps={message.input}
-            error={message.meta.touched && isTypeOfString(message.meta.error)}
-          />
+          {type === REPLY_USER_PARAM || type === EDIT_USER_PARAM ? (
+            <TextEditor value={messageValues} onChange={setMessageValues} />
+          ) : (
+            <PlatformContainer
+              title={titleValues}
+              onTitleChange={setTitleValues}
+              messages={messageValues}
+              onMessagesChange={setMessageValues}
+            />
+          )}
         </div>
         <div className={classes.buttonContainer}>
           <Button
             color="primary"
-            type="submit"
             variant="contained"
-            disabled={prestine || submitting}
+            onClick={() => send({ title: titleValues, message: messageValues })}
           >
             <Android />
             <Send />
@@ -81,13 +58,15 @@ const RobotDialogInput = props => {
 };
 
 RobotDialogInput.defaultProps = {
-  preview: () => null
+  preview: () => null,
+  payload: {}
 };
 
 RobotDialogInput.propTypes = {
   classes: PropTypes.object.isRequired,
-  payload: PropTypes.object.isRequired,
   type: PropTypes.string.isRequired,
+  send: PropTypes.func.isRequired,
+  payload: PropTypes.object,
   preview: PropTypes.func
 };
 

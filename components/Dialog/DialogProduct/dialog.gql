@@ -20,9 +20,13 @@ query dialog (
       params {
         name
         required
-        prompt
+        prompts
       }
-      payload
+      payload {
+        type
+        platform
+        value
+      }
       depth
     }
   }

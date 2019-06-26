@@ -20,7 +20,7 @@ const generateParams = ({ payload, values }) => {
       return {
         name: param.name,
         required: isRequired,
-        prompt: param.prompt
+        prompts: param.prompts
       };
     });
   }
@@ -30,7 +30,7 @@ const generateParams = ({ payload, values }) => {
         return {
           name: param.name,
           required: isRequired,
-          prompt: null
+          prompts: null
         };
       })
     : [];
@@ -96,6 +96,7 @@ const sendAction = (
         message => message.id === payload.id
       );
       selectedMessage.payload = values.message;
+      selectedMessage.title = values.title || 'Untitled Bot Response';
       newParentId =
         computedActiveMessageIds[computedActiveMessageIds.length - 1].id;
       break;
@@ -134,7 +135,7 @@ const sendAction = (
       const selectedParam = selectedMessage.params.find(
         param => param.name === payload.param.name
       );
-      selectedParam.prompt = values.message;
+      selectedParam.prompts = values.message;
       newParentId = computedRawMessages[computedRawMessages.length - 1].id;
       break;
     }
@@ -145,7 +146,7 @@ const sendAction = (
       const selectedParam = selectedMessage.params.find(
         param => param.name === payload.param.name
       );
-      selectedParam.prompt = values.message;
+      selectedParam.prompts = values.message;
       newParentId = computedRawMessages[computedRawMessages.length - 1].id;
       break;
     }
@@ -156,7 +157,7 @@ const sendAction = (
       const selectedParam = selectedMessage.params.find(
         param => param.name === payload.param.name
       );
-      selectedParam.prompt = null;
+      selectedParam.prompts = null;
       newParentId = computedRawMessages[computedRawMessages.length - 1].id;
       break;
     }
@@ -169,8 +170,8 @@ const sendAction = (
         id: computedRawMessages.length,
         parentId: payload.id,
         type: 'BOT',
-        templateName: 'text',
         payload: values.message,
+        title: values.title || 'Untitled Bot Response',
         depth: payload.depth + 1
       });
       const activeMessageIdIndex = computedActiveMessageIds.findIndex(

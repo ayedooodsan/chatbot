@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
 import Done from '@material-ui/icons/Done';
 import ErrorOutline from '@material-ui/icons/ErrorOutline';
 import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
 import Reply from '@material-ui/icons/Reply';
+import DefaultTextView from '../RobotMessage/Default/TextView';
 
 import {
   REPLY_USER,
@@ -54,11 +57,18 @@ const UserMessage = props => {
   }
 
   const replyable = () =>
-    !activeChildMessageId || (activeParamName && !activeParam.prompt);
+    activeParamName
+      ? !activeParam.prompts || activeParam.prompts.length === 0
+      : !activeChildMessageId;
   return (
     <React.Fragment>
       {messages.length > 1 && (
-        <div className={classes.chipContainer}>
+        <div
+          className={classNames(
+            classes.chipContainer,
+            classes.chipContainerTop
+          )}
+        >
           {messages.map(message =>
             message.id === activeMessageId ? (
               <Chip
@@ -92,7 +102,7 @@ const UserMessage = props => {
             <Typography variant="subtitle2" color="primary">
               {activeMessage.title}
             </Typography>
-            <div className={classes.buttons}>
+            <Paper className={classes.buttons}>
               {replyable() && (
                 <IconButton
                   className={classes.iconButton}
@@ -138,7 +148,7 @@ const UserMessage = props => {
               >
                 <Delete className={classes.miniIcon} />
               </IconButton>
-            </div>
+            </Paper>
           </div>
           <Typography variant="subtitle2">
             {activeMessage.intent.title} INTENT
@@ -155,7 +165,12 @@ const UserMessage = props => {
         </React.Fragment>
       </BubbleChat>
       {requiredParams.length > 0 && (
-        <div className={classes.chipContainer}>
+        <div
+          className={classNames(
+            classes.chipContainer,
+            classes.chipContainerBottom
+          )}
+        >
           {!activeParamName ? (
             <Chip
               label="Satisfied"
@@ -201,43 +216,50 @@ const UserMessage = props => {
           )}
         </div>
       )}
-      {activeParamName && activeParam.prompt && (
-        <BubbleChat type="self">
-          <div className={classes.headerBubble}>
-            <Typography variant="caption">{activeParam.prompt}</Typography>
-            <div className={classes.buttons}>
-              <IconButton
-                className={classes.iconButton}
-                onClick={() => {
-                  onChangeDialogInput({
-                    type: EDIT_USER_PARAM,
-                    payload: {
-                      message: activeMessage,
-                      param: activeParam
-                    }
-                  });
-                }}
+      {activeParamName &&
+        activeParam.prompts &&
+        activeParam.prompts.length !== 0 && (
+          <BubbleChat type="self">
+            <div className={classes.headerBubble}>
+              <div>
+                <DefaultTextView value={activeParam.prompts} />
+              </div>
+              <Paper
+                style={{ backgroundColor: 'white' }}
+                className={classes.buttons}
               >
-                <Edit className={classes.miniIcon} />
-              </IconButton>
-              <IconButton
-                className={classes.iconButton}
-                onClick={() => {
-                  onChangeDialogInput({
-                    type: DELETE_USER_PARAM,
-                    payload: {
-                      message: activeMessage,
-                      param: activeParam
-                    }
-                  });
-                }}
-              >
-                <Delete className={classes.miniIcon} />
-              </IconButton>
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={() => {
+                    onChangeDialogInput({
+                      type: EDIT_USER_PARAM,
+                      payload: {
+                        message: activeMessage,
+                        param: activeParam
+                      }
+                    });
+                  }}
+                >
+                  <Edit className={classes.miniIcon} />
+                </IconButton>
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={() => {
+                    onChangeDialogInput({
+                      type: DELETE_USER_PARAM,
+                      payload: {
+                        message: activeMessage,
+                        param: activeParam
+                      }
+                    });
+                  }}
+                >
+                  <Delete className={classes.miniIcon} />
+                </IconButton>
+              </Paper>
             </div>
-          </div>
-        </BubbleChat>
-      )}
+          </BubbleChat>
+        )}
     </React.Fragment>
   );
 };
