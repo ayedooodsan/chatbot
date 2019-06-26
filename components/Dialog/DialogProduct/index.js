@@ -33,8 +33,22 @@ class DialogProduct extends Component {
 
   componentDidMount() {
     const { messages, title } = this.props.dialog;
-    this.setState({ rawMessages: messages, title });
-    this.setState(this.updateViewedDialog(messages, null, [], []));
+    const parsedMessages = messages.map(message => ({
+      ...message,
+      payload: message.payload
+        ? message.payload.map(payloadEl => ({
+            key: Date.now() + Math.random(),
+            type: payloadEl.type,
+            platform: payloadEl.platform,
+            value: JSON.parse(payloadEl.value)
+          }))
+        : null
+    }));
+    this.setState({
+      rawMessages: parsedMessages,
+      title
+    });
+    this.setState(this.updateViewedDialog(parsedMessages, null, [], []));
   }
 
   shouldComponentUpdate() {
@@ -56,8 +70,22 @@ class DialogProduct extends Component {
     );
     if (!isMessagesEqual || !isTitleEqual) {
       const { messages, title } = this.props.dialog;
-      this.setState({ rawMessages: messages, title });
-      this.setState(this.updateViewedDialog(messages, null, [], []));
+      const parsedMessages = messages.map(message => ({
+        ...message,
+        payload: message.payload
+          ? message.payload.map(payloadEl => ({
+              key: Date.now() + Math.random(),
+              type: payloadEl.type,
+              platform: payloadEl.platform,
+              value: JSON.parse(payloadEl.value)
+            }))
+          : null
+      }));
+      this.setState({
+        rawMessages: parsedMessages,
+        title
+      });
+      this.setState(this.updateViewedDialog(parsedMessages, null, [], []));
     }
   }
 
@@ -215,13 +243,19 @@ class DialogProduct extends Component {
         ? rawMessage.params.map(param => ({
             name: param.name,
             required: param.required,
-            prompt: param.prompt
+            prompts: param.prompts
           }))
         : null,
       title: rawMessage.title,
       type: rawMessage.type,
       depth: rawMessage.depth,
       payload: rawMessage.payload
+        ? rawMessage.payload.map(payloadEl => ({
+            type: payloadEl.type,
+            platform: payloadEl.platform,
+            value: JSON.stringify(payloadEl.value)
+          }))
+        : null
     }));
     this.afterSave = true;
     updateDialog({

@@ -1,6 +1,13 @@
 const style = () => ({
   chipContainer: {
-    paddingLeft: '48px'
+    paddingLeft: '40px'
+  },
+  chipContainerBottom: {
+    paddingTop: '5px'
+  },
+  chipContainerTop: {
+    paddingBottom: '5px',
+    paddingTop: '5px'
   },
   chip: {
     marginRight: '5px'
@@ -11,7 +18,11 @@ const style = () => ({
     alignItems: 'center'
   },
   buttons: {
-    marginLeft: '15px'
+    marginLeft: 15,
+    position: 'absolute',
+    top: -13,
+    right: 10,
+    background: '#ecfffe'
   },
   iconButton: {
     padding: '5px'
