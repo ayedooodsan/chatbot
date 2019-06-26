@@ -57,7 +57,7 @@ const RobotMessage = props => {
           )}
         </div>
       )}
-      {chats ? (
+      {chats && chats.length > 0 ? (
         chats.map((chat, index) => (
           <BubbleChat type="self" key={chat.key} dense={index !== 0}>
             <React.Fragment>
