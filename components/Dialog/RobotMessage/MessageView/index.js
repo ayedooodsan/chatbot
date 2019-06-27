@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DefaultCodeView from '../Default/CodeView';
 import DefaultTextView from '../Default/TextView';
+import ZohoTextView from '../Zoho/TextView';
 
 const MessageView = props => {
   const { value, type, platform } = props;
@@ -10,6 +11,8 @@ const MessageView = props => {
     View = DefaultTextView;
   } else if (platform === 'default' && type === 'code') {
     View = DefaultCodeView;
+  } else if (platform === 'zoho' && type === 'text') {
+    View = ZohoTextView;
   }
   return View && <View value={value} />;
 };

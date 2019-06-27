@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
@@ -22,7 +22,21 @@ const RobotMessage = props => {
   const payloadGroup = _.groupBy(payload, el => el.platform);
   const platforms = Object.keys(payloadGroup);
   const [activePlatform, setActivePlatform] = useState(platforms[0]);
-  const chats = payloadGroup[activePlatform];
+  const [chats, setChats] = useState(payloadGroup[activePlatform]);
+  const completePlatformOptions = [
+    { value: 'default', label: 'Default' },
+    ...platformOptions
+  ];
+
+  useEffect(() => {
+    setActivePlatform(platforms[0]);
+    setChats(payloadGroup[platforms[0]]);
+  }, [messages]);
+
+  useEffect(() => {
+    setChats(payloadGroup[activePlatform]);
+  }, [activePlatform]);
+
   return (
     <React.Fragment>
       {platforms && platforms.length > 1 && (
@@ -32,7 +46,7 @@ const RobotMessage = props => {
               <Chip
                 key={platform}
                 label={
-                  platformOptions.find(
+                  completePlatformOptions.find(
                     platformOption => platformOption.value === platform
                   ).label
                 }
@@ -43,7 +57,7 @@ const RobotMessage = props => {
               <Chip
                 key={platform}
                 label={
-                  platformOptions.find(
+                  completePlatformOptions.find(
                     platformOption => platformOption.value === platform
                   ).label
                 }
@@ -84,7 +98,7 @@ const RobotMessage = props => {
                         onClick={() => {
                           onChangeDialogInput({
                             type: EDIT_ROBOT,
-                            payload: activeMessage
+                            payload: { ...activeMessage, activePlatform }
                           });
                         }}
                       >
@@ -133,7 +147,7 @@ const RobotMessage = props => {
                   onClick={() => {
                     onChangeDialogInput({
                       type: EDIT_ROBOT,
-                      payload: activeMessage
+                      payload: { ...activeMessage, activePlatform }
                     });
                   }}
                 >

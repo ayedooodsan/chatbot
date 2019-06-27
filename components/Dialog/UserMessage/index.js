@@ -82,7 +82,6 @@ const UserMessage = props => {
                 key={message.title}
                 label={message.title}
                 className={classes.chip}
-                variant="outlined"
                 onClick={() => {
                   if (activeParamName !== null) {
                     onChangeChildActiveMessage(activeChildMessageId);
@@ -180,7 +179,6 @@ const UserMessage = props => {
             />
           ) : (
             <Chip
-              variant="outlined"
               icon={<Done />}
               label="Satisfied"
               className={classes.chip}
@@ -202,7 +200,6 @@ const UserMessage = props => {
               />
             ) : (
               <Chip
-                variant="outlined"
                 key={param.name}
                 icon={<ErrorOutline />}
                 label={param.name}

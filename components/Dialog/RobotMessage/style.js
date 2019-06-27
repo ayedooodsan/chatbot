@@ -17,10 +17,13 @@ const style = () => ({
     fontSize: '16px'
   },
   chipContainer: {
-    paddingLeft: '48px'
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: '5px 40px 0px'
   },
   chip: {
-    marginRight: '5px'
+    marginLeft: '5px',
+    marginBottom: '5px'
   }
 });
 
