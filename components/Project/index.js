@@ -177,27 +177,31 @@ const Project = props => {
                   <div className={classes.menus}>
                     <Scrollbar contentProps={{ style: { width: '100%' } }}>
                       <List component="nav" dense className={classes.list}>
-                        {myProjects.map(myProject => (
-                          <ListItem
-                            button
-                            key={myProject.id}
-                            onClick={() => toProject(myProject.id)}
-                          >
-                            <ListItemIcon className={classes.listItemIcon}>
-                              <Avatar className={classes.avatar}>
-                                {getInitialProject(myProject.title)}
-                              </Avatar>
-                            </ListItemIcon>
-                            <ListItemText
-                              secondary={
-                                myProject.sharedProject
-                                  ? `by ${myProject.user.username}`
-                                  : null
-                              }
-                              primary={myProject.title}
-                            />
-                          </ListItem>
-                        ))}
+                        {myProjects
+                          .filter(
+                            myProject => myProject.id !== activeProject.id
+                          )
+                          .map(myProject => (
+                            <ListItem
+                              button
+                              key={myProject.id}
+                              onClick={() => toProject(myProject.id)}
+                            >
+                              <ListItemIcon className={classes.listItemIcon}>
+                                <Avatar className={classes.avatar}>
+                                  {getInitialProject(myProject.title)}
+                                </Avatar>
+                              </ListItemIcon>
+                              <ListItemText
+                                secondary={
+                                  myProject.sharedProject
+                                    ? `by ${myProject.user.username}`
+                                    : null
+                                }
+                                primary={myProject.title}
+                              />
+                            </ListItem>
+                          ))}
                       </List>
                     </Scrollbar>
                   </div>

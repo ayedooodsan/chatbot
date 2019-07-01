@@ -164,14 +164,14 @@ class DialogProduct extends Component {
 
   changeActiveMessageIds = (index, value) => {
     this.setState(prevState => {
-      if (value === null) {
+      if (value === 'satisfied') {
         const newViewedDialog = prevState.viewedDialog.slice(0, index);
         return {
           isViewUnsatifiedParam: true,
           viewedUnsatifiedDialog: newViewedDialog
         };
         // eslint-disable-next-line no-else-return
-      } else {
+      } else if (index < prevState.viewedDialog.length) {
         const newActiveMessageIds = prevState.activeMessageIds.slice(
           0,
           index + 1
@@ -186,6 +186,10 @@ class DialogProduct extends Component {
             newViewedDialog,
             newActiveMessageIds
           )
+        };
+      } else {
+        return {
+          isViewUnsatifiedParam: false
         };
       }
     });

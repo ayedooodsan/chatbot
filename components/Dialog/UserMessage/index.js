@@ -39,7 +39,7 @@ const UserMessage = props => {
   useEffect(
     function activeParamChange() {
       if (activeParamName !== null) {
-        onChangeChildActiveMessage(null);
+        onChangeChildActiveMessage('satisfied');
       }
     },
     [activeParamName]
