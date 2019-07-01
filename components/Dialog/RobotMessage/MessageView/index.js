@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import DefaultCodeView from '../Default/CodeView';
 import DefaultTextView from '../Default/TextView';
 import ZohoTextView from '../Zoho/TextView';
+import ZohoSelectView from '../Zoho/SelectView';
 
 const MessageView = props => {
   const { value, type, platform } = props;
@@ -13,6 +14,8 @@ const MessageView = props => {
     View = DefaultCodeView;
   } else if (platform === 'zoho' && type === 'text') {
     View = ZohoTextView;
+  } else if (platform === 'zoho' && type === 'select') {
+    View = ZohoSelectView;
   }
   return View && <View value={value} />;
 };

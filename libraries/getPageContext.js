@@ -46,6 +46,11 @@ const theme = createMuiTheme({
       popper: {
         opacity: 1
       }
+    },
+    MuiInputBase: {
+      error: {
+        color: 'red'
+      }
     }
   }
 });
