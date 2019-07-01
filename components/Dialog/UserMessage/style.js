@@ -1,16 +1,17 @@
 const style = () => ({
   chipContainer: {
-    paddingLeft: '40px'
+    paddingLeft: '40px',
+    paddingRight: '40px'
   },
   chipContainerBottom: {
     paddingTop: '5px'
   },
   chipContainerTop: {
-    paddingBottom: '5px',
     paddingTop: '5px'
   },
   chip: {
-    marginRight: '5px'
+    marginRight: '5px',
+    marginBottom: '5px'
   },
   headerBubble: {
     display: 'flex',

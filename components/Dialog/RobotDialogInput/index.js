@@ -35,6 +35,7 @@ const RobotDialogInput = props => {
             <TextEditor value={messageValues} onChange={setMessageValues} />
           ) : (
             <PlatformContainer
+              activePlatform={payload.activePlatform}
               title={titleValues}
               onTitleChange={setTitleValues}
               messages={messageValues}

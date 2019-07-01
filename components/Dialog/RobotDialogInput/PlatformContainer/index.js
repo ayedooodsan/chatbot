@@ -13,16 +13,41 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import platformOptions from '../const';
 import Default from '../Default';
+import Zoho from '../Zoho';
 import styles from './style';
 
 class PlatformContainer extends React.Component {
   constructor(props) {
     super(props);
+    const { messages, activePlatform } = props;
+    const {
+      usedTabs: newUsedTabs,
+      unusedTabs: newUnusedTabs
+    } = messages.reduce(
+      ({ usedTabs, unusedTabs }, message) => {
+        const { platform } = message;
+        const unusedTabIndex = unusedTabs.findIndex(
+          unusedTab => unusedTab.value === platform
+        );
+        if (unusedTabIndex !== -1) {
+          const [newUsedTab] = _.pullAt(unusedTabs, [unusedTabIndex]);
+          usedTabs.push(newUsedTab);
+        }
+        return {
+          usedTabs,
+          unusedTabs
+        };
+      },
+      {
+        usedTabs: [{ value: 'default', label: 'Default' }],
+        unusedTabs: [...platformOptions]
+      }
+    );
     this.state = {
       newPlatformEl: null,
-      value: 'default',
-      usedTabs: [{ value: 'default', label: 'Default' }],
-      unusedTabs: platformOptions
+      value: activePlatform,
+      usedTabs: newUsedTabs,
+      unusedTabs: newUnusedTabs
     };
   }
 
@@ -63,6 +88,7 @@ class PlatformContainer extends React.Component {
         return {
           usedTabs: _.concat(prevUsedTabs, newUsedTabs),
           unusedTabs: [...prevUnusedTabs],
+          value: tabValue,
           newPlatformEl: null
         };
       });
@@ -158,6 +184,14 @@ class PlatformContainer extends React.Component {
                 onChange={this.onChange}
               />
             )}
+            {value === 'zoho' && (
+              <Zoho
+                messages={messages.filter(
+                  message => message.platform === 'zoho'
+                )}
+                onChange={this.onChange}
+              />
+            )}
           </Scrollbar>
         </div>
       </div>
@@ -165,12 +199,17 @@ class PlatformContainer extends React.Component {
   }
 }
 
+PlatformContainer.defaultProps = {
+  activePlatform: 'default'
+};
+
 PlatformContainer.propTypes = {
   classes: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
   onTitleChange: PropTypes.func.isRequired,
   messages: PropTypes.array.isRequired,
-  onMessagesChange: PropTypes.func.isRequired
+  onMessagesChange: PropTypes.func.isRequired,
+  activePlatform: PropTypes.string
 };
 
 export default withStyles(styles)(PlatformContainer);

@@ -3,13 +3,15 @@ import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import MessagesLayoutProvider from '../MessagesLayoutProvider';
 import TextEditor from '../../../common/TextEditor';
-import CodeEditor from '../../../common/CodeEditor';
+import ZohoSelectResponse from './SelectInput';
 import style from './style';
 
-const Default = props => {
+const Zoho = props => {
   const messageTypes = [
     { value: 'text', label: 'Text Response' },
-    { value: 'code', label: 'Code Response' }
+    { value: 'select', label: 'Select Response' }
+    // { value: 'links', label: 'Link Response' },
+    // { value: 'image', label: 'Image Response' }
   ];
   const { messages, onChange } = props;
   const renderMessage = (message, changeMessage) => {
@@ -22,30 +24,35 @@ const Default = props => {
         />
       );
     }
-    return (
-      <CodeEditor
-        label="Code Response"
-        value={message.value}
-        onChange={value => changeMessage({ ...message, value })}
-      />
-    );
+    if (message.type === 'select') {
+      return (
+        <ZohoSelectResponse
+          value={message.value}
+          onChange={value => changeMessage({ ...message, value })}
+        />
+      );
+    }
   };
 
   const initialMessageValue = messageType => {
     if (messageType === 'text') {
       return {
-        platform: 'default',
+        platform: 'zoho',
         type: messageType,
         key: Date.now() + Math.random(),
         value: []
       };
     }
-    return {
-      platform: 'default',
-      type: 'code',
-      key: Date.now() + Math.random(),
-      value: '{\n    "attribute": value\n}'
-    };
+    if (messageType === 'select') {
+      return {
+        platform: 'zoho',
+        type: messageType,
+        key: Date.now() + Math.random(),
+        value: {
+          options: ['']
+        }
+      };
+    }
   };
 
   return (
@@ -61,13 +68,13 @@ const Default = props => {
   );
 };
 
-Default.defaultProps = {
+Zoho.defaultProps = {
   messages: []
 };
 
-Default.propTypes = {
+Zoho.propTypes = {
   onChange: PropTypes.func.isRequired,
   messages: PropTypes.array
 };
 
-export default withStyles(style)(Default);
+export default withStyles(style)(Zoho);
