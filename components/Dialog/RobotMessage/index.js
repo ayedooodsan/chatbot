@@ -62,7 +62,7 @@ const RobotMessage = props => {
                   ).label
                 }
                 className={classes.chip}
-                color="outlined"
+                variant="outlined"
                 onClick={() => {
                   setActivePlatform(platform);
                 }}

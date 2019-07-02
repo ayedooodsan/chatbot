@@ -1,6 +1,6 @@
 const style = {
   chip: {
-    margin: '0 2.5px'
+    margin: '3px 2.5px 1.5px'
   }
 };
 

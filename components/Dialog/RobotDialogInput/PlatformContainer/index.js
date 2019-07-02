@@ -114,7 +114,14 @@ class PlatformContainer extends React.Component {
               fullWidth
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid
+            item
+            xs={6}
+            container
+            direction="row"
+            justify="flex-start"
+            alignItems="center"
+          >
             <Tabs
               value={value}
               onChange={this.handleChange}
@@ -135,36 +142,36 @@ class PlatformContainer extends React.Component {
                   label={tab.label}
                 />
               ))}
-              {unusedTabs.length > 0 && (
-                <div className={classes.addContainer}>
-                  <IconButton
-                    color="primary"
-                    variant="outlined"
-                    size="medium"
-                    aria-owns={newPlatformEl ? 'platforms' : undefined}
-                    aria-haspopup="true"
-                    onClick={this.openNewPlatform}
-                  >
-                    <Add />
-                  </IconButton>
-                  <Menu
-                    id="platforms"
-                    anchorEl={newPlatformEl}
-                    open={Boolean(newPlatformEl)}
-                    onClose={this.closeNewPlatform}
-                  >
-                    {unusedTabs.map(unusedTab => (
-                      <MenuItem
-                        key={unusedTab.value}
-                        onClick={() => this.addPlatform(unusedTab.value)}
-                      >
-                        {unusedTab.label}
-                      </MenuItem>
-                    ))}
-                  </Menu>
-                </div>
-              )}
             </Tabs>
+            {unusedTabs.length > 0 && (
+              <div className={classes.addContainer}>
+                <IconButton
+                  color="primary"
+                  variant="outlined"
+                  size="medium"
+                  aria-owns={newPlatformEl ? 'platforms' : undefined}
+                  aria-haspopup="true"
+                  onClick={this.openNewPlatform}
+                >
+                  <Add />
+                </IconButton>
+                <Menu
+                  id="platforms"
+                  anchorEl={newPlatformEl}
+                  open={Boolean(newPlatformEl)}
+                  onClose={this.closeNewPlatform}
+                >
+                  {unusedTabs.map(unusedTab => (
+                    <MenuItem
+                      key={unusedTab.value}
+                      onClick={() => this.addPlatform(unusedTab.value)}
+                    >
+                      {unusedTab.label}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </div>
+            )}
           </Grid>
         </Grid>
         <div className={classes.container}>

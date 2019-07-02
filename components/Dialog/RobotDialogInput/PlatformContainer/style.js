@@ -13,7 +13,6 @@ const styles = theme => ({
     textTransform: 'initial',
     minWidth: 72,
     fontWeight: theme.typography.fontWeightRegular,
-    marginRight: theme.spacing.unit * 4,
     '&:hover': {
       color: theme.palette.primary.light,
       opacity: 1
