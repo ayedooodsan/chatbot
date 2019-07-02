@@ -45,10 +45,10 @@ ResponseContainer.defaultProps = {
 };
 
 ResponseContainer.propTypes = {
-  label: PropTypes.object.isRequired,
+  label: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
-  children: PropTypes.object.isRequired,
-  onClickAway: PropTypes.object.isRequired,
+  children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
+  onClickAway: PropTypes.func.isRequired,
   focus: PropTypes.bool,
   error: PropTypes.bool
 };

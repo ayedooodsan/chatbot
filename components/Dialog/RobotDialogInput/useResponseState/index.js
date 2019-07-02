@@ -5,14 +5,14 @@ const useResponseState = (initialValues, initialErrors, validation) => {
   const [errors, setErrors] = useState(initialErrors);
 
   const onChangeValue = (name, value) => {
-    const newValues = setValues({
+    const newValues = {
       ...values,
       [name]: value
-    });
-    const newErrors = setErrors({
+    };
+    const newErrors = {
       ...errors,
-      [name]: validation(values)[name]
-    });
+      [name]: validation(newValues)[name]
+    };
     setValues(newValues);
     setErrors(newErrors);
   };

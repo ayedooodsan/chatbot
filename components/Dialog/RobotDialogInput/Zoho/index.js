@@ -4,13 +4,14 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import MessagesLayoutProvider from '../MessagesLayoutProvider';
 import TextEditor from '../../../common/TextEditor';
 import ZohoSelectResponse from './SelectInput';
+import ZohoLinksResponse from './LinksInput';
 import style from './style';
 
 const Zoho = props => {
   const messageTypes = [
     { value: 'text', label: 'Text Response' },
-    { value: 'select', label: 'Select Response' }
-    // { value: 'links', label: 'Link Response' },
+    { value: 'select', label: 'Select Response' },
+    { value: 'links', label: 'Link Response' }
     // { value: 'image', label: 'Image Response' }
   ];
   const { messages, onChange } = props;
@@ -32,24 +33,51 @@ const Zoho = props => {
         />
       );
     }
+    if (message.type === 'links') {
+      return (
+        <ZohoLinksResponse
+          value={message.value}
+          onChange={value => changeMessage({ ...message, value })}
+        />
+      );
+    }
   };
 
   const initialMessageValue = messageType => {
     if (messageType === 'text') {
       return {
+        key: Date.now() + Math.random(),
         platform: 'zoho',
         type: messageType,
-        key: Date.now() + Math.random(),
         value: []
       };
     }
     if (messageType === 'select') {
       return {
+        key: Date.now() + Math.random(),
         platform: 'zoho',
         type: messageType,
-        key: Date.now() + Math.random(),
         value: {
           options: ['']
+        }
+      };
+    }
+    if (messageType === 'links') {
+      return {
+        key: Date.now() + Math.random(),
+        platform: 'zoho',
+        type: messageType,
+        value: {
+          text: '',
+          image: '',
+          links: [
+            {
+              key: Date.now() + Math.random(),
+              url: '',
+              text: '',
+              icon: ''
+            }
+          ]
         }
       };
     }
