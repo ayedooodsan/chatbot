@@ -49,7 +49,7 @@ const LinksView = props => {
                   <LinkIcon color="primary" />
                 </Avatar>
               )}
-              <Typography component="p" color="primary">
+              <Typography component="caption" color="primary">
                 {link.text}
               </Typography>
             </CardContent>

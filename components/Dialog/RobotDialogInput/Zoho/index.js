@@ -5,14 +5,15 @@ import MessagesLayoutProvider from '../MessagesLayoutProvider';
 import TextEditor from '../../../common/TextEditor';
 import ZohoSelectResponse from './SelectInput';
 import ZohoLinksResponse from './LinksInput';
+import ZohoImageResponse from './ImageInput';
 import style from './style';
 
 const Zoho = props => {
   const messageTypes = [
     { value: 'text', label: 'Text Response' },
     { value: 'select', label: 'Select Response' },
-    { value: 'links', label: 'Link Response' }
-    // { value: 'image', label: 'Image Response' }
+    { value: 'links', label: 'Link Response' },
+    { value: 'image', label: 'Image Response' }
   ];
   const { messages, onChange } = props;
   const renderMessage = (message, changeMessage) => {
@@ -36,6 +37,14 @@ const Zoho = props => {
     if (message.type === 'links') {
       return (
         <ZohoLinksResponse
+          value={message.value}
+          onChange={value => changeMessage({ ...message, value })}
+        />
+      );
+    }
+    if (message.type === 'image') {
+      return (
+        <ZohoImageResponse
           value={message.value}
           onChange={value => changeMessage({ ...message, value })}
         />
@@ -78,6 +87,17 @@ const Zoho = props => {
               icon: ''
             }
           ]
+        }
+      };
+    }
+    if (messageType === 'image') {
+      return {
+        key: Date.now() + Math.random(),
+        platform: 'zoho',
+        type: messageType,
+        value: {
+          text: '',
+          image: ''
         }
       };
     }

@@ -5,6 +5,7 @@ import DefaultTextView from '../Default/TextView';
 import ZohoTextView from '../Zoho/TextView';
 import ZohoSelectView from '../Zoho/SelectView';
 import ZohoLinksView from '../Zoho/LinksView';
+import ZohoImageView from '../Zoho/ImageView';
 
 const MessageView = props => {
   const { value, type, platform } = props;
@@ -19,6 +20,8 @@ const MessageView = props => {
     View = ZohoSelectView;
   } else if (platform === 'zoho' && type === 'links') {
     View = ZohoLinksView;
+  } else if (platform === 'zoho' && type === 'image') {
+    View = ZohoImageView;
   }
   return View && <View value={value} />;
 };

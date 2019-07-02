@@ -80,11 +80,11 @@ const LinksInput = props => {
   useEffect(() => {
     onChange({
       text: values.text === '' ? 'Description' : values.text,
-      image: values.text === '' ? '' : values.image,
+      image: values.image,
       links: values.links.map((link, index) => ({
         text: link.text === '' ? `#${index + 1} link text` : link.text,
         url: link.url === '' ? '#' : link.url,
-        icon: link.icon === '' ? '' : link.icon
+        icon: link.icon
       }))
     });
   }, [values]);
