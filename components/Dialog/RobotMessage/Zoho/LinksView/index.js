@@ -24,7 +24,9 @@ const LinksView = props => {
         />
       )}
       <CardContent>
-        <Typography component="p">{value.text}</Typography>
+        <Typography component="p" variant="caption">
+          {value.text}
+        </Typography>
       </CardContent>
       {value.links.map(link => (
         <React.Fragment key={link.url}>
@@ -49,7 +51,7 @@ const LinksView = props => {
                   <LinkIcon color="primary" />
                 </Avatar>
               )}
-              <Typography component="caption" color="primary">
+              <Typography component="p" variant="caption" color="primary">
                 {link.text}
               </Typography>
             </CardContent>

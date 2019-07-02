@@ -84,7 +84,6 @@ const ImageInput = props => {
 };
 
 ImageInput.propTypes = {
-  classes: PropTypes.object.isRequired,
   value: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired
 };

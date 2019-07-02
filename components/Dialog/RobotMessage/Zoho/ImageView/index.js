@@ -14,7 +14,9 @@ const ImageView = props => {
       <CardMedia className={classes.media} image={value.image} title="Image" />
       {value.text && value.text !== '' && (
         <CardContent>
-          <Typography component="p">{value.text}</Typography>
+          <Typography component="p" variant="caption">
+            {value.text}
+          </Typography>
         </CardContent>
       )}
     </Card>

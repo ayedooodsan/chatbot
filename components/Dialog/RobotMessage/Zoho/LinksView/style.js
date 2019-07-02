@@ -3,7 +3,8 @@ const style = {
     maxWidth: 300
   },
   media: {
-    height: 140
+    width: 300,
+    height: 168.75
   },
   avatar: {
     margin: 0,
