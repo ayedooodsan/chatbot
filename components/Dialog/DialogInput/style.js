@@ -1,7 +1,7 @@
 const style = () => ({
   emptyAction: {
     backgroundColor: '#e8e8e8',
-    margin: '10px',
+    margin: '0',
     padding: '15px'
   }
 });

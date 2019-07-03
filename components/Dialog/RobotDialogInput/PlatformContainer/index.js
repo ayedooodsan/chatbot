@@ -7,7 +7,6 @@ import Tab from '@material-ui/core/Tab';
 import _ from 'lodash';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
 import Add from '@material-ui/icons/AddCircle';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -101,48 +100,26 @@ class PlatformContainer extends React.Component {
 
     return (
       <div className={classes.root}>
-        <Grid container spacing={16} alignItems="flex-end">
-          <Grid item xs={6}>
-            <TextField
-              className={classes.textField}
-              autoFocus
-              value={title}
-              onChange={event => onTitleChange(event.target.value)}
-              label="Title"
-              margin="dense"
-              variant="outlined"
-              fullWidth
-            />
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            container
-            direction="row"
-            justify="flex-start"
-            alignItems="center"
-          >
-            <Tabs
-              value={value}
-              onChange={this.handleChange}
-              classes={{
-                root: classes.tabsRoot,
-                indicator: classes.tabsIndicator
-              }}
-            >
-              {usedTabs.map(tab => (
-                <Tab
-                  key={tab.value}
-                  disableRipple
-                  classes={{
-                    root: classes.tabRoot,
-                    selected: classes.tabSelected
-                  }}
-                  value={tab.value}
-                  label={tab.label}
-                />
-              ))}
-            </Tabs>
+        <Scrollbar
+          translateContentSizeYToHolder
+          noScrollX
+          style={{
+            width: '100%',
+            maxHeight: 'calc(100vh - 215px)'
+          }}
+          contentProps={{ style: { width: '100%', paddingRight: 5 } }}
+        >
+          <TextField
+            className={classes.textField}
+            autoFocus
+            value={title}
+            onChange={event => onTitleChange(event.target.value)}
+            label="Title"
+            margin="dense"
+            variant="outlined"
+            fullWidth
+          />
+          <div className={classes.tabContainer}>
             {unusedTabs.length > 0 && (
               <div className={classes.addContainer}>
                 <IconButton
@@ -172,17 +149,31 @@ class PlatformContainer extends React.Component {
                 </Menu>
               </div>
             )}
-          </Grid>
-        </Grid>
-        <div className={classes.container}>
-          <Scrollbar
-            translateContentSizeYToHolder
-            noScrollX
-            style={{
-              widt: '100%',
-              maxHeight: 'calc(50vh - 85px)'
-            }}
-          >
+            <Tabs
+              variant="scrollable"
+              scrollButtons="auto"
+              value={value}
+              onChange={this.handleChange}
+              classes={{
+                root: classes.tabsRoot,
+                indicator: classes.tabsIndicator
+              }}
+            >
+              {usedTabs.map(tab => (
+                <Tab
+                  key={tab.value}
+                  disableRipple
+                  classes={{
+                    root: classes.tabRoot,
+                    selected: classes.tabSelected
+                  }}
+                  value={tab.value}
+                  label={tab.label}
+                />
+              ))}
+            </Tabs>
+          </div>
+          <div className={classes.container}>
             {value === 'default' && (
               <Default
                 messages={messages.filter(
@@ -199,8 +190,8 @@ class PlatformContainer extends React.Component {
                 onChange={this.onChange}
               />
             )}
-          </Scrollbar>
-        </div>
+          </div>
+        </Scrollbar>
       </div>
     );
   }
