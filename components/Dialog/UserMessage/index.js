@@ -27,12 +27,14 @@ import style from './style';
 const UserMessage = props => {
   const [activeParamName, setActiveParamName] = useState(null);
   const {
+    selected,
     messages,
     activeMessageId,
     activeChildMessageId,
     onChangeActiveMessage,
     onChangeChildActiveMessage,
     onChangeDialogInput,
+    dialogInputType,
     classes
   } = props;
 
@@ -56,6 +58,11 @@ const UserMessage = props => {
     activeParam = requiredParams.find(param => param.name === activeParamName);
   }
 
+  const isSelectedUserMessage =
+    selected &&
+    dialogInputType !== EDIT_USER_PARAM &&
+    dialogInputType !== DELETE_USER_PARAM;
+
   const replyable = () =>
     activeParamName
       ? !activeParam.prompts || activeParam.prompts.length === 0
@@ -66,7 +73,10 @@ const UserMessage = props => {
         <div
           className={classNames(
             classes.chipContainer,
-            classes.chipContainerTop
+            classes.chipContainerTop,
+            {
+              [classes.selectedChipContainer]: isSelectedUserMessage
+            }
           )}
         >
           {messages.map(message =>
@@ -95,7 +105,7 @@ const UserMessage = props => {
           )}
         </div>
       )}
-      <BubbleChat type="other">
+      <BubbleChat type="other" selected={isSelectedUserMessage}>
         <React.Fragment>
           <div className={classes.headerBubble}>
             <Typography variant="subtitle2" color="primary">
@@ -167,7 +177,10 @@ const UserMessage = props => {
         <div
           className={classNames(
             classes.chipContainer,
-            classes.chipContainerBottom
+            classes.chipContainerBottom,
+            {
+              [classes.selectedChipContainer]: isSelectedUserMessage
+            }
           )}
         >
           {!activeParamName ? (
@@ -216,7 +229,7 @@ const UserMessage = props => {
       {activeParamName &&
         activeParam.prompts &&
         activeParam.prompts.length !== 0 && (
-          <BubbleChat type="self">
+          <BubbleChat type="self" selected={selected && !isSelectedUserMessage}>
             <div className={classes.headerBubble}>
               <div>
                 <DefaultTextView value={activeParam.prompts} />
@@ -263,7 +276,8 @@ const UserMessage = props => {
 
 UserMessage.defaultProps = {
   activeMessageId: null,
-  activeChildMessageId: null
+  activeChildMessageId: null,
+  dialogInputType: ''
 };
 
 UserMessage.propTypes = {
@@ -271,9 +285,11 @@ UserMessage.propTypes = {
   onChangeActiveMessage: PropTypes.func.isRequired,
   onChangeChildActiveMessage: PropTypes.func.isRequired,
   onChangeDialogInput: PropTypes.func.isRequired,
+  selected: PropTypes.bool.isRequired,
+  classes: PropTypes.object.isRequired,
+  dialogInputType: PropTypes.string,
   activeMessageId: PropTypes.string,
-  activeChildMessageId: PropTypes.string,
-  classes: PropTypes.object.isRequired
+  activeChildMessageId: PropTypes.string
 };
 
 export default withStyles(style)(UserMessage);

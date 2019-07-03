@@ -4,6 +4,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper
   },
   tabsRoot: {
+    flex: 1,
     borderBottom: '1px solid #e8e8e8'
   },
   tabsIndicator: {
@@ -30,17 +31,20 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3
   },
   container: {
-    marginTop: 5,
+    marginTop: '5px',
     paddingTop: 0
   },
   insideScrollbar: {
-    paddingRight: 10
+    paddingRight: 0
   },
   addContainer: {
     display: 'flex'
   },
   textField: {
     marginBottom: 0
+  },
+  tabContainer: {
+    display: 'flex'
   }
 });
 

@@ -4,8 +4,6 @@ import { useForm, useField } from 'react-final-form-hooks';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Send from '@material-ui/icons/Send';
-import Delete from '@material-ui/icons/Delete';
 import { isTypeOfString } from '../../../libraries/helpers';
 import style from './style';
 
@@ -47,13 +45,13 @@ const DeleteMessageDialogInput = props => {
         </div>
         <div className={classes.buttonContainer}>
           <Button
+            fullWidth
             color="primary"
             type="submit"
             variant="contained"
             disabled={prestine || submitting || title.input.value !== 'DELETE'}
           >
-            <Delete />
-            <Send />
+            Delete Message
           </Button>
         </div>
       </form>

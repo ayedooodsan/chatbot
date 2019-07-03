@@ -1,8 +1,7 @@
 const style = {
   root: {
     paddingTop: 5,
-    position: 'relative',
-    marginRight: 10
+    position: 'relative'
   },
   message: {
     marginBottom: 10

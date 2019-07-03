@@ -1,11 +1,11 @@
 const style = () => ({
   root: {
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'stretch',
     justifyContent: 'center',
     width: '100%',
-    margin: '8px 0'
+    margin: '0'
   },
   inputContainer: {
     flex: 1
@@ -16,7 +16,7 @@ const style = () => ({
     marginBottom: '4px'
   },
   margin: {
-    margin: '0px 10px'
+    marginBottom: '10px'
   }
 });
 

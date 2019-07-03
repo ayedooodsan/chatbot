@@ -13,6 +13,9 @@ const style = () => ({
     marginRight: '5px',
     marginBottom: '5px'
   },
+  selectedChipContainer: {
+    backgroundColor: '#FFECB3'
+  },
   headerBubble: {
     display: 'flex',
     justifyContent: 'space-between',
