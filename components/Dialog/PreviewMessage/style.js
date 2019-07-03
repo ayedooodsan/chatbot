@@ -5,7 +5,7 @@ const style = () => ({
     alignItems: 'stretch',
     justifyContent: 'center',
     width: '100%',
-    margin: '8px 0'
+    marginBottom: '8px'
   },
   strechWidth: {
     flex: 1
@@ -21,7 +21,7 @@ const style = () => ({
     flex: 1
   },
   margin: {
-    margin: '0px 10px'
+    margin: '0px'
   }
 });
 

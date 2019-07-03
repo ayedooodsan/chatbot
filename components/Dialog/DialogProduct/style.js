@@ -7,13 +7,19 @@ const style = () => ({
   },
   body: {
     postion: 'relative',
-    display: 'flex',
-    flex: 1,
-    padding: '10px 0'
+    flex: 1
   },
-  footer: {
-    margin: '0 -5px -10px -5px',
-    padding: '5px 15px 15px',
+  messages: {
+    paddingTop: 10,
+    marginBottom: 5
+  },
+  inputContainer: {
+    position: 'relative',
+    zIndex: 0,
+    flex: 1,
+    height: 'calc(100% + 10px)',
+    margin: '0px -5px 0px 5px',
+    padding: 15,
     borderRadius: 0
   },
   startContainer: {

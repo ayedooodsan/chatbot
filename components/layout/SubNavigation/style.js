@@ -4,6 +4,7 @@ const style = theme => ({
   root: {
     backgroundColor: '#ffffff',
     position: 'relative',
+    zIndex: 2,
     width: subNavgationWidth,
     flexShrink: 0,
     borderRadius: 0,

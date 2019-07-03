@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Button from '@material-ui/core/Button';
-import Send from '@material-ui/icons/Send';
-import Android from '@material-ui/icons/Android';
 import {
   EDIT_ROBOT,
   EDIT_USER_PARAM,
@@ -45,12 +43,12 @@ const RobotDialogInput = props => {
         </div>
         <div className={classes.buttonContainer}>
           <Button
+            fullWidth
             color="primary"
             variant="contained"
             onClick={() => send({ title: titleValues, message: messageValues })}
           >
-            <Android />
-            <Send />
+            Robot Send Message
           </Button>
         </div>
       </form>

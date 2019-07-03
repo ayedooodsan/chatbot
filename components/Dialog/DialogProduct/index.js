@@ -6,6 +6,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import _ from 'lodash';
+import Grid from '@material-ui/core/Grid';
 import ProductHead from '../../layout/ProductHead';
 import style from './style';
 import DialogInput from '../DialogInput';
@@ -276,6 +277,19 @@ class DialogProduct extends Component {
     return response;
   };
 
+  isSelected = messageId => {
+    const { dialogInputProps } = this.state;
+    if (
+      dialogInputProps.payload &&
+      (dialogInputProps.payload.id === messageId ||
+        (dialogInputProps.payload.message &&
+          dialogInputProps.payload.message.id === messageId))
+    ) {
+      return true;
+    }
+    return false;
+  };
+
   render() {
     const { classes, projectId } = this.props;
     const {
@@ -301,91 +315,103 @@ class DialogProduct extends Component {
             autoFocus
           />
         </div>
-        <div className={classes.body}>
-          {rawMessages.length === 0 && _.isEqual(dialogInputProps, {}) && (
-            <div className={classes.startContainer}>
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={() =>
-                  this.onChangeDialogInputProps({
-                    type: START_MESSAGE,
-                    payload: { id: null }
-                  })
-                }
+        <Grid container className={classes.body}>
+          <Grid item xs className={classes.messages}>
+            {rawMessages.length === 0 && _.isEqual(dialogInputProps, {}) && (
+              <div className={classes.startContainer}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() =>
+                    this.onChangeDialogInputProps({
+                      type: START_MESSAGE,
+                      payload: { id: null }
+                    })
+                  }
+                >
+                  Start Dialog
+                </Button>
+              </div>
+            )}
+            {rawMessages.length > 0 && (
+              <Scrollbar
+                contentProps={{ style: { width: '100%', paddingRight: 5 } }}
               >
-                Start Dialog
-              </Button>
-            </div>
-          )}
-          {rawMessages.length > 0 && (
-            <Scrollbar contentProps={{ style: { width: '100%' } }}>
-              {isViewUnsatifiedParam
-                ? viewedUnsatifiedDialog.map((messages, index) =>
-                    messages[0].type === 'USER' ? (
-                      <UserMessage
-                        key={messages[0].id}
-                        messages={messages}
-                        onChangeDialogInput={this.onChangeDialogInputProps}
-                        onChangeActiveMessage={activeMessageId => {
-                          this.changeActiveMessageIds(index, activeMessageId);
-                        }}
-                        onChangeChildActiveMessage={activeMessageId => {
-                          this.changeActiveMessageIds(
-                            index + 1,
-                            activeMessageId
-                          );
-                        }}
-                        activeMessageId={activeMessageIds[index]}
-                        activeChildMessageId={activeMessageIds[index + 1]}
-                      />
-                    ) : (
-                      <RobotMessage
-                        key={messages[0].id}
-                        messages={messages}
-                        onChangeDialogInput={this.onChangeDialogInputProps}
-                      />
+                {isViewUnsatifiedParam
+                  ? viewedUnsatifiedDialog.map((messages, index) =>
+                      messages[0].type === 'USER' ? (
+                        <UserMessage
+                          selected={this.isSelected(activeMessageIds[index])}
+                          key={messages[0].id}
+                          messages={messages}
+                          onChangeDialogInput={this.onChangeDialogInputProps}
+                          onChangeActiveMessage={activeMessageId => {
+                            this.changeActiveMessageIds(index, activeMessageId);
+                          }}
+                          onChangeChildActiveMessage={activeMessageId => {
+                            this.changeActiveMessageIds(
+                              index + 1,
+                              activeMessageId
+                            );
+                          }}
+                          activeMessageId={activeMessageIds[index]}
+                          activeChildMessageId={activeMessageIds[index + 1]}
+                        />
+                      ) : (
+                        <RobotMessage
+                          key={messages[0].id}
+                          selected={this.isSelected(messages[0].id)}
+                          messages={messages}
+                          onChangeDialogInput={this.onChangeDialogInputProps}
+                        />
+                      )
                     )
-                  )
-                : viewedDialog.map((messages, index) =>
-                    messages[0].type === 'USER' ? (
-                      <UserMessage
-                        key={messages[0].id}
-                        messages={messages}
-                        onChangeDialogInput={this.onChangeDialogInputProps}
-                        onChangeActiveMessage={activeMessageId => {
-                          this.changeActiveMessageIds(index, activeMessageId);
-                        }}
-                        onChangeChildActiveMessage={activeMessageId => {
-                          this.changeActiveMessageIds(
-                            index + 1,
-                            activeMessageId
-                          );
-                        }}
-                        activeMessageId={activeMessageIds[index]}
-                        activeChildMessageId={activeMessageIds[index + 1]}
-                      />
-                    ) : (
-                      <RobotMessage
-                        key={messages[0].id}
-                        messages={messages}
-                        onChangeDialogInput={this.onChangeDialogInputProps}
-                      />
-                    )
-                  )}
-            </Scrollbar>
-          )}
-        </div>
-        <Paper className={classes.footer}>
-          <DialogInput
-            key={`${dialogInputProps.type}-${
-              dialogInputProps.payload ? dialogInputProps.payload.id || '' : ''
-            }`}
-            {...dialogInputProps}
-            reset={this.reset}
-            send={this.send}
-          />
-        </Paper>
+                  : viewedDialog.map((messages, index) =>
+                      messages[0].type === 'USER' ? (
+                        <UserMessage
+                          key={messages[0].id}
+                          selected={this.isSelected(activeMessageIds[index])}
+                          messages={messages}
+                          onChangeDialogInput={this.onChangeDialogInputProps}
+                          onChangeActiveMessage={activeMessageId => {
+                            this.changeActiveMessageIds(index, activeMessageId);
+                          }}
+                          onChangeChildActiveMessage={activeMessageId => {
+                            this.changeActiveMessageIds(
+                              index + 1,
+                              activeMessageId
+                            );
+                          }}
+                          activeMessageId={activeMessageIds[index]}
+                          activeChildMessageId={activeMessageIds[index + 1]}
+                        />
+                      ) : (
+                        <RobotMessage
+                          key={messages[0].id}
+                          selected={this.isSelected(messages[0].id)}
+                          messages={messages}
+                          onChangeDialogInput={this.onChangeDialogInputProps}
+                        />
+                      )
+                    )}
+              </Scrollbar>
+            )}
+          </Grid>
+          <Grid item xs>
+            <Paper className={classes.inputContainer}>
+              <DialogInput
+                key={`${dialogInputProps.type}-${
+                  dialogInputProps.payload
+                    ? dialogInputProps.payload.id || ''
+                    : ''
+                }`}
+                {...dialogInputProps}
+                reset={this.reset}
+                send={this.send}
+              />
+            </Paper>
+          </Grid>
+        </Grid>
       </div>
     );
   }

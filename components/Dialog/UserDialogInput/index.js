@@ -3,11 +3,8 @@ import PropTypes from 'prop-types';
 import { useForm, useField } from 'react-final-form-hooks';
 import _ from 'lodash';
 import withStyles from '@material-ui/core/styles/withStyles';
-import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Send from '@material-ui/icons/Send';
-import Face from '@material-ui/icons/Face';
 import { withRouter } from 'next/router';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -63,50 +60,35 @@ const UserDialogInput = props => {
       <form onSubmit={handleSubmit} className={classes.root}>
         <div className={classes.inputContainer}>
           <div className={classes.preview}>{preview()}</div>
-          <Grid container spacing={8}>
-            <Grid
-              item
-              xs
-              className={`${classes.margin} ${classes.noRightMargin}`}
-            >
-              <TextField
-                autoFocus
-                label="Title"
-                margin="dense"
-                variant="outlined"
-                fullWidth
-                InputProps={title.input}
-                error={title.meta.touched && isTypeOfString(title.meta.error)}
-              />
-            </Grid>
-            <Grid item xs className={classes.margin}>
-              <SimpleAutoComplete
-                input={{
-                  ...intent.input,
-                  onChange: event => {
-                    intent.input.onChange(event);
-                    params.input.onChange('');
-                  }
-                }}
-                label="Linked Intent"
-                initialValue={type === EDIT_USER ? payload.intent : {}}
-                initialInputValue={
-                  type === EDIT_USER ? payload.intent.title : null
-                }
-                error={intent.meta.touched && isTypeOfString(intent.meta.error)}
-                suggestions={(inputValue, children) => {
-                  return (
-                    <IntentSuggestions
-                      projectId={projectId}
-                      keyword={inputValue}
-                    >
-                      {children}
-                    </IntentSuggestions>
-                  );
-                }}
-              />
-            </Grid>
-          </Grid>
+          <TextField
+            autoFocus
+            label="Title"
+            margin="dense"
+            variant="outlined"
+            fullWidth
+            InputProps={title.input}
+            error={title.meta.touched && isTypeOfString(title.meta.error)}
+          />
+          <SimpleAutoComplete
+            input={{
+              ...intent.input,
+              onChange: event => {
+                intent.input.onChange(event);
+                params.input.onChange('');
+              }
+            }}
+            label="Linked Intent"
+            initialValue={type === EDIT_USER ? payload.intent : {}}
+            initialInputValue={type === EDIT_USER ? payload.intent.title : null}
+            error={intent.meta.touched && isTypeOfString(intent.meta.error)}
+            suggestions={(inputValue, children) => {
+              return (
+                <IntentSuggestions projectId={projectId} keyword={inputValue}>
+                  {children}
+                </IntentSuggestions>
+              );
+            }}
+          />
           {_.isObject(intent.input.value) &&
             (_.isEqual(intent.input.value, payload.intent)
               ? payload.params.length > 0 && (
@@ -185,13 +167,13 @@ const UserDialogInput = props => {
         </div>
         <div className={classes.buttonContainer}>
           <Button
+            fullWidth
             color="primary"
             variant="contained"
             type="submit"
             disabled={prestine || submitting}
           >
-            <Face />
-            <Send />
+            User Send Message
           </Button>
         </div>
       </form>
