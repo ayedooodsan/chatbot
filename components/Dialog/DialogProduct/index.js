@@ -277,6 +277,19 @@ class DialogProduct extends Component {
     return response;
   };
 
+  isSelected = messageId => {
+    const { dialogInputProps } = this.state;
+    if (
+      dialogInputProps.payload &&
+      (dialogInputProps.payload.id === messageId ||
+        (dialogInputProps.payload.message &&
+          dialogInputProps.payload.message.id === messageId))
+    ) {
+      return true;
+    }
+    return false;
+  };
+
   render() {
     const { classes, projectId } = this.props;
     const {
@@ -328,6 +341,7 @@ class DialogProduct extends Component {
                   ? viewedUnsatifiedDialog.map((messages, index) =>
                       messages[0].type === 'USER' ? (
                         <UserMessage
+                          selected={this.isSelected(activeMessageIds[index])}
                           key={messages[0].id}
                           messages={messages}
                           onChangeDialogInput={this.onChangeDialogInputProps}
@@ -346,6 +360,7 @@ class DialogProduct extends Component {
                       ) : (
                         <RobotMessage
                           key={messages[0].id}
+                          selected={this.isSelected(messages[0].id)}
                           messages={messages}
                           onChangeDialogInput={this.onChangeDialogInputProps}
                         />
@@ -355,6 +370,7 @@ class DialogProduct extends Component {
                       messages[0].type === 'USER' ? (
                         <UserMessage
                           key={messages[0].id}
+                          selected={this.isSelected(activeMessageIds[index])}
                           messages={messages}
                           onChangeDialogInput={this.onChangeDialogInputProps}
                           onChangeActiveMessage={activeMessageId => {
@@ -372,6 +388,7 @@ class DialogProduct extends Component {
                       ) : (
                         <RobotMessage
                           key={messages[0].id}
+                          selected={this.isSelected(messages[0].id)}
                           messages={messages}
                           onChangeDialogInput={this.onChangeDialogInputProps}
                         />

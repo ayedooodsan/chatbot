@@ -8,7 +8,8 @@ const style = () => ({
     margin: '0'
   },
   inputContainer: {
-    flex: 1
+    flex: 1,
+    marginBottom: 10
   },
   buttonContainer: {
     display: 'flex',

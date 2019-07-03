@@ -24,6 +24,9 @@ const style = () => ({
   chip: {
     marginLeft: '5px',
     marginBottom: '5px'
+  },
+  selectedChipContainer: {
+    backgroundColor: '#FFECB3'
   }
 });
 

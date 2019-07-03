@@ -27,6 +27,7 @@ import style from './style';
 const UserMessage = props => {
   const [activeParamName, setActiveParamName] = useState(null);
   const {
+    selected,
     messages,
     activeMessageId,
     activeChildMessageId,
@@ -66,7 +67,10 @@ const UserMessage = props => {
         <div
           className={classNames(
             classes.chipContainer,
-            classes.chipContainerTop
+            classes.chipContainerTop,
+            {
+              [classes.selectedChipContainer]: selected && !activeParamName
+            }
           )}
         >
           {messages.map(message =>
@@ -95,7 +99,7 @@ const UserMessage = props => {
           )}
         </div>
       )}
-      <BubbleChat type="other">
+      <BubbleChat type="other" selected={selected && !activeParamName}>
         <React.Fragment>
           <div className={classes.headerBubble}>
             <Typography variant="subtitle2" color="primary">
@@ -167,7 +171,10 @@ const UserMessage = props => {
         <div
           className={classNames(
             classes.chipContainer,
-            classes.chipContainerBottom
+            classes.chipContainerBottom,
+            {
+              [classes.selectedChipContainer]: selected && !activeParamName
+            }
           )}
         >
           {!activeParamName ? (
@@ -216,7 +223,7 @@ const UserMessage = props => {
       {activeParamName &&
         activeParam.prompts &&
         activeParam.prompts.length !== 0 && (
-          <BubbleChat type="self">
+          <BubbleChat type="self" selected={selected}>
             <div className={classes.headerBubble}>
               <div>
                 <DefaultTextView value={activeParam.prompts} />
@@ -271,9 +278,10 @@ UserMessage.propTypes = {
   onChangeActiveMessage: PropTypes.func.isRequired,
   onChangeChildActiveMessage: PropTypes.func.isRequired,
   onChangeDialogInput: PropTypes.func.isRequired,
+  selected: PropTypes.bool.isRequired,
+  classes: PropTypes.object.isRequired,
   activeMessageId: PropTypes.string,
-  activeChildMessageId: PropTypes.string,
-  classes: PropTypes.object.isRequired
+  activeChildMessageId: PropTypes.string
 };
 
 export default withStyles(style)(UserMessage);

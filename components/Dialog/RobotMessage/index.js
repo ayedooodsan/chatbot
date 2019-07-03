@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import withStyles from '@material-ui/core/styles/withStyles';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -16,7 +17,7 @@ import style from './style';
 import { REPLY_ROBOT, EDIT_ROBOT, DELETE_ROBOT } from '../DialogInput/constant';
 
 const RobotMessage = props => {
-  const { classes, onChangeDialogInput, messages } = props;
+  const { classes, onChangeDialogInput, messages, selected } = props;
   const activeMessage = messages[0];
   const { payload } = activeMessage;
   const payloadGroup = _.groupBy(payload, el => el.platform);
@@ -40,7 +41,11 @@ const RobotMessage = props => {
   return (
     <React.Fragment>
       {platforms && platforms.length > 1 && (
-        <div className={classes.chipContainer}>
+        <div
+          className={classNames(classes.chipContainer, {
+            [classes.selectedChipContainer]: selected
+          })}
+        >
           {platforms.map(platform =>
             platform === activePlatform ? (
               <Chip
@@ -62,7 +67,6 @@ const RobotMessage = props => {
                   ).label
                 }
                 className={classes.chip}
-                variant="outlined"
                 onClick={() => {
                   setActivePlatform(platform);
                 }}
@@ -73,7 +77,12 @@ const RobotMessage = props => {
       )}
       {chats && chats.length > 0 ? (
         chats.map((chat, index) => (
-          <BubbleChat type="self" key={chat.key} dense={index !== 0}>
+          <BubbleChat
+            type="self"
+            key={chat.key}
+            dense={index !== 0}
+            selected={selected}
+          >
             <React.Fragment>
               <div className={classes.headerBubble}>
                 {index === 0 && (
@@ -124,7 +133,7 @@ const RobotMessage = props => {
           </BubbleChat>
         ))
       ) : (
-        <BubbleChat type="self">
+        <BubbleChat type="self" selected={selected}>
           <React.Fragment>
             <div className={classes.headerBubble}>
               <Typography variant="subtitle2" color="primary">
@@ -179,7 +188,8 @@ const RobotMessage = props => {
 RobotMessage.propTypes = {
   messages: PropTypes.array.isRequired,
   onChangeDialogInput: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  selected: PropTypes.bool.isRequired
 };
 
 export default withStyles(style)(RobotMessage);
