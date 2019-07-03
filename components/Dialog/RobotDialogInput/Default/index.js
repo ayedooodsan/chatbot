@@ -44,7 +44,7 @@ const Default = props => {
       platform: 'default',
       type: 'code',
       key: Date.now() + Math.random(),
-      value: '{\n    "attribute": value\n}'
+      value: '{\n    "attribute": "value"\n}'
     };
   };
 
