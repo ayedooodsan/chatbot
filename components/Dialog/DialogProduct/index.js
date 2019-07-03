@@ -341,6 +341,7 @@ class DialogProduct extends Component {
                   ? viewedUnsatifiedDialog.map((messages, index) =>
                       messages[0].type === 'USER' ? (
                         <UserMessage
+                          dialogInputType={dialogInputProps.type}
                           selected={this.isSelected(activeMessageIds[index])}
                           key={messages[0].id}
                           messages={messages}

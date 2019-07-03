@@ -34,6 +34,7 @@ const UserMessage = props => {
     onChangeActiveMessage,
     onChangeChildActiveMessage,
     onChangeDialogInput,
+    dialogInputType,
     classes
   } = props;
 
@@ -57,6 +58,11 @@ const UserMessage = props => {
     activeParam = requiredParams.find(param => param.name === activeParamName);
   }
 
+  const isSelectedUserMessage =
+    selected &&
+    dialogInputType !== EDIT_USER_PARAM &&
+    dialogInputType !== DELETE_USER_PARAM;
+
   const replyable = () =>
     activeParamName
       ? !activeParam.prompts || activeParam.prompts.length === 0
@@ -69,7 +75,7 @@ const UserMessage = props => {
             classes.chipContainer,
             classes.chipContainerTop,
             {
-              [classes.selectedChipContainer]: selected && !activeParamName
+              [classes.selectedChipContainer]: isSelectedUserMessage
             }
           )}
         >
@@ -99,7 +105,7 @@ const UserMessage = props => {
           )}
         </div>
       )}
-      <BubbleChat type="other" selected={selected && !activeParamName}>
+      <BubbleChat type="other" selected={isSelectedUserMessage}>
         <React.Fragment>
           <div className={classes.headerBubble}>
             <Typography variant="subtitle2" color="primary">
@@ -173,7 +179,7 @@ const UserMessage = props => {
             classes.chipContainer,
             classes.chipContainerBottom,
             {
-              [classes.selectedChipContainer]: selected && !activeParamName
+              [classes.selectedChipContainer]: isSelectedUserMessage
             }
           )}
         >
@@ -223,7 +229,7 @@ const UserMessage = props => {
       {activeParamName &&
         activeParam.prompts &&
         activeParam.prompts.length !== 0 && (
-          <BubbleChat type="self" selected={selected}>
+          <BubbleChat type="self" selected={selected && !isSelectedUserMessage}>
             <div className={classes.headerBubble}>
               <div>
                 <DefaultTextView value={activeParam.prompts} />
@@ -270,7 +276,8 @@ const UserMessage = props => {
 
 UserMessage.defaultProps = {
   activeMessageId: null,
-  activeChildMessageId: null
+  activeChildMessageId: null,
+  dialogInputType: ''
 };
 
 UserMessage.propTypes = {
@@ -280,6 +287,7 @@ UserMessage.propTypes = {
   onChangeDialogInput: PropTypes.func.isRequired,
   selected: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
+  dialogInputType: PropTypes.string,
   activeMessageId: PropTypes.string,
   activeChildMessageId: PropTypes.string
 };
