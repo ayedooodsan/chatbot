@@ -29,7 +29,7 @@ const DeleteMessageDialogInput = props => {
     validate
   });
   const title = useField('title', form);
-  const { classes, preview, message } = props;
+  const { classes, preview } = props;
   return (
     <React.Fragment>
       <form onSubmit={handleSubmit} className={classes.root}>
@@ -37,7 +37,7 @@ const DeleteMessageDialogInput = props => {
           {preview()}
           <TextField
             autoFocus
-            label="First word"
+            label="Type here"
             margin="dense"
             variant="outlined"
             fullWidth
@@ -50,11 +50,7 @@ const DeleteMessageDialogInput = props => {
             color="primary"
             type="submit"
             variant="contained"
-            disabled={
-              prestine ||
-              submitting ||
-              title.input.value !== message.split(' ')[0]
-            }
+            disabled={prestine || submitting || title.input.value !== 'DELETE'}
           >
             <Delete />
             <Send />
@@ -71,7 +67,6 @@ DeleteMessageDialogInput.defaultProps = {
 
 DeleteMessageDialogInput.propTypes = {
   classes: PropTypes.object.isRequired,
-  message: PropTypes.object.isRequired,
   preview: PropTypes.func
 };
 

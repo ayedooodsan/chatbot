@@ -1,6 +1,7 @@
 const style = {
   root: {
-    display: 'flex'
+    display: 'flex',
+    overflowY: 'hidden'
   },
   children: {
     flex: 1

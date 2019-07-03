@@ -2,10 +2,12 @@ const style = () => ({
   bubbleSelf: {
     display: 'flex',
     alignItems: 'flex-end',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    paddingLeft: '2.5rem'
   },
   bubbleOther: {
-    display: 'flex'
+    display: 'flex',
+    paddingRight: '2.5rem'
   },
   bubbleContent: {
     borderRadius: '4px',
@@ -23,9 +25,16 @@ const style = () => ({
     borderLeft: '10px solid transparent'
   },
   li: {
-    padding: '0.5rem',
+    paddingTop: '1rem',
+    paddingBottom: '0.2rem',
     overflow: 'hidden',
     display: 'flex'
+  },
+  denseLi: {
+    paddingTop: '0.2rem'
+  },
+  selectedLi: {
+    backgroundColor: '#FFECB3'
   },
   img: {
     display: 'block',
@@ -71,20 +80,23 @@ const style = () => ({
     }
   },
   messages: {
+    minWidth: '105px',
     background: '#ecfffe',
-    padding: '10px',
-    borderRadius: '4px',
+    padding: '15px 10px',
+    borderRadius: '15px',
     minHeight: '40px'
   },
   otherMessages: {
     boxShadow: '1px 1px 3px 0px rgba(0,0,0,0.20)',
     backgroundColor: 'white',
-    position: 'relative'
+    position: 'relative',
+    borderTopLeftRadius: 0
   },
   selfMessages: {
     order: 1,
     boxShadow: '1px 1px 3px 0px rgba(0,0,0,0.2)',
-    position: 'relative'
+    position: 'relative',
+    borderBottomRightRadius: 0
   },
   wasekusr: {
     color: 'white',
@@ -108,7 +120,7 @@ const style = () => ({
     color: '#ecfffe',
     position: 'absolute',
     right: '-13px',
-    bottom: '-2px',
+    bottom: '-4px',
     width: '20px',
     height: '20px'
   },
@@ -116,7 +128,7 @@ const style = () => ({
     color: 'rgba(0,0,0,0.1)',
     position: 'absolute',
     right: '-13px',
-    bottom: '-3px',
+    bottom: '-5px',
     width: '20px',
     height: '20px'
   }

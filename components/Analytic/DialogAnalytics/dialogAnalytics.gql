@@ -1,0 +1,16 @@
+query dialogAnalytics (
+  $id: String!
+  $date: String!
+) {
+  dialogAnalytics (
+    id: $id
+    date: $date
+  ) {
+    from
+    message
+    responseMessage
+    requestTime
+    responseTime
+    groupid
+  } 
+}

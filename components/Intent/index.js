@@ -4,7 +4,12 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import withStyles from '@material-ui/core/styles/withStyles';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 import classNames from 'classnames';
+import SearchView from '../common/SearchView';
+import MyIntents from './MyIntents';
+import SearchIntents from './SearchIntents';
 import LayoutProvider from '../layout/LayoutProvider';
 import Navigation from '../layout/Navigation';
 import SubNavigation from '../layout/SubNavigation';
@@ -18,12 +23,28 @@ import redirect from '../../libraries/redirect';
 
 class Intent extends Component {
   state = {
+    openSearch: false,
     keyword: '',
     pagination: {
-      limit: 10000,
-      offset: 1
+      limit: 20,
+      offset: 0
     },
+    advancedSearch: false,
     createItemDialogStatus: false
+  };
+
+  setOpenSearch = value => {
+    this.setState({ openSearch: value });
+  };
+
+  setAdvancedSearch = value => {
+    this.setState({
+      advancedSearch: value,
+      pagination: {
+        limit: 20,
+        offset: 0
+      }
+    });
   };
 
   openCreateItemDialog = () => {
@@ -56,60 +77,110 @@ class Intent extends Component {
   activeIntent = currentIntentId => currentIntentId === this.props.intentId;
 
   render() {
-    const { keyword, pagination, createItemDialogStatus } = this.state;
-    const { myIntents, projectId, intentId, classes } = this.props;
+    const {
+      keyword,
+      pagination,
+      createItemDialogStatus,
+      advancedSearch,
+      openSearch
+    } = this.state;
+    const { projectId, intentId, classes } = this.props;
+    const IntentsProvider = advancedSearch ? SearchIntents : MyIntents;
     return (
       <LayoutProvider
         navigation={() => <Navigation />}
         subNavigation={() => (
-          <SubNavigation
-            header={() => (
-              <SimpleHeader
-                title="Intents"
-                onAddItem={this.openCreateItemDialog}
-                handleClickPagination={this.setOffsetPagination}
-                pagination={{ ...pagination, dataLength: myIntents.length }}
-                keyword={keyword}
-                setKeyword={this.setKeyword}
+          <IntentsProvider
+            offset={pagination.offset}
+            limit={pagination.limit}
+            projectId={projectId}
+            keyword={keyword}
+          >
+            {intentProvider => (
+              <SubNavigation
+                header={() =>
+                  intentProvider && (
+                    <SimpleHeader
+                      openSearch={openSearch}
+                      setOpenSearch={this.setOpenSearch}
+                      hasAdvanceSearch
+                      advancedSearch={advancedSearch}
+                      setAdvancedSearch={this.setAdvancedSearch}
+                      title="Intents"
+                      onAddItem={this.openCreateItemDialog}
+                      handleClickPagination={this.setOffsetPagination}
+                      pagination={{
+                        ...pagination,
+                        dataLength: intentProvider.pageInfo.total
+                      }}
+                      keyword={keyword}
+                      setKeyword={this.setKeyword}
+                    />
+                  )
+                }
+                body={() =>
+                  intentProvider && intentProvider.intents.length > 0 ? (
+                    <List component="nav">
+                      {intentProvider.intents.map((myIntent, index) => (
+                        <Link
+                          route={`/${projectId}/intent/${myIntent.id}`}
+                          key={myIntent.id}
+                        >
+                          <Tooltip title={myIntent.title} placement="right">
+                            {advancedSearch ? (
+                              <SearchView
+                                productTitle={myIntent.title}
+                                activeId={intentId}
+                                index={index}
+                                id={myIntent.id}
+                                searchResult={myIntent.searchResult}
+                              />
+                            ) : (
+                              <ListItem
+                                className={classes.listItem}
+                                divider
+                                dense
+                                button
+                              >
+                                <ListItemText
+                                  primary={myIntent.title}
+                                  primaryTypographyProps={{
+                                    variant: 'body2',
+                                    noWrap: true,
+                                    className: classNames({
+                                      [classes.listItemTextActive]: this.activeIntent(
+                                        myIntent.id
+                                      )
+                                    })
+                                  }}
+                                />
+                              </ListItem>
+                            )}
+                          </Tooltip>
+                        </Link>
+                      ))}
+                    </List>
+                  ) : (
+                    <Typography
+                      variant="caption"
+                      className={classes.noData}
+                      color="primary"
+                    >
+                      No data available.
+                    </Typography>
+                  )
+                }
               />
             )}
-            body={() =>
-              myIntents && (
-                <List component="nav">
-                  {myIntents.map(myIntent => (
-                    <Link
-                      route={`/${projectId}/intent/${myIntent.id}`}
-                      key={myIntent.id}
-                    >
-                      <ListItem
-                        className={classNames({
-                          [classes.listItemActive]: this.activeIntent(
-                            myIntent.id
-                          )
-                        })}
-                        button
-                      >
-                        <ListItemText
-                          primary={myIntent.title}
-                          primaryTypographyProps={{
-                            className: classNames({
-                              [classes.listItemTextActive]: this.activeIntent(
-                                myIntent.id
-                              )
-                            })
-                          }}
-                        />
-                      </ListItem>
-                    </Link>
-                  ))}
-                </List>
-              )
-            }
-          />
+          </IntentsProvider>
         )}
       >
         {intentId && (
-          <IntentProduct intentId={intentId} projectId={projectId} />
+          <IntentProduct
+            key={intentId}
+            intentId={intentId}
+            projectId={projectId}
+          />
         )}
         <CreateProductDialog
           placeholder="Intent Name"
@@ -124,7 +195,6 @@ class Intent extends Component {
 }
 
 Intent.defaultProps = {
-  myIntents: [],
   intentId: null
 };
 
@@ -132,8 +202,7 @@ Intent.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
   createIntent: PropTypes.func.isRequired,
-  intentId: PropTypes.string,
-  myIntents: PropTypes.array
+  intentId: PropTypes.string
 };
 
 export default withStyles(style)(connect(Intent));

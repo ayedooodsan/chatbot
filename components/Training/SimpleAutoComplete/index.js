@@ -38,7 +38,7 @@ function renderSuggestion({
   return (
     <MenuItem
       {...itemProps}
-      key={suggestion.id}
+      key={suggestion.id + suggestion.title}
       selected={isHighlighted}
       component="div"
       style={{
@@ -88,6 +88,7 @@ function SimpleAutoComplete(props) {
     initialValue,
     initialInputValue,
     suggestions,
+    placeholder,
     className
   } = props;
   // eslint-disable-next-line no-unused-vars
@@ -112,6 +113,7 @@ function SimpleAutoComplete(props) {
       }) => (
         <div>
           {renderInput({
+            placeholder,
             className,
             fullWidth: true,
             label,
@@ -176,14 +178,16 @@ SimpleAutoComplete.defaultProps = {
   error: false,
   initialValue: {},
   initialInputValue: null,
-  className: ''
+  className: '',
+  label: ''
 };
 
 SimpleAutoComplete.propTypes = {
   classes: PropTypes.object.isRequired,
   suggestions: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
-  label: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
+  label: PropTypes.string,
   className: PropTypes.string,
   error: PropTypes.bool,
   initialValue: PropTypes.object,

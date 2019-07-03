@@ -1,9 +1,17 @@
 const style = () => ({
   chipContainer: {
-    paddingLeft: '48px'
+    paddingLeft: '40px',
+    paddingRight: '40px'
+  },
+  chipContainerBottom: {
+    paddingTop: '5px'
+  },
+  chipContainerTop: {
+    paddingTop: '5px'
   },
   chip: {
-    marginRight: '5px'
+    marginRight: '5px',
+    marginBottom: '5px'
   },
   headerBubble: {
     display: 'flex',
@@ -11,7 +19,11 @@ const style = () => ({
     alignItems: 'center'
   },
   buttons: {
-    marginLeft: '15px'
+    marginLeft: 15,
+    position: 'absolute',
+    top: -13,
+    right: 10,
+    background: '#ecfffe'
   },
   iconButton: {
     padding: '5px'

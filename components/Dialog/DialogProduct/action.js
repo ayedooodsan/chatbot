@@ -13,12 +13,35 @@ import {
 } from '../DialogInput/constant';
 import { findLastIndex } from '../../../libraries/helpers';
 
+const generateParams = ({ payload, values }) => {
+  if (payload.intent && payload.intent.id === values.intent.id) {
+    return payload.params.map(param => {
+      const isRequired = values.params.includes(`|${param.name}|`);
+      return {
+        name: param.name,
+        required: isRequired,
+        prompts: param.prompts
+      };
+    });
+  }
+  return values.intent.params
+    ? values.intent.params.map(param => {
+        const isRequired = values.params.includes(`|${param.name}|`);
+        return {
+          name: param.name,
+          required: isRequired,
+          prompts: null
+        };
+      })
+    : [];
+};
+
 const sendAction = (
   { rawMessages, viewedDialog, activeMessageIds },
   { type, payload },
   values
 ) => {
-  const computedRawMessages = _.cloneDeep(rawMessages);
+  let computedRawMessages = _.cloneDeep(rawMessages);
   let computedViewedDialog = _.cloneDeep(viewedDialog);
   let computedActiveMessageIds = _.cloneDeep(activeMessageIds);
   let newParentId = null;
@@ -31,6 +54,7 @@ const sendAction = (
         title: values.title,
         intentId: values.intent.id,
         intent: values.intent,
+        params: generateParams({ payload, values }),
         depth: -1
       });
       computedViewedDialog = [];
@@ -50,6 +74,7 @@ const sendAction = (
         title: values.title,
         intentId: values.intent.id,
         intent: values.intent,
+        params: generateParams({ payload, values }),
         depth: payload.depth + 1
       });
       const activeMessageIdIndex = computedActiveMessageIds.findIndex(
@@ -71,6 +96,7 @@ const sendAction = (
         message => message.id === payload.id
       );
       selectedMessage.payload = values.message;
+      selectedMessage.title = values.title || 'Untitled Bot Response';
       newParentId =
         computedActiveMessageIds[computedActiveMessageIds.length - 1].id;
       break;
@@ -87,6 +113,7 @@ const sendAction = (
       if (selectedParentMessageIndex === -1) {
         computedActiveMessageIds = [];
         computedViewedDialog = [];
+        computedRawMessages = [];
         newParentId = null;
       } else {
         computedActiveMessageIds.splice(
@@ -105,30 +132,33 @@ const sendAction = (
       const selectedMessage = computedRawMessages.find(
         message => message.id === payload.message.id
       );
-      const selectedParam = selectedMessage.intent.params.find(
+      const selectedParam = selectedMessage.params.find(
         param => param.name === payload.param.name
       );
-      selectedParam.message = values.message;
+      selectedParam.prompts = values.message;
+      newParentId = computedRawMessages[computedRawMessages.length - 1].id;
       break;
     }
     case EDIT_USER_PARAM: {
       const selectedMessage = computedRawMessages.find(
         message => message.id === payload.message.id
       );
-      const selectedParam = selectedMessage.intent.params.find(
+      const selectedParam = selectedMessage.params.find(
         param => param.name === payload.param.name
       );
-      selectedParam.message = values.message;
+      selectedParam.prompts = values.message;
+      newParentId = computedRawMessages[computedRawMessages.length - 1].id;
       break;
     }
     case DELETE_USER_PARAM: {
       const selectedMessage = computedRawMessages.find(
         message => message.id === payload.message.id
       );
-      const selectedParam = selectedMessage.intent.params.find(
+      const selectedParam = selectedMessage.params.find(
         param => param.name === payload.param.name
       );
-      selectedParam.message = null;
+      selectedParam.prompts = null;
+      newParentId = computedRawMessages[computedRawMessages.length - 1].id;
       break;
     }
     case REPLY_USER: {
@@ -140,8 +170,8 @@ const sendAction = (
         id: computedRawMessages.length,
         parentId: payload.id,
         type: 'BOT',
-        templateName: 'text',
         payload: values.message,
+        title: values.title || 'Untitled Bot Response',
         depth: payload.depth + 1
       });
       const activeMessageIdIndex = computedActiveMessageIds.findIndex(
@@ -165,6 +195,7 @@ const sendAction = (
       selectedMessage.title = values.title;
       selectedMessage.intentId = values.intent.id;
       selectedMessage.intent = values.intent;
+      selectedMessage.params = generateParams({ payload, values });
       newParentId = computedRawMessages[computedRawMessages.length - 1].id;
       break;
     }
@@ -180,6 +211,7 @@ const sendAction = (
       if (selectedParentMessageIndex === -1) {
         computedActiveMessageIds = [];
         computedViewedDialog = [];
+        computedRawMessages = [];
         newParentId = null;
       } else {
         computedActiveMessageIds.splice(

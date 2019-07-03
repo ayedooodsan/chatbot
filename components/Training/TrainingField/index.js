@@ -1,11 +1,14 @@
 import React, { useReducer, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Paper from '@material-ui/core/Paper';
-import CancelIcon from '@material-ui/icons/Cancel';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import DeleteIcon from '@material-ui/icons/DeleteOutlined';
+import CheckIcon from '@material-ui/icons/Check';
+import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
 import { withRouter } from 'next/router';
 import SimpleAutoComplete from '../SimpleAutoComplete';
 import IntentSuggestions from '../../common/IntentSuggestions';
@@ -42,13 +45,10 @@ const reducer = (state, { type, payload }) => {
 };
 
 const TrainingField = props => {
-  const { onDelete, onChange, classes, initialValue, router, number } = props;
+  const { onChange, classes, initialValue, router, number } = props;
   const { projectId } = router.query;
   const [state, dispatch] = useReducer(reducer, initialValue);
-  const { text, entityRanges, params, intentResult } = state;
-  const onUpdateParams = () => {
-    console.log('on udpate params');
-  };
+  const { text, entityRanges, params, intentResult, actionStatus } = state;
 
   useEffect(() => {
     onChange(state);
@@ -62,27 +62,27 @@ const TrainingField = props => {
       entityRanges: newBlock.entityRanges.map(entityRange => ({
         offset: entityRange.offset,
         length: entityRange.length,
-        entity: entityMap[entityRange.key].data.entity
+        entity: entityMap[entityRange.key].data.entity,
+        paramKey: entityMap[entityRange.key].data.paramKey
       }))
     };
     const addedEntity = {};
     const newParams = newTraining.entityRanges.reduce(
       (currentParams, entityRange) => {
-        const { entity } = entityRange;
-        if (!addedEntity[entity.id]) {
-          const foundEntity = params.find(
-            param => param.entity.id === entity.id
-          );
+        const { entity, paramKey } = entityRange;
+        if (!addedEntity[paramKey]) {
+          const foundEntity = params.find(param => param.key === paramKey);
           if (foundEntity) {
             currentParams.push(foundEntity);
           } else {
             currentParams.push({
-              name: entity.title,
-              entity
+              name: '',
+              entity,
+              key: paramKey
             });
           }
         }
-        addedEntity[entity.id] = true;
+        addedEntity[paramKey] = true;
         return currentParams;
       },
       []
@@ -104,11 +104,36 @@ const TrainingField = props => {
     });
   };
 
-  const onChangeParam = () => null;
-  const onDeleteParam = () => null;
+  const onChangeParam = (name, index) => {
+    params[index].name = name;
+    dispatch({
+      type: ON_CHANGE_PARAMS,
+      payload: { params }
+    });
+  };
 
-  const onTrainingDelete = () => {
-    onDelete(onUpdateParams);
+  const onDeleteParam = index => {
+    const [deletedParam] = params.splice(index, 1);
+    const newEntityRanges = entityRanges.filter(
+      entityRange => entityRange.paramKey !== deletedParam.key
+    );
+    dispatch({
+      type: ON_CHANGE_USER_SAY,
+      payload: {
+        text,
+        entityRanges: newEntityRanges,
+        params
+      }
+    });
+  };
+
+  const onChangeAction = newActionStatus => {
+    dispatch({
+      type: ON_CHANGE_ACTION_STATUS,
+      payload: {
+        actionStatus: newActionStatus
+      }
+    });
   };
 
   return (
@@ -119,16 +144,18 @@ const TrainingField = props => {
             #{number} USER SAY
           </Typography>
           <IntenEditor
+            key={params.length}
             className={classes.intentEditor}
             initialValue={{ text, entityRanges }}
+            params={params}
             onChange={onPushUserSay}
           />
-          {params.map(param => (
+          {params.map((param, index) => (
             <ParamEditor
               key={param.entity.id}
               initialValue={param}
-              onChange={onChangeParam}
-              onDelete={onDeleteParam}
+              onChange={name => onChangeParam(name, index)}
+              onDelete={() => onDeleteParam(index)}
             />
           ))}
           <Typography variant="subtitle2" className={classes.fieldName}>
@@ -138,9 +165,9 @@ const TrainingField = props => {
             className={classes.noMarginTop}
             onChange={onChangeIntentResult}
             placeholder="Intent"
-            initialInputValue={intentResult.title}
+            initialInputValue={intentResult === null ? '' : intentResult.title}
             initialValue={intentResult}
-            error={!intentResult.title}
+            error={intentResult === null ? false : !intentResult.title}
             suggestions={(inputValue, children) => {
               return (
                 <IntentSuggestions projectId={projectId} keyword={inputValue}>
@@ -154,20 +181,48 @@ const TrainingField = props => {
           <Typography variant="body2" className={classes.fieldName}>
             ACTION
           </Typography>
+          {intentResult && (
+            <Tooltip
+              title={`Add to intent "${intentResult.title}"`}
+              placement="left"
+            >
+              <IconButton
+                className={classNames(classes.iconButton, {
+                  [classes.selectedCheck]: actionStatus === 'Check'
+                })}
+                aria-label="Check"
+                onClick={() => {
+                  onChangeAction('Check');
+                }}
+              >
+                <CheckIcon />
+              </IconButton>
+            </Tooltip>
+          )}
           <IconButton
-            onClick={onTrainingDelete}
-            className={classes.iconButton}
-            aria-label="Check"
-          >
-            <CheckCircleIcon />
-          </IconButton>
-          <IconButton
-            onClick={onTrainingDelete}
-            className={classes.iconButton}
+            className={classNames(classes.iconButton, {
+              [classes.selectedDelete]: actionStatus === 'Delete'
+            })}
             aria-label="Delete"
+            onClick={() => {
+              onChangeAction('Delete');
+            }}
           >
-            <CancelIcon />
+            <DeleteIcon />
           </IconButton>
+          {actionStatus !== null && (
+            <Tooltip title="Reset action" placement="left">
+              <IconButton
+                className={classes.iconButton}
+                aria-label="Close"
+                onClick={() => {
+                  onChangeAction(null);
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </Tooltip>
+          )}
         </div>
       </Paper>
     </React.Fragment>
@@ -177,7 +232,6 @@ const TrainingField = props => {
 TrainingField.propTypes = {
   initialValue: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
   router: PropTypes.object.isRequired,
   number: PropTypes.number.isRequired

@@ -1,0 +1,22 @@
+query searchEntities (
+  $projectId: String!
+  $keyword: String
+  $limit: Int
+  $offset: Int
+) {
+  searchEntities (
+    projectId: $projectId
+    keyword: $keyword
+    limit: $limit
+    offset: $offset
+  ) {
+    entities {
+    	id
+      title
+      searchResult
+    }
+    pageInfo {
+      total
+    }
+  }
+}

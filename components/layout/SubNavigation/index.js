@@ -24,7 +24,7 @@ class SubNavigation extends React.Component {
   };
 
   render() {
-    const { classes, header, body } = this.props;
+    const { classes, header, body, noHeader } = this.props;
     const { open } = this.state;
     return (
       <Paper
@@ -56,13 +56,17 @@ class SubNavigation extends React.Component {
         )}
         <div
           className={classNames(classes.container, {
-            [classes.containerOpen]: open,
-            [classes.containerClose]: !open
+            [classes.containerClose]: !open,
+            [classes.noHeaderContainer]: noHeader
           })}
         >
-          <div className={classes.containerHeader}>{header()}</div>
+          {!noHeader && (
+            <div className={classes.containerHeader}>{header()}</div>
+          )}
           <div className={classes.containerBody}>
-            <Scrollbar>{body()}</Scrollbar>
+            <Scrollbar contentProps={{ style: { width: '100%' } }}>
+              <div className={classes.insideScrollbar}>{body()}</div>
+            </Scrollbar>
           </div>
         </div>
       </Paper>
@@ -70,10 +74,15 @@ class SubNavigation extends React.Component {
   }
 }
 
+SubNavigation.defaultProps = {
+  noHeader: false
+};
+
 SubNavigation.propTypes = {
   classes: PropTypes.object.isRequired,
   header: PropTypes.func.isRequired,
-  body: PropTypes.func.isRequired
+  body: PropTypes.func.isRequired,
+  noHeader: PropTypes.bool
 };
 
 export default withStyles(style)(SubNavigation);

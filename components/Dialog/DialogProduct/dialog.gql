@@ -17,7 +17,16 @@ query dialog (
           text
         }
       }
-      payload
+      params {
+        name
+        required
+        prompts
+      }
+      payload {
+        type
+        platform
+        value
+      }
       depth
     }
   }
