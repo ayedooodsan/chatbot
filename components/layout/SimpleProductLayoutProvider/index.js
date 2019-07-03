@@ -6,7 +6,11 @@ import style from './style';
 const SimpleProductLayoutProvider = props => {
   const { classes, header, product, onSave } = props;
   return (
-    <form className={classes.root} onSubmit={onSave}>
+    <form
+      className={classes.root}
+      onSubmit={onSave}
+      id="SimpleProductLayoutProvider"
+    >
       <div className={classes.header}>{header()}</div>
       <div className={classes.body}>
         <div className={classes.product}>{product()}</div>

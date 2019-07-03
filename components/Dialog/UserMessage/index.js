@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
 import Done from '@material-ui/icons/Done';
 import ErrorOutline from '@material-ui/icons/ErrorOutline';
 import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
 import Reply from '@material-ui/icons/Reply';
+import DefaultTextView from '../RobotMessage/Default/TextView';
 
 import {
   REPLY_USER,
@@ -24,19 +27,21 @@ import style from './style';
 const UserMessage = props => {
   const [activeParamName, setActiveParamName] = useState(null);
   const {
+    selected,
     messages,
     activeMessageId,
     activeChildMessageId,
     onChangeActiveMessage,
     onChangeChildActiveMessage,
     onChangeDialogInput,
+    dialogInputType,
     classes
   } = props;
 
   useEffect(
     function activeParamChange() {
       if (activeParamName !== null) {
-        onChangeChildActiveMessage(null);
+        onChangeChildActiveMessage('satisfied');
       }
     },
     [activeParamName]
@@ -46,21 +51,34 @@ const UserMessage = props => {
     message => message.id === activeMessageId
   );
 
-  const requiredParams = [];
+  const requiredParams = activeMessage.params.filter(param => param.required);
 
   let activeParam;
   if (activeParamName !== null) {
-    activeParam = activeMessage.intent.params.find(
-      param => param.name === activeParamName
-    );
+    activeParam = requiredParams.find(param => param.name === activeParamName);
   }
 
+  const isSelectedUserMessage =
+    selected &&
+    dialogInputType !== EDIT_USER_PARAM &&
+    dialogInputType !== DELETE_USER_PARAM;
+
   const replyable = () =>
-    !activeChildMessageId || (activeParamName && !activeParam.message);
+    activeParamName
+      ? !activeParam.prompts || activeParam.prompts.length === 0
+      : !activeChildMessageId;
   return (
     <React.Fragment>
       {messages.length > 1 && (
-        <div className={classes.chipContainer}>
+        <div
+          className={classNames(
+            classes.chipContainer,
+            classes.chipContainerTop,
+            {
+              [classes.selectedChipContainer]: isSelectedUserMessage
+            }
+          )}
+        >
           {messages.map(message =>
             message.id === activeMessageId ? (
               <Chip
@@ -74,7 +92,6 @@ const UserMessage = props => {
                 key={message.title}
                 label={message.title}
                 className={classes.chip}
-                variant="outlined"
                 onClick={() => {
                   if (activeParamName !== null) {
                     onChangeChildActiveMessage(activeChildMessageId);
@@ -88,13 +105,13 @@ const UserMessage = props => {
           )}
         </div>
       )}
-      <BubbleChat type="other">
+      <BubbleChat type="other" selected={isSelectedUserMessage}>
         <React.Fragment>
           <div className={classes.headerBubble}>
             <Typography variant="subtitle2" color="primary">
               {activeMessage.title}
             </Typography>
-            <div className={classes.buttons}>
+            <Paper className={classes.buttons}>
               {replyable() && (
                 <IconButton
                   className={classes.iconButton}
@@ -140,7 +157,7 @@ const UserMessage = props => {
               >
                 <Delete className={classes.miniIcon} />
               </IconButton>
-            </div>
+            </Paper>
           </div>
           <Typography variant="subtitle2">
             {activeMessage.intent.title} INTENT
@@ -157,7 +174,15 @@ const UserMessage = props => {
         </React.Fragment>
       </BubbleChat>
       {requiredParams.length > 0 && (
-        <div className={classes.chipContainer}>
+        <div
+          className={classNames(
+            classes.chipContainer,
+            classes.chipContainerBottom,
+            {
+              [classes.selectedChipContainer]: isSelectedUserMessage
+            }
+          )}
+        >
           {!activeParamName ? (
             <Chip
               label="Satisfied"
@@ -167,7 +192,6 @@ const UserMessage = props => {
             />
           ) : (
             <Chip
-              variant="outlined"
               icon={<Done />}
               label="Satisfied"
               className={classes.chip}
@@ -181,7 +205,7 @@ const UserMessage = props => {
           {requiredParams.map(param =>
             param.name === activeParamName ? (
               <Chip
-                icon={<ErrorOutline style={{ color: 'rgba(0, 0, 0, 0.87)' }} />}
+                icon={<ErrorOutline />}
                 key={param.name}
                 label={param.name}
                 className={classes.chip}
@@ -189,9 +213,8 @@ const UserMessage = props => {
               />
             ) : (
               <Chip
-                variant="outlined"
                 key={param.name}
-                icon={<ErrorOutline style={{ color: 'rgba(0, 0, 0, 0.87)' }} />}
+                icon={<ErrorOutline />}
                 label={param.name}
                 className={classes.chip}
                 onClick={() => {
@@ -203,50 +226,58 @@ const UserMessage = props => {
           )}
         </div>
       )}
-      {activeParamName && activeParam.message && (
-        <BubbleChat type="self">
-          <div className={classes.headerBubble}>
-            <Typography variant="subtitle2">{activeParam.message}</Typography>
-            <div className={classes.buttons}>
-              <IconButton
-                className={classes.iconButton}
-                onClick={() => {
-                  onChangeDialogInput({
-                    type: EDIT_USER_PARAM,
-                    payload: {
-                      message: activeMessage,
-                      param: activeParam
-                    }
-                  });
-                }}
+      {activeParamName &&
+        activeParam.prompts &&
+        activeParam.prompts.length !== 0 && (
+          <BubbleChat type="self" selected={selected && !isSelectedUserMessage}>
+            <div className={classes.headerBubble}>
+              <div>
+                <DefaultTextView value={activeParam.prompts} />
+              </div>
+              <Paper
+                style={{ backgroundColor: 'white' }}
+                className={classes.buttons}
               >
-                <Edit className={classes.miniIcon} />
-              </IconButton>
-              <IconButton
-                className={classes.iconButton}
-                onClick={() => {
-                  onChangeDialogInput({
-                    type: DELETE_USER_PARAM,
-                    payload: {
-                      message: activeMessage,
-                      param: activeParam
-                    }
-                  });
-                }}
-              >
-                <Delete className={classes.miniIcon} />
-              </IconButton>
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={() => {
+                    onChangeDialogInput({
+                      type: EDIT_USER_PARAM,
+                      payload: {
+                        message: activeMessage,
+                        param: activeParam
+                      }
+                    });
+                  }}
+                >
+                  <Edit className={classes.miniIcon} />
+                </IconButton>
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={() => {
+                    onChangeDialogInput({
+                      type: DELETE_USER_PARAM,
+                      payload: {
+                        message: activeMessage,
+                        param: activeParam
+                      }
+                    });
+                  }}
+                >
+                  <Delete className={classes.miniIcon} />
+                </IconButton>
+              </Paper>
             </div>
-          </div>
-        </BubbleChat>
-      )}
+          </BubbleChat>
+        )}
     </React.Fragment>
   );
 };
 
 UserMessage.defaultProps = {
   activeMessageId: null,
-  activeChildMessageId: null
+  activeChildMessageId: null,
+  dialogInputType: ''
 };
 
 UserMessage.propTypes = {
@@ -254,9 +285,11 @@ UserMessage.propTypes = {
   onChangeActiveMessage: PropTypes.func.isRequired,
   onChangeChildActiveMessage: PropTypes.func.isRequired,
   onChangeDialogInput: PropTypes.func.isRequired,
+  selected: PropTypes.bool.isRequired,
+  classes: PropTypes.object.isRequired,
+  dialogInputType: PropTypes.string,
   activeMessageId: PropTypes.string,
-  activeChildMessageId: PropTypes.string,
-  classes: PropTypes.object.isRequired
+  activeChildMessageId: PropTypes.string
 };
 
 export default withStyles(style)(UserMessage);

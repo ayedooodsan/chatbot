@@ -1,5 +1,7 @@
 const style = () => ({
   root: {
+    position: 'relative',
+    zIndex: 1,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
