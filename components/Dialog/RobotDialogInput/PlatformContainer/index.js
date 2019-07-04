@@ -198,7 +198,7 @@ class PlatformContainer extends React.Component {
 }
 
 PlatformContainer.defaultProps = {
-  activePlatform: 'default'
+  activePlatform: 'zoho'
 };
 
 PlatformContainer.propTypes = {
