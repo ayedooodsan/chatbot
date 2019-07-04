@@ -38,7 +38,7 @@ class PlatformContainer extends React.Component {
         };
       },
       {
-        usedTabs: [{ value: 'default', label: 'Default' }],
+        usedTabs: [{ value: 'zoho', label: 'Zoho' }],
         unusedTabs: [...platformOptions]
       }
     );
