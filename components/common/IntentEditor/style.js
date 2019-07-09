@@ -8,6 +8,9 @@ const style = theme => {
     })
   };
   return {
+    root: {
+      display: 'flex'
+    },
     popper: {
       zIndex: 1
     },
