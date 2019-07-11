@@ -155,14 +155,14 @@ const IntegrationSetting = props => {
                             className={classes.button}
                             color="primary"
                             variant="contained"
-                            onClick={() => onEdit()}
+                            onClick={() => onEdit(listItem.vendor)}
                           >
                             Edit
                           </Button>
                           <Button
                             variant="contained"
                             className={classes.button}
-                            onClick={() => onDisconnect(listItem.vendor)}
+                            onClick={() => onDisconnect()}
                           >
                             Disconnect
                           </Button>
