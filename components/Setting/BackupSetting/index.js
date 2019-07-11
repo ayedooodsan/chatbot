@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import BackupDialog from './BackupDialog';
+import UploadFileDialog from '../../common/UploadFileDialog';
 import SimpleProductLayoutProvider from '../../layout/SimpleProductLayoutProvider';
 import SimpleProductHead from '../../layout/SimpleProductHead';
 import SimpleProductBody from '../../layout/SimpleProductBody';
@@ -66,13 +66,20 @@ const BackupSetting = props => {
                     the current the current ones. Intents, entities and dialogs
                     with the same name will be replaced with the newer version.
                   </Typography>
-                  <BackupDialog
+                  <UploadFileDialog
+                    acceptType=".zip"
                     open={imporDialogOpen}
                     handleClose={() => setImporDialogOpen(false)}
                     handleConfirm={onChangeBackup}
                     placeholder="Type IMPORT and click the import button"
                     message="Upload Project Backup"
-                    subMessage={`You can upload an agent as a zip archive consisting of the folders "intents" and "entities". The folders should contain JSON files of the intents and entities.`}
+                    subMessage={() => (
+                      <React.Fragment>
+                        You can upload an agent as a zip archive consisting of
+                        the folders intents and entities. The folders should
+                        contain JSON files of the intents and entities.
+                      </React.Fragment>
+                    )}
                     actionName="IMPORT"
                   />
                   <Button
