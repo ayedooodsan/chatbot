@@ -1,0 +1,27 @@
+mutation detectIntent (
+  $id: String!
+  $sessionTag: String!
+  $utterance: String!
+  $contexts: [ContextInput!]!
+) {
+  detectIntent(
+    id: $id
+    sessionTag: $sessionTag
+    utterance: $utterance
+    contexts: $contexts
+  ) {
+    name
+    contexts {
+      name
+      lifespanCount
+      parameters {
+        name
+        value
+      }
+    }
+    parameters {
+      name
+      value
+    }
+  }
+}
