@@ -12,7 +12,7 @@ import Reply from '@material-ui/icons/Reply';
 import _ from 'lodash';
 import MessageView from './MessageView';
 import platformOptions from '../RobotDialogInput/const';
-import BubbleChat from '../BubbleChat';
+import BubbleChat from '../../common/BubbleChat';
 import style from './style';
 import { REPLY_ROBOT, EDIT_ROBOT, DELETE_ROBOT } from '../DialogInput/constant';
 

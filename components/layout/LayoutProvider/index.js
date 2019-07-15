@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
+import Evaluator from '../../Evaluator';
 import style from './style';
 
 const LayoutProvider = ({ navigation, subNavigation, children, classes }) => (
@@ -7,6 +8,7 @@ const LayoutProvider = ({ navigation, subNavigation, children, classes }) => (
     {navigation()}
     {subNavigation && subNavigation()}
     <div className={classes.children}>{children}</div>
+    <Evaluator />
   </div>
 );
 

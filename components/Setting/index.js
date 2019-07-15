@@ -13,6 +13,7 @@ import style from './style';
 import GeneralSetting from './GeneralSetting';
 import BackupSetting from './BackupSetting';
 import ShareSetting from './ShareSetting';
+import IntegrationSetting from './IntegrationSetting';
 import connect from './store';
 
 const Setting = props => {
@@ -24,6 +25,10 @@ const Setting = props => {
 
   if (role === 'Admin') {
     settingMenu.push({ name: 'Share', type: 'share' });
+    settingMenu.push({
+      name: 'NLP Engine',
+      type: 'integration'
+    });
   }
 
   const activeSettingType = currentSettingType =>
@@ -42,6 +47,10 @@ const Setting = props => {
       }
       case 'share': {
         SettingProduct = ShareSetting;
+        break;
+      }
+      case 'integration': {
+        SettingProduct = IntegrationSetting;
         break;
       }
       default: {

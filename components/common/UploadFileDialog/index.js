@@ -10,7 +10,7 @@ import TextField from '@material-ui/core/TextField';
 import withStyles from '@material-ui/core/styles/withStyles';
 import style from './style';
 
-const BackupDialog = props => {
+const UploadFileDialog = props => {
   const [word, setWord] = useState('');
   const [backupFile, setBackupFile] = useState(null);
   const {
@@ -21,6 +21,7 @@ const BackupDialog = props => {
     actionName,
     subMessage,
     placeholder,
+    acceptType,
     classes
   } = props;
 
@@ -62,11 +63,11 @@ const BackupDialog = props => {
       <form onSubmit={handleSubmit}>
         <DialogTitle id="form-dialog-title">{message}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{subMessage}</DialogContentText>
+          <DialogContentText>{subMessage()}</DialogContentText>
           <div className={classes.buttons}>
             <label htmlFor="uploadFile">
               <input
-                accept=".zip"
+                accept={acceptType}
                 style={{ display: 'none' }}
                 id="uploadFile"
                 multiple
@@ -107,19 +108,16 @@ const BackupDialog = props => {
   );
 };
 
-BackupDialog.defaultProps = {
-  actionName: ''
-};
-
-BackupDialog.propTypes = {
+UploadFileDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   handleConfirm: PropTypes.func.isRequired,
   message: PropTypes.string.isRequired,
-  subMessage: PropTypes.string.isRequired,
+  subMessage: PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired,
-  actionName: PropTypes.string
+  acceptType: PropTypes.string.isRequired,
+  actionName: PropTypes.string.isRequired
 };
 
-export default withStyles(style)(BackupDialog);
+export default withStyles(style)(UploadFileDialog);
