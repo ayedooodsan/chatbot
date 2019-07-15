@@ -10,6 +10,9 @@ const style = {
   },
   button: {
     alignItems: 'flex-start'
+  },
+  tableCell: {
+    padding: 5
   }
 };
 

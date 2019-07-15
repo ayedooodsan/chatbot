@@ -8,7 +8,7 @@ const style = theme => ({
     display: 'flex',
     flexDirection: 'column',
     height: 'calc(100vh - 165px)',
-    width: '25vw',
+    width: '30vw',
     marginBottom: 20,
     background: '#fafafa'
   },

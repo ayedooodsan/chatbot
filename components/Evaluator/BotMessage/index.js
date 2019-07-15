@@ -57,10 +57,12 @@ const BotMessage = props => {
                   <TableBody>
                     {detectedIntent.parameters.map(parameter => (
                       <TableRow key={parameter.name}>
-                        <TableCell>{parameter.name}</TableCell>
-                        <TableCell>
+                        <TableCell className={classes.tableCell}>
+                          {parameter.name}
+                        </TableCell>
+                        <TableCell className={classes.tableCell}>
                           {typeof parameter.value === 'object'
-                            ? beautify(parameter.value, null, 2, 20)
+                            ? beautify(parameter.value, null, 2, 10)
                             : parameter.value}
                         </TableCell>
                       </TableRow>
