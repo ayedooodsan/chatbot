@@ -51,7 +51,11 @@ function createClient(headers, token, initialState, reduxStore) {
 
   const loadingLink = new ApolloLink((operation, forward) => {
     const operationType = operation.query.definitions[0].operation;
-    if (process.browser && operationType !== 'query') {
+    if (
+      process.browser &&
+      operationType !== 'query' &&
+      !operation.getContext().hideLoading
+    ) {
       const loadingSnackbarKey = new Date().getTime() + Math.random();
       reduxStore.dispatch(
         dispatchers.enqueueSnackbar({

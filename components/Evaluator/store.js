@@ -6,7 +6,8 @@ const withDetectIntent = graphql(detectIntentGql, {
   props: ({ detectIntent }) => ({
     detectIntent: ({ id, sessionTag, utterance, contexts }) =>
       detectIntent({
-        variables: { id, sessionTag, utterance, contexts }
+        variables: { id, sessionTag, utterance, contexts },
+        context: { hideLoading: true }
       })
   })
 });

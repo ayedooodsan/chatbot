@@ -7,11 +7,15 @@ import Fab from '@material-ui/core/Fab';
 import Fade from '@material-ui/core/Fade';
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import Delete from '@material-ui/icons/Delete';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import { withRouter } from 'next/router';
+import Scrollbar from 'react-scrollbars-custom';
 import UserMessage from './UserMessage';
 import BotMessage from './BotMessage';
+import BotLoading from './BotLoading';
 import style from './style';
 import connect from './store';
 
@@ -41,8 +45,22 @@ class Evaluator extends React.Component {
       anchorEl: currentTarget,
       open: !state.open,
       messages: [],
+      previousDetectedIntent: {
+        contexts: []
+      },
       sessionTag: router.query.projectId + Math.random()
     }));
+  };
+
+  resetContexts = () => {
+    const { router } = this.props;
+    this.setState({
+      messages: [],
+      previousDetectedIntent: {
+        contexts: []
+      },
+      sessionTag: router.query.projectId + Math.random()
+    });
   };
 
   onChangeUtterance = event => {
@@ -55,10 +73,19 @@ class Evaluator extends React.Component {
   detectIntent = event => {
     event.preventDefault();
     const { utterance, sessionTag, previousDetectedIntent } = this.state;
-    this.setState(state => ({
-      utterance: '',
-      messages: [...state.messages, { key: Date.now(), text: utterance }]
-    }));
+    this.setState(
+      state => ({
+        utterance: '',
+        messages: [
+          ...state.messages,
+          { key: Date.now(), text: utterance },
+          null
+        ]
+      }),
+      () => {
+        this.scrollbar.scrollToBottom();
+      }
+    );
     const { router, detectIntent } = this.props;
     detectIntent({
       id: router.query.projectId,
@@ -89,10 +116,23 @@ class Evaluator extends React.Component {
           value: JSON.parse(parameter.value)
         }))
       };
-      this.setState(state => ({
-        previousDetectedIntent: formatedDetectedIntent,
-        messages: [...state.messages, formatedDetectedIntent]
-      }));
+      this.setState(
+        state => {
+          const newMessages = [...state.messages];
+          newMessages[newMessages.length - 2] = {
+            ...newMessages[newMessages.length - 2],
+            dialogName: formatedDetectedIntent.dialogName
+          };
+          newMessages[newMessages.length - 1] = formatedDetectedIntent;
+          return {
+            previousDetectedIntent: formatedDetectedIntent,
+            messages: newMessages
+          };
+        },
+        () => {
+          this.scrollbar.scrollToBottom();
+        }
+      );
     });
   };
 
@@ -131,26 +171,61 @@ class Evaluator extends React.Component {
             <Fade {...TransitionProps} timeout={350}>
               <Paper className={classes.container}>
                 <div className={classes.infoContainer}>
-                  {messages.map((message, index) =>
-                    index % 2 === 0 ? (
-                      <UserMessage key={message.key} text={message.text} />
-                    ) : (
-                      <BotMessage key={message.key} detectedIntent={message} />
-                    )
-                  )}
+                  <Scrollbar
+                    ref={ref => {
+                      this.scrollbar = ref;
+                    }}
+                    contentProps={{
+                      style: { width: '100%', paddingRight: 5, paddingTop: 5 }
+                    }}
+                  >
+                    {messages.map((message, index) =>
+                      index % 2 === 0 ? (
+                        <React.Fragment key={message.key}>
+                          {}
+                          <UserMessage
+                            text={message.text}
+                            dialogName={
+                              (index === 0 ||
+                                message.dialogName !==
+                                  messages[index - 2].dialogName) &&
+                              message.dialogName
+                                ? message.dialogName
+                                : null
+                            }
+                          />
+                        </React.Fragment>
+                      ) : (
+                        <React.Fragment>
+                          {message && (
+                            <BotMessage
+                              key={message.key}
+                              detectedIntent={message}
+                            />
+                          )}
+                          {!message && <BotLoading />}
+                        </React.Fragment>
+                      )
+                    )}
+                  </Scrollbar>
                 </div>
                 <Divider />
-                <div className={classes.inputContainer}>
-                  <form onSubmit={this.detectIntent} id="DetectIntentInput">
-                    <InputBase
-                      autoFocus
-                      fullWidth
-                      placeholder="Try it!"
-                      value={utterance}
-                      onChange={this.onChangeUtterance}
-                    />
-                  </form>
-                </div>
+                <form
+                  onSubmit={this.detectIntent}
+                  id="DetectIntentInput"
+                  className={classes.inputContainer}
+                >
+                  <InputBase
+                    autoFocus
+                    fullWidth
+                    placeholder="Try it!"
+                    value={utterance}
+                    onChange={this.onChangeUtterance}
+                  />
+                  <IconButton onClick={() => this.resetContexts()}>
+                    <Delete />
+                  </IconButton>
+                </form>
               </Paper>
             </Fade>
           )}

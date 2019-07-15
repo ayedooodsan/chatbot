@@ -10,7 +10,9 @@ mutation detectIntent (
     utterance: $utterance
     contexts: $contexts
   ) {
-    name
+    messageName
+    dialogName
+    response
     contexts {
       name
       lifespanCount
