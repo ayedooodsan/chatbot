@@ -31,7 +31,7 @@ const IntentField = props => {
               currentParams.push(foundParams);
             } else {
               currentParams.push({
-                name: '',
+                name: entity.title,
                 entity,
                 key: paramKey
               });

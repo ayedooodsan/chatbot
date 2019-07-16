@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
+import Typography from '@material-ui/core/Typography';
 
 function renderInput(inputProps) {
   const { InputProps, classes, ref, className, ...other } = inputProps;
@@ -154,14 +155,20 @@ function SimpleAutoComplete(props) {
               >
                 <div className={classes.suggestions}>
                   {suggestions(inputValue, result => {
-                    return result.map((suggestion, index) =>
-                      renderSuggestion({
-                        suggestion,
-                        index,
-                        itemProps: getItemProps({ item: suggestion }),
-                        highlightedIndex,
-                        selectedItem
-                      })
+                    return result.length === 0 ? (
+                      <Typography variant="body2">
+                        No matching intents
+                      </Typography>
+                    ) : (
+                      result.map((suggestion, index) =>
+                        renderSuggestion({
+                          suggestion,
+                          index,
+                          itemProps: getItemProps({ item: suggestion }),
+                          highlightedIndex,
+                          selectedItem
+                        })
+                      )
                     );
                   })}
                 </div>

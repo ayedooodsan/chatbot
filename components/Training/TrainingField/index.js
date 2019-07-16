@@ -76,7 +76,7 @@ const TrainingField = props => {
             currentParams.push(foundEntity);
           } else {
             currentParams.push({
-              name: '',
+              name: entity.title,
               entity,
               key: paramKey
             });
