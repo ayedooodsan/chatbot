@@ -198,6 +198,7 @@ class Evaluator extends React.Component {
           anchorEl={anchorEl}
           transition
           placement="top-end"
+          style={{ zIndex: 2000 }}
           modifiers={{
             offset: { offset: '18px, 0' },
             preventOverflow: {
