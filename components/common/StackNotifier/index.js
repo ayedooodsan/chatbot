@@ -43,6 +43,9 @@ const styles = theme => ({
     opacity: 0.9,
     marginRight: theme.spacing.unit
   },
+  snackbarContent: {
+    marginRight: 140
+  },
   message: {
     display: 'flex',
     alignItems: 'center'
@@ -124,7 +127,11 @@ class ConsecutiveSnackbars extends React.Component {
         {...otherOptions}
       >
         <SnackbarContent
-          className={classNames(classes[variant], className)}
+          className={classNames(
+            classes[variant],
+            className,
+            classes.snackbarContent
+          )}
           aria-describedby="client-snackbar"
           message={
             <span id="client-snackbar" className={classes.message}>

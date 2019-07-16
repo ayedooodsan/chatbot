@@ -8,6 +8,7 @@ import Fade from '@material-ui/core/Fade';
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Delete from '@material-ui/icons/Delete';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
@@ -67,6 +68,18 @@ class Evaluator extends React.Component {
     const { currentTarget } = event;
     this.setState({
       utterance: currentTarget.value
+    });
+  };
+
+  trainProject = () => {
+    const { router, trainProject } = this.props;
+    this.setState({
+      training: true
+    });
+    trainProject({ id: router.query.projectId }).then(() => {
+      this.setState({
+        training: false
+      });
     });
   };
 
@@ -137,22 +150,48 @@ class Evaluator extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
-    const { anchorEl, open, utterance, messages } = this.state;
+    const { classes, project } = this.props;
+    const { anchorEl, open, utterance, messages, training } = this.state;
     const id = open ? 'evaluator-popper' : null;
-
+    let trainButtonText = '';
+    if (project.needTrain) {
+      if (training) {
+        trainButtonText = 'Training';
+      } else {
+        trainButtonText = 'Train';
+      }
+    } else {
+      trainButtonText = 'Trained';
+    }
     return (
       <div>
-        <Fab
-          size="medium"
-          className={classes.toggleButton}
-          aria-describedby={id}
-          variant="contained"
-          color="primary"
-          onClick={this.handleClick}
-        >
-          {open ? <StopIcon /> : <PlayIcon />}
-        </Fab>
+        <div className={classes.buttonContainer}>
+          <div className={classes.trainWrapper}>
+            <Fab
+              className={classes.button}
+              variant="extended"
+              size="medium"
+              color="primary"
+              disabled={training || !project.needTrain}
+              onClick={this.trainProject}
+            >
+              {trainButtonText}
+            </Fab>
+            {training && (
+              <CircularProgress size={24} className={classes.trainProgress} />
+            )}
+          </div>
+          <Fab
+            className={classes.button}
+            size="medium"
+            aria-describedby={id}
+            variant="contained"
+            color="primary"
+            onClick={this.handleClick}
+          >
+            {open ? <StopIcon /> : <PlayIcon />}
+          </Fab>
+        </div>
         <Popper
           id={id}
           open={open}
@@ -236,12 +275,16 @@ class Evaluator extends React.Component {
 }
 
 Evaluator.defaultProps = {
-  router: {}
+  router: {},
+  project: {}
 };
 
 Evaluator.propTypes = {
   classes: PropTypes.object.isRequired,
   detectIntent: PropTypes.func.isRequired,
+  trainProject: PropTypes.func.isRequired,
+  notifications: PropTypes.array.isRequired,
+  project: PropTypes.object,
   router: PropTypes.object
 };
 

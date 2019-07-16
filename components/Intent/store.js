@@ -9,7 +9,7 @@ const withCreateIntent = graphql(createIntentGql, {
     createIntent: ({ title, projectId }) =>
       createIntent({
         variables: { title, projectId },
-        refetchQueries: ['myIntents', 'searchIntents'],
+        refetchQueries: ['myIntents', 'searchIntents', 'project'],
         update: cache => {
           invalidateAllIntent(cache);
           invalidateAllSearchResult(cache);

@@ -1,8 +1,29 @@
 const style = theme => ({
-  toggleButton: {
+  buttonContainer: {
     position: 'absolute',
-    bottom: theme.spacing.unit * 2,
+    bottom: 24,
     right: theme.spacing.unit * 2
+  },
+  buttonContainerMoveUp: {
+    transform: 'translate3d(0, -46px, 0)',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.enteringScreen,
+      easing: theme.transitions.easing.easeOut
+    })
+  },
+  buttonContainerMoveDown: {
+    transform: 'translate3d(0, 0, 0)',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.leavingScreen,
+      easing: theme.transitions.easing.sharp
+    })
+  },
+  button: {
+    marginLeft: 10
+  },
+  trainWrapper: {
+    display: 'inline-block',
+    position: 'relative'
   },
   container: {
     display: 'flex',
@@ -22,6 +43,14 @@ const style = theme => ({
   },
   dialogName: {
     padding: '0 15px'
+  },
+  trainProgress: {
+    color: theme.palette.primary.main,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -8
   }
 });
 

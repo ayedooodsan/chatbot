@@ -9,7 +9,7 @@ const withCreateEntity = graphql(createEntityGql, {
     createEntity: ({ title, projectId }) =>
       createEntity({
         variables: { title, projectId },
-        refetchQueries: ['myEntities', 'searchEntities'],
+        refetchQueries: ['myEntities', 'searchEntities', 'project'],
         update: cache => {
           invalidateAllSearchResult(cache);
           invalidateAllEntity(cache);

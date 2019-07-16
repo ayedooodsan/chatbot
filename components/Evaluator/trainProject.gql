@@ -1,0 +1,5 @@
+mutation trainProject (
+  $id: String!
+) {
+  trainProject(id: $id)
+}
