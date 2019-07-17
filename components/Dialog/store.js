@@ -8,7 +8,7 @@ const withCreateDialog = graphql(createDialogGql, {
     createDialog: ({ title, projectId }) =>
       createDialog({
         variables: { title, projectId },
-        refetchQueries: ['myDialogs'],
+        refetchQueries: ['myDialogs', 'project'],
         update: updateDialogQuery
       })
   })

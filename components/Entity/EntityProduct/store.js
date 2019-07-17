@@ -33,7 +33,7 @@ const withUpdateEntity = graphql(updateEntityGql, {
     updateEntity: ({ id, title, values }) =>
       updateEntity({
         variables: { id, title, values },
-        refetchQueries: ['myEntities', 'entity', 'searchEntities']
+        refetchQueries: ['myEntities', 'entity', 'searchEntities', 'project']
       })
   })
 });
@@ -44,7 +44,7 @@ const withDeleteEntity = graphql(deleteEntityGql, {
     deleteEntity: ({ id }) =>
       deleteEntity({
         variables: { id },
-        refetchQueries: ['myEntities', 'searchEntities'],
+        refetchQueries: ['myEntities', 'searchEntities', 'project'],
         update: cache => {
           invalidateAllEntity(cache);
           invalidateAllSearchResult(cache);

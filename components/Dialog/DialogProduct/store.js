@@ -32,7 +32,7 @@ const withUpdateDialog = graphql(updateDialogGql, {
     updateDialog: ({ id, messages, title }) =>
       updateDialog({
         variables: { id, messages, title },
-        refetchQueries: ['myDialogs', 'dialog']
+        refetchQueries: ['myDialogs', 'dialog', 'project']
       })
   })
 });
@@ -43,7 +43,7 @@ const withDeleteDialog = graphql(deleteDialogGql, {
     deleteDialog: ({ id }) =>
       deleteDialog({
         variables: { id },
-        refetchQueries: ['myDialogs'],
+        refetchQueries: ['myDialogs', 'project'],
         update: updateDialogQuery
       })
   })

@@ -4,10 +4,6 @@ query project (
   project (
     id: $id
   ) {
-    title
-    description
-    language
-    timeZone
-    sharedProject
+    needTrain
   }
 }
