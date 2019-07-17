@@ -72,7 +72,7 @@ const styles = () => ({
     flexGrow: 1
   },
   suggestions: {
-    height: 184,
+    maxHeight: 184,
     overflowY: 'overlay'
   }
 });
@@ -153,7 +153,14 @@ function SimpleAutoComplete(props) {
                 <div className={classes.suggestions}>
                   {suggestions(inputValue, result => {
                     return result.length === 0 ? (
-                      <Typography variant="body2">No matching users</Typography>
+                      <Typography
+                        variant="body2"
+                        style={{
+                          margin: '11px 16px'
+                        }}
+                      >
+                        No matching users
+                      </Typography>
                     ) : (
                       result.map((suggestion, index) =>
                         renderSuggestion({

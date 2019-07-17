@@ -84,7 +84,7 @@ const styles = () => ({
     marginLeft: 5
   },
   suggestions: {
-    height: 184,
+    maxHeight: 184,
     overflowY: 'overlay'
   }
 });
@@ -162,7 +162,14 @@ function SimpleAutoComplete(props) {
               let hasEntityLabel = false;
               const mergedSuggestions = [...filteredParam, ...result];
               return mergedSuggestions.length === 0 ? (
-                <Typography variant="body2">No matching entities</Typography>
+                <Typography
+                  variant="body2"
+                  style={{
+                    margin: '11px 16px'
+                  }}
+                >
+                  No matching entities
+                </Typography>
               ) : (
                 mergedSuggestions.map((suggestion, index) => {
                   if (!hasParamLabel) {
@@ -185,8 +192,7 @@ function SimpleAutoComplete(props) {
                           index,
                           itemProps: getItemProps({ item: suggestion }),
                           highlightedIndex,
-                          selectedItem,
-                          noNeedKey: true
+                          selectedItem
                         })}
                       </React.Fragment>
                     );
@@ -219,8 +225,7 @@ function SimpleAutoComplete(props) {
                           index,
                           itemProps: getItemProps({ item: suggestion }),
                           highlightedIndex,
-                          selectedItem,
-                          noNeedKey: true
+                          selectedItem
                         })}
                       </React.Fragment>
                     );

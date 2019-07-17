@@ -74,7 +74,7 @@ const styles = () => ({
     flexGrow: 1
   },
   suggestions: {
-    height: 184,
+    maxHeight: 184,
     overflowY: 'overlay'
   }
 });
@@ -126,9 +126,16 @@ function SimpleAutoComplete(props) {
           <Popper
             open={isOpen}
             anchorEl={popperRef.current}
-            placement="top"
-            style={{
-              zIndex: 1
+            placement="bottom-start"
+            style={{ zIndex: 1 }}
+            modifiers={{
+              flip: {
+                enabled: true
+              },
+              preventOverflow: {
+                enabled: true,
+                boundariesElement: 'window'
+              }
             }}
           >
             <div
@@ -147,7 +154,12 @@ function SimpleAutoComplete(props) {
                 <div className={classes.suggestions}>
                   {suggestions(inputValue, result => {
                     return result.length === 0 ? (
-                      <Typography variant="body2">
+                      <Typography
+                        variant="body2"
+                        style={{
+                          margin: '11px 16px'
+                        }}
+                      >
                         No matching intents
                       </Typography>
                     ) : (

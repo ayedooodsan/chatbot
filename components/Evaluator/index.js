@@ -76,11 +76,17 @@ class Evaluator extends React.Component {
     this.setState({
       training: true
     });
-    trainProject({ id: router.query.projectId }).then(() => {
-      this.setState({
-        training: false
+    trainProject({ id: router.query.projectId })
+      .then(() => {
+        this.setState({
+          training: false
+        });
+      })
+      .catch(() => {
+        this.setState({
+          training: false
+        });
       });
-    });
   };
 
   detectIntent = event => {
@@ -185,7 +191,6 @@ class Evaluator extends React.Component {
             className={classes.button}
             size="medium"
             aria-describedby={id}
-            variant="contained"
             color="primary"
             onClick={this.handleClick}
           >
@@ -284,7 +289,6 @@ Evaluator.propTypes = {
   classes: PropTypes.object.isRequired,
   detectIntent: PropTypes.func.isRequired,
   trainProject: PropTypes.func.isRequired,
-  notifications: PropTypes.array.isRequired,
   project: PropTypes.object,
   router: PropTypes.object
 };
