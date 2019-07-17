@@ -4,6 +4,7 @@ import Downshift from 'downshift';
 import { withStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 
@@ -71,7 +72,7 @@ const styles = () => ({
     flexGrow: 1
   },
   suggestions: {
-    height: 184,
+    maxHeight: 184,
     overflowY: 'overlay'
   }
 });
@@ -151,14 +152,25 @@ function SimpleAutoComplete(props) {
               >
                 <div className={classes.suggestions}>
                   {suggestions(inputValue, result => {
-                    return result.map((suggestion, index) =>
-                      renderSuggestion({
-                        suggestion,
-                        index,
-                        itemProps: getItemProps({ item: suggestion }),
-                        highlightedIndex,
-                        selectedItem
-                      })
+                    return result.length === 0 ? (
+                      <Typography
+                        variant="body2"
+                        style={{
+                          margin: '11px 16px'
+                        }}
+                      >
+                        No matching users
+                      </Typography>
+                    ) : (
+                      result.map((suggestion, index) =>
+                        renderSuggestion({
+                          suggestion,
+                          index,
+                          itemProps: getItemProps({ item: suggestion }),
+                          highlightedIndex,
+                          selectedItem
+                        })
+                      )
                     );
                   })}
                 </div>

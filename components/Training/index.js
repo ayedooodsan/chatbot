@@ -5,6 +5,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import withStyles from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import readXlsxFile from 'read-excel-file';
@@ -30,6 +32,7 @@ class Training extends Component {
       limit: 20,
       offset: 0
     },
+    type: 'known',
     uploadProductDialogStatus: false
   };
 
@@ -91,16 +94,22 @@ class Training extends Component {
   activeTraining = currentTrainingId =>
     currentTrainingId === this.props.trainingId;
 
+  handleTabChange = (event, value) => {
+    this.setState({ type: value });
+  };
+
   render() {
     const {
       keyword,
       pagination,
       uploadProductDialogStatus,
-      openSearch
+      openSearch,
+      type
     } = this.state;
     const { projectId, trainingId, classes } = this.props;
     return (
       <MyTrainings
+        type={type}
         keyword={keyword}
         projectId={projectId}
         limit={pagination.limit}
@@ -129,47 +138,62 @@ class Training extends Component {
                   )}
                   body={() =>
                     myTrainings && myTrainings.trainings.length > 0 ? (
-                      <List component="nav">
-                        {myTrainings.trainings.map(myTraining => (
-                          <Link
-                            route={`/${projectId}/training/${myTraining.id}`}
-                            key={myTraining.id}
-                          >
-                            <Tooltip title={myTraining.title} placement="right">
-                              <ListItem
-                                className={classes.listItem}
-                                divider
-                                dense
-                                button
+                      <React.Fragment>
+                        <Tabs
+                          value={type}
+                          variant="fullWidth"
+                          indicatorColor="primary"
+                          onChange={this.handleTabChange}
+                          textColor="primary"
+                        >
+                          <Tab value="known" label="Known" />
+                          <Tab value="unknown" label="Unknown" />
+                        </Tabs>
+                        <List component="nav">
+                          {myTrainings.trainings.map(myTraining => (
+                            <Link
+                              route={`/${projectId}/training/${myTraining.id}`}
+                              key={myTraining.id}
+                            >
+                              <Tooltip
+                                title={myTraining.title}
+                                placement="right"
                               >
-                                <ListItemText
-                                  primary={myTraining.title}
-                                  primaryTypographyProps={{
-                                    variant: 'body2',
-                                    noWrap: true,
-                                    className: classNames({
-                                      [classes.listItemPrimaryTextActive]: this.activeTraining(
-                                        myTraining.id
-                                      )
-                                    })
-                                  }}
-                                  secondary={moment(
-                                    myTraining.createdAt
-                                  ).format('MM/DD/YYYY')}
-                                  secondaryTypographyProps={{
-                                    variant: 'caption',
-                                    className: classNames({
-                                      [classes.listItemSecondaryTextActive]: this.activeTraining(
-                                        myTraining.id
-                                      )
-                                    })
-                                  }}
-                                />
-                              </ListItem>
-                            </Tooltip>
-                          </Link>
-                        ))}
-                      </List>
+                                <ListItem
+                                  className={classes.listItem}
+                                  divider
+                                  dense
+                                  button
+                                >
+                                  <ListItemText
+                                    primary={myTraining.title}
+                                    primaryTypographyProps={{
+                                      variant: 'body2',
+                                      noWrap: true,
+                                      className: classNames({
+                                        [classes.listItemPrimaryTextActive]: this.activeTraining(
+                                          myTraining.id
+                                        )
+                                      })
+                                    }}
+                                    secondary={moment(
+                                      myTraining.createdAt
+                                    ).format('MM/DD/YYYY')}
+                                    secondaryTypographyProps={{
+                                      variant: 'caption',
+                                      className: classNames({
+                                        [classes.listItemSecondaryTextActive]: this.activeTraining(
+                                          myTraining.id
+                                        )
+                                      })
+                                    }}
+                                  />
+                                </ListItem>
+                              </Tooltip>
+                            </Link>
+                          ))}
+                        </List>
+                      </React.Fragment>
                     ) : (
                       <Typography
                         variant="caption"
