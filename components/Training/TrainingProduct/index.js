@@ -87,7 +87,14 @@ const TrainingProduct = props => {
           />
         );
       }}
-      product={(values, onChangeValues, onAddIntialValue, onDeleteValue) => {
+      product={(
+        values,
+        onChangeValues,
+        onAddIntialValue,
+        onDeleteValue,
+        updateLocalIntentsFromTraining,
+        localIntents
+      ) => {
         return (
           <ProductBody
             noAdd
@@ -104,6 +111,8 @@ const TrainingProduct = props => {
                 number={index + 1}
                 initialValue={value}
                 onChange={onChangeCurrentValue}
+                localIntents={localIntents}
+                updateLocalIntentsFromTraining={updateLocalIntentsFromTraining}
                 onDelete={() => {
                   onDeleteCurrentValue();
                 }}

@@ -45,7 +45,15 @@ const reducer = (state, { type, payload }) => {
 };
 
 const TrainingField = props => {
-  const { onChange, classes, initialValue, router, number } = props;
+  const {
+    onChange,
+    classes,
+    initialValue,
+    router,
+    number,
+    localIntents,
+    updateLocalIntentsFromTraining
+  } = props;
   const { projectId } = router.query;
   const [state, dispatch] = useReducer(reducer, initialValue);
   const { text, entityRanges, params, intentResult, actionStatus } = state;
@@ -95,7 +103,13 @@ const TrainingField = props => {
   };
 
   const onChangeIntentResult = newIntentResult => {
-    const { id, title } = newIntentResult;
+    const { id, title, isNew } = newIntentResult;
+    if (
+      isNew &&
+      !localIntents.find(localIntent => localIntent.title === title)
+    ) {
+      updateLocalIntentsFromTraining(() => [...localIntents, newIntentResult]);
+    }
     dispatch({
       type: ON_CHANGE_INTENT_RESULT,
       payload: {
@@ -165,6 +179,7 @@ const TrainingField = props => {
             className={classes.noMarginTop}
             onChange={onChangeIntentResult}
             placeholder="Intent"
+            localIntents={localIntents}
             initialInputValue={intentResult === null ? '' : intentResult.title}
             initialValue={intentResult}
             error={intentResult === null ? false : !intentResult.title}
@@ -232,6 +247,8 @@ const TrainingField = props => {
 TrainingField.propTypes = {
   initialValue: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
+  updateLocalIntentsFromTraining: PropTypes.func.isRequired,
+  localIntents: PropTypes.array.isRequired,
   classes: PropTypes.object.isRequired,
   router: PropTypes.object.isRequired,
   number: PropTypes.number.isRequired

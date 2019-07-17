@@ -188,7 +188,7 @@ class ProductLayoutProvider extends Component {
               this.getProduct
             )}
           </div>
-          {subProductValues.length !== 0 && (
+          {subProductValues.length !== 0 && subProduct && (
             <div className={classes.subProduct}>
               {subProduct(
                 subProductValues,
@@ -208,7 +208,7 @@ class ProductLayoutProvider extends Component {
 ProductLayoutProvider.defaultProps = {
   productValues: [],
   subProductValues: [],
-  subProduct: () => null,
+  subProduct: null,
   title: '',
   id: null
 };
