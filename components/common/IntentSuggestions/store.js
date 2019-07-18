@@ -9,7 +9,8 @@ const withData = graphql(intentSuggestionsGql, {
     variables: {
       projectId,
       keyword
-    }
+    },
+    fetchPolicy: 'network-only'
   }),
   props: ({ intentSuggestions: { loading, intentSuggestions, error } }) => ({
     loading,

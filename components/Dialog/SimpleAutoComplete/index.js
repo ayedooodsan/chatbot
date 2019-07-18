@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Downshift from 'downshift';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -73,7 +74,7 @@ const styles = () => ({
     flexGrow: 1
   },
   suggestions: {
-    height: 184,
+    maxHeight: 184,
     overflowY: 'overlay'
   }
 });
@@ -125,9 +126,16 @@ function SimpleAutoComplete(props) {
           <Popper
             open={isOpen}
             anchorEl={popperRef.current}
-            placement="top"
-            style={{
-              zIndex: 1
+            placement="bottom-start"
+            style={{ zIndex: 1 }}
+            modifiers={{
+              flip: {
+                enabled: true
+              },
+              preventOverflow: {
+                enabled: true,
+                boundariesElement: 'window'
+              }
             }}
           >
             <div
@@ -145,14 +153,25 @@ function SimpleAutoComplete(props) {
               >
                 <div className={classes.suggestions}>
                   {suggestions(inputValue, result => {
-                    return result.map((suggestion, index) =>
-                      renderSuggestion({
-                        suggestion,
-                        index,
-                        itemProps: getItemProps({ item: suggestion }),
-                        highlightedIndex,
-                        selectedItem
-                      })
+                    return result.length === 0 ? (
+                      <Typography
+                        variant="body2"
+                        style={{
+                          margin: '11px 16px'
+                        }}
+                      >
+                        No matching intents
+                      </Typography>
+                    ) : (
+                      result.map((suggestion, index) =>
+                        renderSuggestion({
+                          suggestion,
+                          index,
+                          itemProps: getItemProps({ item: suggestion }),
+                          highlightedIndex,
+                          selectedItem
+                        })
+                      )
                     );
                   })}
                 </div>

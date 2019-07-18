@@ -31,9 +31,23 @@ const style = theme => ({
   listItemTextTypSecondary: {
     fontSize: '.75rem'
   },
+  menuRoot: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 5
+  },
   menuContainer: {
     marginLeft: 10,
-    marginTop: 8
+    marginTop: 8,
+    width: 280
+  },
+  list: {
+    padding: 5
+  },
+  menus: {
+    paddingRight: 5,
+    height: 350
   },
   menuTitle: {
     padding: '12px 16px 8px'

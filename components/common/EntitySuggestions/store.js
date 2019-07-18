@@ -9,7 +9,8 @@ const withData = graphql(entitySuggestionsGql, {
     variables: {
       projectId,
       keyword
-    }
+    },
+    fetchPolicy: 'network-only'
   }),
   props: ({ entitySuggestions: { loading, entitySuggestions, error } }) => ({
     loading,

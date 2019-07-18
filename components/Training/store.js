@@ -1,6 +1,6 @@
 import { graphql, compose } from 'react-apollo';
-import getMyTrainingsGql from './myTrainings.gql';
 import createTrainingsGql from './createTrainings.gql';
+import updateTrainingQuery from './MyTrainings/updateTrainingQuery';
 
 const withCreateTrainings = graphql(createTrainingsGql, {
   name: 'createTrainings',
@@ -8,27 +8,10 @@ const withCreateTrainings = graphql(createTrainingsGql, {
     createTrainings: ({ trainings, projectId }) =>
       createTrainings({
         variables: { trainings, projectId },
-        refetchQueries: ['myTrainings']
+        refetchQueries: ['myTrainings'],
+        update: updateTrainingQuery
       })
   })
 });
 
-const withMyTrainings = graphql(getMyTrainingsGql, {
-  name: 'myTrainings',
-  options: props => ({
-    variables: {
-      projectId: props.projectId
-    }
-  }),
-  props: ({ myTrainings: { loading, myTrainings, error } }) => ({
-    loading,
-    myTrainings,
-    error
-  })
-});
-
-export default comp =>
-  compose(
-    withCreateTrainings,
-    withMyTrainings
-  )(comp);
+export default comp => compose(withCreateTrainings)(comp);

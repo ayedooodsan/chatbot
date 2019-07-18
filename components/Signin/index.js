@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useForm, useField } from 'react-final-form-hooks';
 import { withStyles } from '@material-ui/core/styles';
@@ -45,6 +45,11 @@ const Signin = props => {
   });
   const login = useField('login', form);
   const password = useField('password', form);
+
+  useEffect(() => {
+    props.actions.signOut();
+  }, []);
+
   const { classes } = props;
   return (
     <form onSubmit={handleSubmit}>
@@ -90,7 +95,8 @@ const Signin = props => {
 };
 
 Signin.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  actions: PropTypes.object.isRequired
 };
 
 export default withStyles(style)(connect(Signin));

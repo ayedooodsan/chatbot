@@ -15,6 +15,7 @@ const ProductBody = props => {
     onChangeValues,
     onDeleteValue,
     addFormList,
+    buttonText,
     values
   } = props;
   return (
@@ -25,7 +26,7 @@ const ProductBody = props => {
         </div>
       )}
       <div className={classes.formList}>
-        <Scrollbar>
+        <Scrollbar contentProps={{ style: { width: '100%' } }}>
           <div className={classes.inScrollbar}>
             {values.map((value, index) => (
               <div key={JSON.stringify(value)}>
@@ -48,7 +49,7 @@ const ProductBody = props => {
                 color="primary"
                 onClick={addFormList}
               >
-                ADD EXAMPLE
+                {buttonText || 'ADD EXAMPLE'}
               </Button>
             )}
           </div>
@@ -61,7 +62,8 @@ const ProductBody = props => {
 ProductBody.defaultProps = {
   values: [],
   noAdd: false,
-  generateAction: null
+  generateAction: null,
+  buttonText: null
 };
 
 ProductBody.propTypes = {
@@ -70,6 +72,7 @@ ProductBody.propTypes = {
   addFormList: PropTypes.func.isRequired,
   onChangeValues: PropTypes.func.isRequired,
   onDeleteValue: PropTypes.func.isRequired,
+  buttonText: PropTypes.string,
   generateAction: PropTypes.func,
   noAdd: PropTypes.bool,
   values: PropTypes.array

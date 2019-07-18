@@ -17,7 +17,7 @@ const PreviewMessage = props => {
             <Typography variant="subtitle2" color="primary">
               {title}
             </Typography>
-            <Typography variant="caption">{subtitle}</Typography>
+            {subtitle && <Typography variant="caption">{subtitle}</Typography>}
             {footTitle && (
               <Typography variant="caption" color="primary">
                 {footTitle}
@@ -36,14 +36,15 @@ const PreviewMessage = props => {
 };
 
 PreviewMessage.defaultProps = {
-  footTitle: null
+  footTitle: null,
+  subtitle: null
 };
 
 PreviewMessage.propTypes = {
   title: PropTypes.string.isRequired,
-  subtitle: PropTypes.string.isRequired,
   reset: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
+  subtitle: PropTypes.string,
   footTitle: PropTypes.string
 };
 

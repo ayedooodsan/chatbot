@@ -1,7 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SnackbarProvider } from 'notistack';
-import Notifier from './common/Notifier';
+import StackNotifier from './common/StackNotifier';
 
 let offlineInstalled = false;
 
@@ -21,16 +20,10 @@ const App = ({ children }) => {
   }
 
   return (
-    <SnackbarProvider
-      maxSnack={1}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'left'
-      }}
-    >
-      <Notifier />
+    <React.Fragment>
+      <StackNotifier />
       {children}
-    </SnackbarProvider>
+    </React.Fragment>
   );
 };
 

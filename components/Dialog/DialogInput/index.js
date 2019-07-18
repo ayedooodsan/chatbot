@@ -32,7 +32,7 @@ const DialogInput = props => {
           preview={() => (
             <PreviewMessage
               title="REPLY ROBOT SAYS:"
-              subtitle={payload.payload}
+              subtitle={payload.title}
               reset={reset}
             />
           )}
@@ -62,7 +62,7 @@ const DialogInput = props => {
           preview={() => (
             <PreviewMessage
               title="EDIT ROBOT SAYS:"
-              subtitle={payload.payload}
+              subtitle={payload.title}
               reset={reset}
             />
           )}
@@ -79,8 +79,8 @@ const DialogInput = props => {
           preview={() => (
             <PreviewMessage
               title="DELETE ROBOT SAYS:"
-              subtitle={payload.payload}
-              footTitle="Type the the first word and click the send button."
+              subtitle={payload.title}
+              footTitle="Type 'DELETE' and click the send button."
               reset={reset}
             />
           )}
@@ -130,7 +130,7 @@ const DialogInput = props => {
           preview={() => (
             <PreviewMessage
               title={`EDIT ROBOT SAYS ABOUT "${payload.param.name.toUpperCase()}" PARAMETER DOESN'T APPEAR:`}
-              subtitle={payload.param.message}
+              subtitle={`${payload.param.prompts[0]}...`}
               reset={reset}
             />
           )}
@@ -164,8 +164,8 @@ const DialogInput = props => {
           preview={() => (
             <PreviewMessage
               title={`DELETE ROBOT SAYS ABOUT "${payload.param.name.toUpperCase()}" PARAMETER DOESN'T APPEAR:`}
-              subtitle={payload.param.message}
-              footTitle="Type the first word and click the send button."
+              subtitle={`${payload.param.prompts[0]}...`}
+              footTitle="Type 'DELETE' and click the send button."
               reset={reset}
             />
           )}
@@ -183,7 +183,7 @@ const DialogInput = props => {
             <PreviewMessage
               title="DELETE USER SAYS:"
               subtitle={payload.title}
-              footTitle="Type the title and click the send button."
+              footTitle="Type 'DELETE' and click the send button."
               reset={reset}
             />
           )}

@@ -1,0 +1,22 @@
+query myTrainings (
+  $projectId: String!
+  $limit: Int
+  $offset: Int
+  $keyword: String
+) {
+  myTrainings (
+    projectId: $projectId
+    limit: $limit
+    offset: $offset
+    keyword: $keyword
+  ) {
+    trainings {
+    	id
+      title
+      createdAt
+    }
+    pageInfo {
+      total
+    }
+  }
+}

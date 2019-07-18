@@ -32,7 +32,7 @@ const ParamEditor = props => {
   const { form, handleSubmit } = useForm({
     onSubmit: onSubmit(props),
     initialValues: {
-      name: initialValue.name
+      name: initialValue.name || initialValue.entity.title
     },
     validate
   });
@@ -43,11 +43,6 @@ const ParamEditor = props => {
   } = name;
 
   const inputRef = useRef(null);
-  if (!restInput.value) {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  }
 
   return (
     <Paper className={classes.root} elevation={0}>

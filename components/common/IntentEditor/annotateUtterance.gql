@@ -1,0 +1,19 @@
+mutation annotateUtterance (
+  $id: String!
+  $utterance: String!
+) {
+  annotateUtterance(
+    id: $id
+    utterance: $utterance
+  ) {
+    text,
+    annotations {
+      offset
+      length
+      entity {
+        id
+        title
+      }
+    }
+  }
+}

@@ -40,7 +40,7 @@ function renderSuggestion({
   return (
     <MenuItem
       {...itemProps}
-      key={suggestion.id}
+      key={suggestion.key ? suggestion.key : suggestion.id}
       selected={isHighlighted}
       component="div"
       style={{
@@ -60,11 +60,11 @@ renderSuggestion.defaultProps = {
 };
 
 renderSuggestion.propTypes = {
+  suggestion: PropTypes.shape({ title: PropTypes.string }).isRequired,
   highlightedIndex: PropTypes.number,
   index: PropTypes.number,
   itemProps: PropTypes.object,
-  inputValue: PropTypes.string,
-  suggestion: PropTypes.shape({ title: PropTypes.string }).isRequired
+  inputValue: PropTypes.string
 };
 
 const styles = () => ({
@@ -84,7 +84,7 @@ const styles = () => ({
     marginLeft: 5
   },
   suggestions: {
-    height: 184,
+    maxHeight: 184,
     overflowY: 'overlay'
   }
 });
@@ -160,44 +160,23 @@ function SimpleAutoComplete(props) {
                 }));
               let hasParamLabel = false;
               let hasEntityLabel = false;
-              return [...filteredParam, ...result].map((suggestion, index) => {
-                if (!hasParamLabel) {
-                  hasParamLabel = true;
-                  return (
-                    <React.Fragment key={suggestion.id}>
-                      {result.length !== 0 && filteredParam.length !== 0 && (
-                        <Typography
-                          color="primary"
-                          variant="overline"
-                          style={{
-                            margin: '10px 0 0 16px'
-                          }}
-                        >
-                          Params
-                        </Typography>
-                      )}
-                      {renderSuggestion({
-                        suggestion,
-                        index,
-                        itemProps: getItemProps({ item: suggestion }),
-                        highlightedIndex,
-                        selectedItem
-                      })}
-                    </React.Fragment>
-                  );
-                }
-                if (!hasEntityLabel && hasParamLabel && !suggestion.key) {
-                  hasEntityLabel = true;
-                  return (
-                    <React.Fragment key={suggestion.id}>
-                      {result.length !== 0 && filteredParam.length !== 0 && (
-                        <React.Fragment>
-                          <Divider
-                            style={{
-                              marginLeft:
-                                highlightedIndex === index - 1 ? 0 : 16
-                            }}
-                          />
+              const mergedSuggestions = [...filteredParam, ...result];
+              return mergedSuggestions.length === 0 ? (
+                <Typography
+                  variant="body2"
+                  style={{
+                    margin: '11px 16px'
+                  }}
+                >
+                  No matching entities
+                </Typography>
+              ) : (
+                mergedSuggestions.map((suggestion, index) => {
+                  if (!hasParamLabel) {
+                    hasParamLabel = true;
+                    return (
+                      <React.Fragment key={`key-${suggestion.key}`}>
+                        {result.length !== 0 && filteredParam.length !== 0 && (
                           <Typography
                             color="primary"
                             variant="overline"
@@ -205,28 +184,61 @@ function SimpleAutoComplete(props) {
                               margin: '10px 0 0 16px'
                             }}
                           >
-                            Entity
+                            Params
                           </Typography>
-                        </React.Fragment>
-                      )}
-                      {renderSuggestion({
-                        suggestion,
-                        index,
-                        itemProps: getItemProps({ item: suggestion }),
-                        highlightedIndex,
-                        selectedItem
-                      })}
-                    </React.Fragment>
-                  );
-                }
-                return renderSuggestion({
-                  suggestion,
-                  index,
-                  itemProps: getItemProps({ item: suggestion }),
-                  highlightedIndex,
-                  selectedItem
-                });
-              });
+                        )}
+                        {renderSuggestion({
+                          suggestion,
+                          index,
+                          itemProps: getItemProps({ item: suggestion }),
+                          highlightedIndex,
+                          selectedItem
+                        })}
+                      </React.Fragment>
+                    );
+                  }
+                  if (!hasEntityLabel && hasParamLabel && !suggestion.key) {
+                    hasEntityLabel = true;
+                    return (
+                      <React.Fragment key={`${suggestion.id}-labeled`}>
+                        {result.length !== 0 && filteredParam.length !== 0 && (
+                          <React.Fragment>
+                            <Divider
+                              style={{
+                                marginLeft:
+                                  highlightedIndex === index - 1 ? 0 : 16
+                              }}
+                            />
+                            <Typography
+                              color="primary"
+                              variant="overline"
+                              style={{
+                                margin: '10px 0 0 16px'
+                              }}
+                            >
+                              Entity
+                            </Typography>
+                          </React.Fragment>
+                        )}
+                        {renderSuggestion({
+                          suggestion,
+                          index,
+                          itemProps: getItemProps({ item: suggestion }),
+                          highlightedIndex,
+                          selectedItem
+                        })}
+                      </React.Fragment>
+                    );
+                  }
+                  return renderSuggestion({
+                    suggestion,
+                    index,
+                    itemProps: getItemProps({ item: suggestion }),
+                    highlightedIndex,
+                    selectedItem
+                  });
+                })
+              );
             })}
           </div>
         </div>

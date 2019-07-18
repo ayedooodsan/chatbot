@@ -9,6 +9,7 @@ const style = () => ({
     flex: 1
   },
   inScrollbar: {
+    width: '100%',
     padding: '0 5px 5px',
     justifyContent: 'flex-end'
   },
