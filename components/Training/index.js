@@ -32,7 +32,7 @@ class Training extends Component {
       limit: 20,
       offset: 0
     },
-    type: 'known',
+    type: 'predicted',
     uploadProductDialogStatus: false
   };
 
@@ -60,6 +60,7 @@ class Training extends Component {
         if (!foundTrainingInput) {
           currentTrainingInputs.push({
             title,
+            type: 'unpredicted',
             userSays: [userSay.toString()]
           });
         } else {
@@ -77,7 +78,9 @@ class Training extends Component {
     createTrainings({ trainings, projectId }).then(response => {
       this.closeCreateItemDialog();
       const trainingId = response.data.createTrainings[0].id;
-      redirect({}, `/${projectId}/training/${trainingId}`);
+      this.setState({ type: 'unpredicted' }, () => {
+        redirect({}, `/${projectId}/training/${trainingId}`);
+      });
     });
   };
 
@@ -136,74 +139,78 @@ class Training extends Component {
                       setKeyword={this.setKeyword}
                     />
                   )}
-                  body={() =>
-                    myTrainings && myTrainings.trainings.length > 0 ? (
-                      <React.Fragment>
-                        <Tabs
-                          value={type}
-                          variant="fullWidth"
-                          indicatorColor="primary"
-                          onChange={this.handleTabChange}
-                          textColor="primary"
-                        >
-                          <Tab value="known" label="Known" />
-                          <Tab value="unknown" label="Unknown" />
-                        </Tabs>
-                        <List component="nav">
-                          {myTrainings.trainings.map(myTraining => (
-                            <Link
-                              route={`/${projectId}/training/${myTraining.id}`}
-                              key={myTraining.id}
-                            >
-                              <Tooltip
-                                title={myTraining.title}
-                                placement="right"
-                              >
-                                <ListItem
-                                  className={classes.listItem}
-                                  divider
-                                  dense
-                                  button
-                                >
-                                  <ListItemText
-                                    primary={myTraining.title}
-                                    primaryTypographyProps={{
-                                      variant: 'body2',
-                                      noWrap: true,
-                                      className: classNames({
-                                        [classes.listItemPrimaryTextActive]: this.activeTraining(
-                                          myTraining.id
-                                        )
-                                      })
-                                    }}
-                                    secondary={moment(
-                                      myTraining.createdAt
-                                    ).format('MM/DD/YYYY')}
-                                    secondaryTypographyProps={{
-                                      variant: 'caption',
-                                      className: classNames({
-                                        [classes.listItemSecondaryTextActive]: this.activeTraining(
-                                          myTraining.id
-                                        )
-                                      })
-                                    }}
-                                  />
-                                </ListItem>
-                              </Tooltip>
-                            </Link>
-                          ))}
-                        </List>
-                      </React.Fragment>
-                    ) : (
-                      <Typography
-                        variant="caption"
-                        className={classes.noData}
-                        color="primary"
+                  body={() => (
+                    <React.Fragment>
+                      <Tabs
+                        value={type}
+                        variant="fullWidth"
+                        indicatorColor="primary"
+                        onChange={this.handleTabChange}
+                        textColor="primary"
                       >
-                        No data available.
-                      </Typography>
-                    )
-                  }
+                        <Tab value="predicted" label="Predicted" />
+                        <Tab value="unpredicted" label="Unpredicted" />
+                      </Tabs>
+                      {myTrainings && myTrainings.trainings.length > 0 ? (
+                        <React.Fragment>
+                          <List component="nav">
+                            {myTrainings.trainings.map(myTraining => (
+                              <Link
+                                route={`/${projectId}/training/${
+                                  myTraining.id
+                                }`}
+                                key={myTraining.id}
+                              >
+                                <Tooltip
+                                  title={myTraining.title}
+                                  placement="right"
+                                >
+                                  <ListItem
+                                    className={classes.listItem}
+                                    divider
+                                    dense
+                                    button
+                                  >
+                                    <ListItemText
+                                      primary={myTraining.title}
+                                      primaryTypographyProps={{
+                                        variant: 'body2',
+                                        noWrap: true,
+                                        className: classNames({
+                                          [classes.listItemPrimaryTextActive]: this.activeTraining(
+                                            myTraining.id
+                                          )
+                                        })
+                                      }}
+                                      secondary={moment(
+                                        myTraining.createdAt
+                                      ).format('MM/DD/YYYY')}
+                                      secondaryTypographyProps={{
+                                        variant: 'caption',
+                                        className: classNames({
+                                          [classes.listItemSecondaryTextActive]: this.activeTraining(
+                                            myTraining.id
+                                          )
+                                        })
+                                      }}
+                                    />
+                                  </ListItem>
+                                </Tooltip>
+                              </Link>
+                            ))}
+                          </List>
+                        </React.Fragment>
+                      ) : (
+                        <Typography
+                          variant="caption"
+                          className={classes.noData}
+                          color="primary"
+                        >
+                          No data available.
+                        </Typography>
+                      )}
+                    </React.Fragment>
+                  )}
                 />
               )}
             >
@@ -214,9 +221,9 @@ class Training extends Component {
                 />
               )}
               <UploadProductDialog
-                placeholder="Choose User Input File"
-                message="Upload User Input"
-                submessage="You can upload user inputs to the Training tool in one .xlsx file (follow the template below)."
+                placeholder="Choose Unpredicted User Input File"
+                message="Upload Unpredicted User Input"
+                submessage="You can upload unpredicted user inputs to the Training tool in one .xlsx file (follow the template below)."
                 open={uploadProductDialogStatus}
                 handleClose={this.closeCreateItemDialog}
                 handleConfirm={this.createItem}

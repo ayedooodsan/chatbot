@@ -78,9 +78,11 @@ class Evaluator extends React.Component {
     });
     trainProject({ id: router.query.projectId })
       .then(() => {
-        this.setState({
-          training: false
-        });
+        setTimeout(() => {
+          this.setState({
+            training: false
+          });
+        }, 3000);
       })
       .catch(() => {
         this.setState({
@@ -189,6 +191,7 @@ class Evaluator extends React.Component {
           </div>
           <Fab
             className={classes.button}
+            disabled={training}
             size="medium"
             aria-describedby={id}
             color="primary"

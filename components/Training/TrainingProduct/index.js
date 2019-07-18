@@ -43,7 +43,8 @@ const TrainingProduct = props => {
               entityId: param.entity.id,
               key: param.key
             })),
-            intentResultId: intentResult === null ? null : intentResult.id,
+            intentResultTitle:
+              intentResult === null ? null : intentResult.title,
             actionStatus
           };
         })
@@ -108,6 +109,7 @@ const TrainingProduct = props => {
               index
             ) => (
               <TrainingField
+                type={training.type}
                 number={index + 1}
                 initialValue={value}
                 onChange={onChangeCurrentValue}

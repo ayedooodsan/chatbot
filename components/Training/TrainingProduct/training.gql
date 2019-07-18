@@ -5,6 +5,7 @@ query training (
     id: $id
   ) {
     title
+    type
     userSays {
       actionStatus
       intentResult {

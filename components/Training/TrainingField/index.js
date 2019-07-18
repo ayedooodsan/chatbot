@@ -52,6 +52,7 @@ const TrainingField = props => {
     router,
     number,
     localIntents,
+    type,
     updateLocalIntentsFromTraining
   } = props;
   const { projectId } = router.query;
@@ -173,7 +174,7 @@ const TrainingField = props => {
             />
           ))}
           <Typography variant="subtitle2" className={classes.fieldName}>
-            INTENT RESULT
+            INTENT {type && 'SUGGESTION'} RESULT
           </Typography>
           <SimpleAutoComplete
             className={classes.noMarginTop}
@@ -251,6 +252,7 @@ TrainingField.propTypes = {
   localIntents: PropTypes.array.isRequired,
   classes: PropTypes.object.isRequired,
   router: PropTypes.object.isRequired,
+  type: PropTypes.string.isRequired,
   number: PropTypes.number.isRequired
 };
 
