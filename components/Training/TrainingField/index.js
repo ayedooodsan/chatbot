@@ -152,7 +152,14 @@ const TrainingField = props => {
 
   return (
     <React.Fragment>
-      <Paper className={classes.root} elevation={1}>
+      <Paper
+        className={classNames(classes.root, {
+          [classes.green]: initialValue.type === 'predicted',
+          [classes.orange]: initialValue.type === 'unpredicted',
+          [classes.red]: initialValue.type === 'unknown-suggestion'
+        })}
+        elevation={1}
+      >
         <div className={classes.fieldContainer}>
           <Typography variant="subtitle2" className={classes.fieldName}>
             #{number} USER SAY

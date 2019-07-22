@@ -1,7 +1,7 @@
 const style = theme => {
   return {
     root: {
-      margin: '8px 0',
+      margin: '16px 0',
       padding: 10,
       display: 'flex',
       alignItems: 'flex-start'
@@ -35,6 +35,15 @@ const style = theme => {
     },
     noMarginTop: {
       marginTop: 0
+    },
+    orange: {
+      borderLeft: `12px solid ${theme.palette.secondary.main}`
+    },
+    green: {
+      borderLeft: `12px solid ${theme.palette.primary.main}`
+    },
+    red: {
+      borderLeft: `12px solid #d32f2f`
     }
   };
 };

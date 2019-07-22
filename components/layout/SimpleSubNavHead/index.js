@@ -47,6 +47,7 @@ const SimpleSubNavHead = props => {
       setAdvancedSearch(false);
     }
     setKeyword('');
+    handleClickPagination(0);
   };
 
   const toggleSearch = () => {
@@ -76,7 +77,10 @@ const SimpleSubNavHead = props => {
         <React.Fragment>
           <TextField
             value={keyword}
-            onChange={event => setKeyword(event.target.value)}
+            onChange={event => {
+              setKeyword(event.target.value);
+              handleClickPagination(0);
+            }}
             inputRef={searchInputRef}
             autoFocus
             label="Keyword"

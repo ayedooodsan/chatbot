@@ -5,8 +5,12 @@ query training (
     id: $id
   ) {
     title
+    request
+    noMatch
+    unknownSuggestion
     userSays {
       actionStatus
+      type
       intentResult {
         id
         title

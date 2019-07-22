@@ -5,8 +5,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import withStyles from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import readXlsxFile from 'read-excel-file';
@@ -139,16 +137,6 @@ class Training extends Component {
                   body={() =>
                     myTrainings && myTrainings.trainings.length > 0 ? (
                       <React.Fragment>
-                        <Tabs
-                          value={type}
-                          variant="fullWidth"
-                          indicatorColor="primary"
-                          onChange={this.handleTabChange}
-                          textColor="primary"
-                        >
-                          <Tab value="known" label="Known" />
-                          <Tab value="unknown" label="Unknown" />
-                        </Tabs>
                         <List component="nav">
                           {myTrainings.trainings.map(myTraining => (
                             <Link
@@ -176,9 +164,24 @@ class Training extends Component {
                                         )
                                       })
                                     }}
-                                    secondary={moment(
-                                      myTraining.createdAt
-                                    ).format('MM/DD/YYYY')}
+                                    secondary={
+                                      <React.Fragment>
+                                        <span>
+                                          {(
+                                            (myTraining.request -
+                                              myTraining.noMatch) /
+                                            myTraining.request
+                                          ).toFixed(2)}
+                                          {'% '}
+                                          Predicted
+                                        </span>
+                                        <span>
+                                          {moment(myTraining.createdAt).format(
+                                            '— MM/DD/YYYY'
+                                          )}
+                                        </span>
+                                      </React.Fragment>
+                                    }
                                     secondaryTypographyProps={{
                                       variant: 'caption',
                                       className: classNames({
