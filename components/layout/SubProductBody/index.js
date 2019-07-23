@@ -28,7 +28,7 @@ const SubProductBody = props => {
           <Scrollbar contentProps={{ style: { width: '100%' } }}>
             <div className={classes.inScrollbar}>
               {values.map((value, index) => (
-                <div key={JSON.stringify(value)}>
+                <div key={value.key}>
                   {generateForm(
                     value,
                     (newValue, key) => {

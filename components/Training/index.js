@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import withStyles from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import readXlsxFile from 'read-excel-file';
@@ -139,78 +136,72 @@ class Training extends Component {
                       setKeyword={this.setKeyword}
                     />
                   )}
-                  body={() => (
-                    <React.Fragment>
-                      <Tabs
-                        value={type}
-                        variant="fullWidth"
-                        indicatorColor="primary"
-                        onChange={this.handleTabChange}
-                        textColor="primary"
-                      >
-                        <Tab value="predicted" label="Predicted" />
-                        <Tab value="unpredicted" label="Unpredicted" />
-                      </Tabs>
-                      {myTrainings && myTrainings.trainings.length > 0 ? (
-                        <React.Fragment>
-                          <List component="nav">
-                            {myTrainings.trainings.map(myTraining => (
-                              <Link
-                                route={`/${projectId}/training/${
-                                  myTraining.id
-                                }`}
-                                key={myTraining.id}
+                  body={() =>
+                    myTrainings && myTrainings.trainings.length > 0 ? (
+                      <React.Fragment>
+                        <List component="nav">
+                          {myTrainings.trainings.map(myTraining => (
+                            <Link
+                              route={`/${projectId}/training/${myTraining.id}`}
+                              key={myTraining.id}
+                            >
+                              <Tooltip
+                                title={myTraining.title}
+                                placement="right"
                               >
-                                <Tooltip
-                                  title={myTraining.title}
-                                  placement="right"
-                                >
-                                  <ListItem
-                                    className={classes.listItem}
-                                    divider
-                                    dense
-                                    button
-                                  >
-                                    <ListItemText
-                                      primary={myTraining.title}
-                                      primaryTypographyProps={{
-                                        variant: 'body2',
-                                        noWrap: true,
-                                        className: classNames({
-                                          [classes.listItemPrimaryTextActive]: this.activeTraining(
-                                            myTraining.id
-                                          )
-                                        })
-                                      }}
-                                      secondary={moment(
-                                        myTraining.createdAt
-                                      ).format('MM/DD/YYYY')}
-                                      secondaryTypographyProps={{
-                                        variant: 'caption',
-                                        className: classNames({
-                                          [classes.listItemSecondaryTextActive]: this.activeTraining(
-                                            myTraining.id
-                                          )
-                                        })
-                                      }}
-                                    />
-                                  </ListItem>
-                                </Tooltip>
-                              </Link>
-                            ))}
-                          </List>
-                        </React.Fragment>
-                      ) : (
-                        <Typography
-                          variant="caption"
-                          className={classes.noData}
-                          color="primary"
-                        >
-                          No data available.
-                        </Typography>
-                      )}
-                    </React.Fragment>
-                  )}
+                                <ListItemText
+                                  primary={myTraining.title}
+                                  primaryTypographyProps={{
+                                    variant: 'body2',
+                                    noWrap: true,
+                                    className: classNames({
+                                      [classes.listItemPrimaryTextActive]: this.activeTraining(
+                                        myTraining.id
+                                      )
+                                    })
+                                  }}
+                                  secondary={
+                                    <React.Fragment>
+                                      <span>
+                                        {(
+                                          (myTraining.request -
+                                            myTraining.noMatch) /
+                                          myTraining.request
+                                        ).toFixed(2)}
+                                        {'% '}
+                                        Predicted
+                                      </span>
+                                      <span>
+                                        {moment(myTraining.createdAt).format(
+                                          '— MM/DD/YYYY'
+                                        )}
+                                      </span>
+                                    </React.Fragment>
+                                  }
+                                  secondaryTypographyProps={{
+                                    variant: 'caption',
+                                    className: classNames({
+                                      [classes.listItemSecondaryTextActive]: this.activeTraining(
+                                        myTraining.id
+                                      )
+                                    })
+                                  }}
+                                />
+                              </Tooltip>
+                            </Link>
+                          ))}
+                        </List>
+                      </React.Fragment>
+                    ) : (
+                      <Typography
+                        variant="caption"
+                        className={classes.noData}
+                        color="primary"
+                      >
+                        No data available.
+                      </Typography>
+                    )
+                  }
                 />
               )}
             >
