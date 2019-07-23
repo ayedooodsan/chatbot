@@ -1,10 +1,10 @@
 import { graphql, compose } from 'react-apollo';
-import intentGql from '../../Intent/IntentProduct/intent.gql';
 import trainingGql from './training.gql';
 import updateTrainingGql from './updateTraining.gql';
 import approveTrainingGql from './approveTraining.gql';
 import deleteTrainingGql from './deleteTraining.gql';
 import updateTrainingQuery from '../MyTrainings/updateTrainingQuery';
+import invalidateAllIntent from '../../../libraries/updateApolloCache/invalidateAllIntent';
 
 const withTraining = graphql(trainingGql, {
   name: 'training',
@@ -45,16 +45,8 @@ const withApproveTraining = graphql(approveTrainingGql, {
     approveTraining: ({ id, title, userSays }) =>
       approveTraining({
         variables: { id, title, userSays },
-        refetchQueries: [
-          'myTrainings',
-          'training',
-          ...userSays
-            .filter(userSay => userSay.actionStatus === 'Check')
-            .map(userSay => ({
-              query: intentGql,
-              variables: { id: userSay.intentResultId }
-            }))
-        ]
+        refetchQueries: ['myTrainings', 'training'],
+        update: invalidateAllIntent
       })
   })
 });

@@ -20,7 +20,7 @@ const withImportProject = graphql(importProjectGql, {
     importProject: ({ id, file }) =>
       importProject({
         variables: { id, file },
-        refetchQueries: ['myProjects'],
+        refetchQueries: ['myProjects', 'project'],
         update: invalidateStore
       })
   })
