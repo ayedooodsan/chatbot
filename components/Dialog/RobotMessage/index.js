@@ -87,9 +87,16 @@ const RobotMessage = props => {
               <div className={classes.headerBubble}>
                 {index === 0 && (
                   <React.Fragment>
-                    <Typography variant="subtitle2" color="primary">
-                      {activeMessage.title}
-                    </Typography>
+                    <div>
+                      <Typography variant="subtitle2" color="primary">
+                        {activeMessage.title}
+                      </Typography>
+                      {activeMessage.actionName && (
+                        <Typography variant="subtitle2">
+                          {activeMessage.actionName} ACTION
+                        </Typography>
+                      )}
+                    </div>
                     <Paper className={classes.buttons}>
                       <IconButton
                         className={classes.iconButton}
@@ -136,9 +143,16 @@ const RobotMessage = props => {
         <BubbleChat type="self" selected={selected}>
           <React.Fragment>
             <div className={classes.headerBubble}>
-              <Typography variant="subtitle2" color="primary">
-                {activeMessage.title}
-              </Typography>
+              <div>
+                <Typography variant="subtitle2" color="primary">
+                  {activeMessage.title}
+                </Typography>
+                {activeMessage.actionName && (
+                  <Typography variant="subtitle2">
+                    {activeMessage.actionName} ACTION
+                  </Typography>
+                )}
+              </div>
               <Paper className={classes.buttons}>
                 <IconButton
                   className={classes.iconButton}

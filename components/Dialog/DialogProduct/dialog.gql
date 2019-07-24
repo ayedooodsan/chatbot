@@ -10,6 +10,7 @@ query dialog (
       parentId
       type
       title
+      actionName
       intent {
         id
         title
