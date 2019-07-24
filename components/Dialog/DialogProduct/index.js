@@ -251,6 +251,7 @@ class DialogProduct extends Component {
             prompts: param.prompts
           }))
         : null,
+      actionName: rawMessage.actionName ? rawMessage.actionName : null,
       title: rawMessage.title,
       type: rawMessage.type,
       depth: rawMessage.depth,
