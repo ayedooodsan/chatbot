@@ -74,7 +74,7 @@ const Project = props => {
       <React.Fragment>
         <List>
           {!collapse ? (
-            <Tooltip title="Project" placement="right">
+            <Tooltip title={`${activeProject.title} Project`} placement="right">
               <ListItem
                 button
                 onClick={() => {

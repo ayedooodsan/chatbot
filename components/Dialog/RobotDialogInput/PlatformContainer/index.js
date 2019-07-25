@@ -11,6 +11,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import platformOptions from '../const';
 import Default from '../Default';
 import Zoho from '../Zoho';
+import Facebook from '../Facebook';
 import styles from './style';
 
 class PlatformContainer extends React.Component {
@@ -99,6 +100,28 @@ class PlatformContainer extends React.Component {
     return (
       <div className={classes.root}>
         <div className={classes.tabContainer}>
+          <Tabs
+            scrollButtons="auto"
+            value={value}
+            onChange={this.handleChange}
+            classes={{
+              root: classes.tabsRoot,
+              indicator: classes.tabsIndicator
+            }}
+          >
+            {usedTabs.map(tab => (
+              <Tab
+                key={tab.value}
+                disableRipple
+                classes={{
+                  root: classes.tabRoot,
+                  selected: classes.tabSelected
+                }}
+                value={tab.value}
+                label={tab.label}
+              />
+            ))}
+          </Tabs>
           {unusedTabs.length > 0 && (
             <div className={classes.addContainer}>
               <IconButton
@@ -128,29 +151,6 @@ class PlatformContainer extends React.Component {
               </Menu>
             </div>
           )}
-          <Tabs
-            variant="scrollable"
-            scrollButtons="auto"
-            value={value}
-            onChange={this.handleChange}
-            classes={{
-              root: classes.tabsRoot,
-              indicator: classes.tabsIndicator
-            }}
-          >
-            {usedTabs.map(tab => (
-              <Tab
-                key={tab.value}
-                disableRipple
-                classes={{
-                  root: classes.tabRoot,
-                  selected: classes.tabSelected
-                }}
-                value={tab.value}
-                label={tab.label}
-              />
-            ))}
-          </Tabs>
         </div>
         <div className={classes.container}>
           {value === 'default' && (
@@ -164,6 +164,14 @@ class PlatformContainer extends React.Component {
           {value === 'zoho' && (
             <Zoho
               messages={messages.filter(message => message.platform === 'zoho')}
+              onChange={this.onChange}
+            />
+          )}
+          {value === 'facebook' && (
+            <Facebook
+              messages={messages.filter(
+                message => message.platform === 'facebook'
+              )}
               onChange={this.onChange}
             />
           )}
