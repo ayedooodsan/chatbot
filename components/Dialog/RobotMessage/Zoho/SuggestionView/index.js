@@ -5,15 +5,15 @@ import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Style from './style';
 
-const SelectView = props => {
+const SuggestionView = props => {
   const { value, classes } = props;
   return (
     <React.Fragment>
-      <Typography variant="caption">Please, select one:</Typography>
-      {value.options.map(option => (
+      <Typography variant="caption">These are my suggestions:</Typography>
+      {value.suggestions.map(suggestion => (
         <Chip
-          key={option}
-          label={option}
+          key={suggestion}
+          label={suggestion}
           variant="outlined"
           className={classes.chip}
         />
@@ -22,9 +22,9 @@ const SelectView = props => {
   );
 };
 
-SelectView.propTypes = {
+SuggestionView.propTypes = {
   value: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(Style)(SelectView);
+export default withStyles(Style)(SuggestionView);

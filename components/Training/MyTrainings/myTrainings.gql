@@ -1,13 +1,11 @@
 query myTrainings (
   $projectId: String!
-  $type: String!
   $limit: Int
   $offset: Int
   $keyword: String
 ) {
   myTrainings (
     projectId: $projectId
-    type: $type
     limit: $limit
     offset: $offset
     keyword: $keyword

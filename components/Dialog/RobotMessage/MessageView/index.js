@@ -5,6 +5,7 @@ import DefaultTextView from '../Default/TextView';
 import FacebookTextView from '../Facebook/TextView';
 import ZohoTextView from '../Zoho/TextView';
 import ZohoSelectView from '../Zoho/SelectView';
+import ZohoSuggestionView from '../Zoho/SuggestionView';
 import ZohoLinksView from '../Zoho/LinksView';
 import ZohoImageView from '../Zoho/ImageView';
 
@@ -19,6 +20,8 @@ const MessageView = props => {
     View = ZohoTextView;
   } else if (platform === 'zoho' && type === 'select') {
     View = ZohoSelectView;
+  } else if (platform === 'zoho' && type === 'suggestion') {
+    View = ZohoSuggestionView;
   } else if (platform === 'zoho' && type === 'links') {
     View = ZohoLinksView;
   } else if (platform === 'zoho' && type === 'image') {

@@ -3,10 +3,9 @@ import getMyTrainingsGql from './myTrainings.gql';
 
 const withMyTrainings = graphql(getMyTrainingsGql, {
   name: 'myTrainings',
-  options: ({ projectId, offset, type, limit, keyword }) => ({
+  options: ({ projectId, offset, limit, keyword }) => ({
     variables: {
       projectId,
-      type,
       offset,
       limit,
       keyword

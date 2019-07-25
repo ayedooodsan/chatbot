@@ -62,10 +62,12 @@ const TrainingProduct = props => {
             entityRanges,
             params,
             intentResult,
+            type,
             actionStatus
           } = userSay;
           return {
             text,
+            type,
             entityRanges: entityRanges.map(entityRange => ({
               offset: entityRange.offset,
               length: entityRange.length,
