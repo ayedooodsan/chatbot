@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import MessagesLayoutProvider from '../MessagesLayoutProvider';
 import TextEditor from '../../../common/TextEditor';
 import ZohoSelectResponse from './SelectInput';
+import ZohoSuggestionResponse from './SuggestionInput';
 import ZohoLinksResponse from './LinksInput';
 import ZohoImageResponse from './ImageInput';
 
@@ -10,6 +11,7 @@ const Zoho = props => {
   const messageTypes = [
     { value: 'text', label: 'Text Response' },
     { value: 'select', label: 'Select Response' },
+    { value: 'suggestion', label: 'Suggestion Response' },
     { value: 'links', label: 'Link Response' },
     { value: 'image', label: 'Image Response' }
   ];
@@ -48,6 +50,14 @@ const Zoho = props => {
         />
       );
     }
+    if (message.type === 'suggestion') {
+      return (
+        <ZohoSuggestionResponse
+          value={message.value}
+          onChange={value => changeMessage({ ...message, value })}
+        />
+      );
+    }
   };
 
   const initialMessageValue = messageType => {
@@ -66,6 +76,16 @@ const Zoho = props => {
         type: messageType,
         value: {
           options: ['']
+        }
+      };
+    }
+    if (messageType === 'suggestion') {
+      return {
+        key: Date.now() + Math.random(),
+        platform: 'zoho',
+        type: messageType,
+        value: {
+          suggestions: ['']
         }
       };
     }
