@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DefaultCodeView from '../Default/CodeView';
 import DefaultTextView from '../Default/TextView';
+import FacebookTextView from '../Facebook/TextView';
 import ZohoTextView from '../Zoho/TextView';
 import ZohoSelectView from '../Zoho/SelectView';
 import ZohoLinksView from '../Zoho/LinksView';
@@ -22,6 +23,8 @@ const MessageView = props => {
     View = ZohoLinksView;
   } else if (platform === 'zoho' && type === 'image') {
     View = ZohoImageView;
+  } else if (platform === 'facebook' && type === 'text') {
+    View = FacebookTextView;
   }
   return View && <View value={value} />;
 };

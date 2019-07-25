@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import withStyles from '@material-ui/core/styles/withStyles';
 import MessagesLayoutProvider from '../MessagesLayoutProvider';
 import TextEditor from '../../../common/TextEditor';
 import ZohoSelectResponse from './SelectInput';
 import ZohoLinksResponse from './LinksInput';
 import ZohoImageResponse from './ImageInput';
-import style from './style';
 
 const Zoho = props => {
   const messageTypes = [
@@ -125,4 +123,4 @@ Zoho.propTypes = {
   messages: PropTypes.array
 };
 
-export default withStyles(style)(Zoho);
+export default Zoho;
