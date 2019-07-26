@@ -8,6 +8,7 @@ import ZohoSelectView from '../Zoho/SelectView';
 import ZohoSuggestionView from '../Zoho/SuggestionView';
 import ZohoLinksView from '../Zoho/LinksView';
 import ZohoImageView from '../Zoho/ImageView';
+import ZohoHandoverView from '../Zoho/HandoverView';
 
 const MessageView = props => {
   const { value, type, platform } = props;
@@ -26,6 +27,8 @@ const MessageView = props => {
     View = ZohoLinksView;
   } else if (platform === 'zoho' && type === 'image') {
     View = ZohoImageView;
+  } else if (platform === 'zoho' && type === 'forward') {
+    View = ZohoHandoverView;
   } else if (platform === 'facebook' && type === 'text') {
     View = FacebookTextView;
   }
