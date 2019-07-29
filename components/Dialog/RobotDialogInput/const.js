@@ -1,6 +1,6 @@
 const platformOptions = [
   // { value: 'zoho', label: 'Zoho' },
-  // { value: 'fb', label: 'Facebook' }
+  { value: 'facebook', label: 'Facebook' }
 ];
 
 export default platformOptions;

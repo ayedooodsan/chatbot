@@ -14,8 +14,14 @@ class ProductLayoutProvider extends Component {
   componentDidMount() {
     const { productValues, subProductValues } = this.props;
     this.setState({
-      productValues: _.cloneDeep(productValues),
-      subProductValues: _.cloneDeep(subProductValues),
+      productValues: productValues.map(productValue => ({
+        key: productValue.id || Date.now() + Math.random(),
+        ...productValue
+      })),
+      subProductValues: subProductValues.map(subProductValue => ({
+        key: subProductValue.id || Date.now() + Math.random(),
+        ...subProductValue
+      })),
       title: this.props.title
     });
   }
@@ -29,6 +35,10 @@ class ProductLayoutProvider extends Component {
       nextState.subProductValues,
       this.state.subProductValues
     );
+    const isFilterConditionEqual = _.isEqual(
+      nextProps.filterCondition,
+      this.props.filterCondition
+    );
     if (nextState.updateView) {
       return true;
     }
@@ -36,6 +46,7 @@ class ProductLayoutProvider extends Component {
       isTitlePropsEqual &&
       isTitleStateEqual &&
       isProductValuesEqual &&
+      isFilterConditionEqual &&
       isSubProductEqual
     ) {
       return false;
@@ -49,8 +60,14 @@ class ProductLayoutProvider extends Component {
     if (!isTitleEqual) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
-        productValues: _.cloneDeep(productValues),
-        subProductValues: _.cloneDeep(subProductValues),
+        productValues: productValues.map(productValue => ({
+          key: productValue.id || Date.now() + Math.random(),
+          ...productValue
+        })),
+        subProductValues: subProductValues.map(subProductValue => ({
+          key: subProductValue.id || Date.now() + Math.random(),
+          ...subProductValue
+        })),
         title: this.props.title
       });
     } else if (this.state.updateView) {
@@ -89,7 +106,10 @@ class ProductLayoutProvider extends Component {
   onAddProductValue = initialValue => {
     this.setState(prevState => {
       const newValues = [...prevState.productValues];
-      newValues.push(initialValue);
+      newValues.push({
+        key: initialValue.id || Date.now() + Math.random(),
+        ...initialValue
+      });
       return { productValues: newValues };
     });
   };
@@ -124,7 +144,10 @@ class ProductLayoutProvider extends Component {
   onAddSubProductValue = initialValue => {
     this.setState(prevState => {
       const newValues = prevState.subProductValues;
-      newValues.push(initialValue);
+      newValues.push({
+        key: initialValue.id || Date.now() + Math.random(),
+        ...initialValue
+      });
       return { subProductValues: newValues };
     });
   };
@@ -188,7 +211,7 @@ class ProductLayoutProvider extends Component {
               this.getProduct
             )}
           </div>
-          {subProductValues.length !== 0 && (
+          {subProductValues.length !== 0 && subProduct && (
             <div className={classes.subProduct}>
               {subProduct(
                 subProductValues,
@@ -208,8 +231,9 @@ class ProductLayoutProvider extends Component {
 ProductLayoutProvider.defaultProps = {
   productValues: [],
   subProductValues: [],
-  subProduct: () => null,
+  subProduct: null,
   title: '',
+  filterCondition: {},
   id: null
 };
 
@@ -217,6 +241,7 @@ ProductLayoutProvider.propTypes = {
   header: PropTypes.func.isRequired,
   product: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
+  filterCondition: PropTypes.object,
   id: PropTypes.string,
   title: PropTypes.string,
   productValues: PropTypes.array,

@@ -13,6 +13,8 @@ query myTrainings (
     trainings {
     	id
       title
+      request
+      noMatch
       createdAt
     }
     pageInfo {

@@ -8,10 +8,10 @@ import PlayArrow from '@material-ui/icons/PlayArrow';
 import style from './style';
 
 const BubbleChat = props => {
-  const { classes, type, children, selected, dense } = props;
+  const { classes, type, children, selected, dense, className } = props;
   return type === 'other' ? (
     <div
-      className={classNames(classes.li, classes.bubbleOther, {
+      className={classNames(classes.li, classes.bubbleOther, className, {
         [classes.selectedLi]: selected,
         [classes.denseLi]: dense
       })}
@@ -29,7 +29,7 @@ const BubbleChat = props => {
     </div>
   ) : (
     <div
-      className={classNames(classes.li, classes.bubbleSelf, {
+      className={classNames(classes.li, classes.bubbleSelf, className, {
         [classes.selectedLi]: selected,
         [classes.denseLi]: dense
       })}
@@ -50,13 +50,15 @@ const BubbleChat = props => {
 
 BubbleChat.defaultProps = {
   selected: false,
-  dense: false
+  dense: false,
+  className: ''
 };
 
 BubbleChat.propTypes = {
   classes: PropTypes.object.isRequired,
   type: PropTypes.string.isRequired,
   children: PropTypes.object.isRequired,
+  className: PropTypes.string,
   dense: PropTypes.bool,
   selected: PropTypes.bool
 };

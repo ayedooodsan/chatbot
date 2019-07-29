@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import ListItem from '@material-ui/core/ListItem';
 import withStyles from '@material-ui/core/styles/withStyles';
 import classNames from 'classnames';
 import readXlsxFile from 'read-excel-file';
@@ -30,6 +30,7 @@ class Training extends Component {
       limit: 20,
       offset: 0
     },
+    type: 'predicted',
     uploadProductDialogStatus: false
   };
 
@@ -57,6 +58,7 @@ class Training extends Component {
         if (!foundTrainingInput) {
           currentTrainingInputs.push({
             title,
+            type: 'unpredicted',
             userSays: [userSay.toString()]
           });
         } else {
@@ -74,7 +76,9 @@ class Training extends Component {
     createTrainings({ trainings, projectId }).then(response => {
       this.closeCreateItemDialog();
       const trainingId = response.data.createTrainings[0].id;
-      redirect({}, `/${projectId}/training/${trainingId}`);
+      this.setState({ type: 'unpredicted' }, () => {
+        redirect({}, `/${projectId}/training/${trainingId}`);
+      });
     });
   };
 
@@ -91,16 +95,22 @@ class Training extends Component {
   activeTraining = currentTrainingId =>
     currentTrainingId === this.props.trainingId;
 
+  handleTabChange = (event, value) => {
+    this.setState({ type: value });
+  };
+
   render() {
     const {
       keyword,
       pagination,
       uploadProductDialogStatus,
-      openSearch
+      openSearch,
+      type
     } = this.state;
     const { projectId, trainingId, classes } = this.props;
     return (
       <MyTrainings
+        type={type}
         keyword={keyword}
         projectId={projectId}
         limit={pagination.limit}
@@ -129,47 +139,67 @@ class Training extends Component {
                   )}
                   body={() =>
                     myTrainings && myTrainings.trainings.length > 0 ? (
-                      <List component="nav">
-                        {myTrainings.trainings.map(myTraining => (
-                          <Link
-                            route={`/${projectId}/training/${myTraining.id}`}
-                            key={myTraining.id}
-                          >
-                            <Tooltip title={myTraining.title} placement="right">
-                              <ListItem
-                                className={classes.listItem}
-                                divider
-                                dense
-                                button
+                      <React.Fragment>
+                        <List component="nav">
+                          {myTrainings.trainings.map(myTraining => (
+                            <Link
+                              route={`/${projectId}/training/${myTraining.id}`}
+                              key={myTraining.id}
+                            >
+                              <Tooltip
+                                title={myTraining.title}
+                                placement="right"
                               >
-                                <ListItemText
-                                  primary={myTraining.title}
-                                  primaryTypographyProps={{
-                                    variant: 'body2',
-                                    noWrap: true,
-                                    className: classNames({
-                                      [classes.listItemPrimaryTextActive]: this.activeTraining(
-                                        myTraining.id
-                                      )
-                                    })
-                                  }}
-                                  secondary={moment(
-                                    myTraining.createdAt
-                                  ).format('MM/DD/YYYY')}
-                                  secondaryTypographyProps={{
-                                    variant: 'caption',
-                                    className: classNames({
-                                      [classes.listItemSecondaryTextActive]: this.activeTraining(
-                                        myTraining.id
-                                      )
-                                    })
-                                  }}
-                                />
-                              </ListItem>
-                            </Tooltip>
-                          </Link>
-                        ))}
-                      </List>
+                                <ListItem
+                                  className={classes.listItem}
+                                  divider
+                                  dense
+                                  button
+                                >
+                                  <ListItemText
+                                    primary={myTraining.title}
+                                    primaryTypographyProps={{
+                                      variant: 'body2',
+                                      noWrap: true,
+                                      className: classNames({
+                                        [classes.listItemPrimaryTextActive]: this.activeTraining(
+                                          myTraining.id
+                                        )
+                                      })
+                                    }}
+                                    secondary={
+                                      <React.Fragment>
+                                        <span>
+                                          {(
+                                            (myTraining.request -
+                                              myTraining.noMatch) /
+                                            myTraining.request
+                                          ).toFixed(2)}
+                                          {'% '}
+                                          Predicted
+                                        </span>
+                                        <span>
+                                          {moment(myTraining.createdAt).format(
+                                            '— MM/DD/YYYY'
+                                          )}
+                                        </span>
+                                      </React.Fragment>
+                                    }
+                                    secondaryTypographyProps={{
+                                      variant: 'caption',
+                                      className: classNames({
+                                        [classes.listItemSecondaryTextActive]: this.activeTraining(
+                                          myTraining.id
+                                        )
+                                      })
+                                    }}
+                                  />
+                                </ListItem>
+                              </Tooltip>
+                            </Link>
+                          ))}
+                        </List>
+                      </React.Fragment>
                     ) : (
                       <Typography
                         variant="caption"
@@ -190,9 +220,9 @@ class Training extends Component {
                 />
               )}
               <UploadProductDialog
-                placeholder="Choose User Input File"
-                message="Upload User Input"
-                submessage="You can upload user inputs to the Training tool in one .xlsx file (follow the template below)."
+                placeholder="Choose Unpredicted User Input File"
+                message="Upload Unpredicted User Input"
+                submessage="You can upload unpredicted user inputs to the Training tool in one .xlsx file (follow the template below)."
                 open={uploadProductDialogStatus}
                 handleClose={this.closeCreateItemDialog}
                 handleConfirm={this.createItem}

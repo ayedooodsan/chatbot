@@ -43,6 +43,9 @@ const styles = theme => ({
     opacity: 0.9,
     marginRight: theme.spacing.unit
   },
+  snackbar: {
+    marginRight: 140
+  },
   message: {
     display: 'flex',
     alignItems: 'center'
@@ -118,6 +121,7 @@ class ConsecutiveSnackbars extends React.Component {
           vertical: 'bottom',
           horizontal: 'right'
         }}
+        className={classes.snackbar}
         open={this.state.open}
         onClose={this.handleClose}
         onExited={this.handleExited}

@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
 function renderInput(inputProps) {
   const { InputProps, classes, ref, className, ...other } = inputProps;
@@ -74,8 +75,12 @@ const styles = () => ({
     flexGrow: 1
   },
   suggestions: {
-    height: 184,
+    maxHeight: 184,
     overflowY: 'overlay'
+  },
+  createIntent: {
+    paddingTop: 16,
+    paddingBottom: 16
   }
 });
 
@@ -89,6 +94,7 @@ function SimpleAutoComplete(props) {
     initialInputValue,
     suggestions,
     placeholder,
+    localIntents,
     className
   } = props;
   // eslint-disable-next-line no-unused-vars
@@ -154,14 +160,59 @@ function SimpleAutoComplete(props) {
               >
                 <div className={classes.suggestions}>
                   {suggestions(inputValue, result => {
-                    return result.map((suggestion, index) =>
-                      renderSuggestion({
-                        suggestion,
-                        index,
-                        itemProps: getItemProps({ item: suggestion }),
-                        highlightedIndex,
-                        selectedItem
-                      })
+                    const filteredLocalIntents = localIntents.filter(
+                      param =>
+                        param.title.search(RegExp(inputValue || '', 'i')) !== -1
+                    );
+                    const mergedResult = [
+                      ...filteredLocalIntents,
+                      ...result
+                    ].sort((a, b) => {
+                      const nameA = a.title.toUpperCase();
+                      const nameB = b.title.toUpperCase();
+                      if (nameA < nameB) {
+                        return -1;
+                      }
+                      if (nameA > nameB) {
+                        return 1;
+                      }
+                      return 0;
+                    });
+                    return mergedResult.length === 0 ? (
+                      <MenuItem
+                        className={classes.createIntent}
+                        {...getItemProps({
+                          item: {
+                            id: Date.now() + Math.random(),
+                            title: inputValue,
+                            isNew: true
+                          }
+                        })}
+                      >
+                        <ListItemText
+                          primaryTypographyProps={{
+                            variant: 'caption',
+                            color: 'primary'
+                          }}
+                          primary="Create new intent"
+                          secondaryTypographyProps={{
+                            style: {
+                              color: 'black'
+                            }
+                          }}
+                          secondary={inputValue}
+                        />
+                      </MenuItem>
+                    ) : (
+                      mergedResult.map((suggestion, index) =>
+                        renderSuggestion({
+                          suggestion,
+                          index,
+                          itemProps: getItemProps({ item: suggestion }),
+                          highlightedIndex,
+                          selectedItem
+                        })
+                      )
                     );
                   })}
                 </div>
@@ -179,6 +230,7 @@ SimpleAutoComplete.defaultProps = {
   initialValue: {},
   initialInputValue: null,
   className: '',
+  localIntents: [],
   label: ''
 };
 
@@ -187,6 +239,7 @@ SimpleAutoComplete.propTypes = {
   suggestions: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired,
+  localIntents: PropTypes.array,
   label: PropTypes.string,
   className: PropTypes.string,
   error: PropTypes.bool,

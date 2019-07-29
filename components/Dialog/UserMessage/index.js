@@ -21,7 +21,7 @@ import {
   EDIT_USER_PARAM,
   DELETE_USER_PARAM
 } from '../DialogInput/constant';
-import BubbleChat from '../BubbleChat';
+import BubbleChat from '../../common/BubbleChat';
 import style from './style';
 
 const UserMessage = props => {

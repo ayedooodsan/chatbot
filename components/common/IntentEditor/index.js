@@ -8,6 +8,9 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Fade from '@material-ui/core/Fade';
+import LabelIcon from '@material-ui/icons/Label';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 import {
   Editor,
   EditorState,
@@ -17,6 +20,7 @@ import {
 } from 'draft-js';
 import { withRouter } from 'next/router';
 import uuid from 'uuid/v1';
+import connect from './store';
 import {
   addEntity,
   changeEntity,
@@ -33,7 +37,15 @@ import useFakeSelection from './useFakeSelection';
 import style from './style';
 
 const IntentEditor = props => {
-  const { classes, router, initialValue, params, onChange, className } = props;
+  const {
+    classes,
+    router,
+    initialValue,
+    params,
+    onChange,
+    className,
+    annotateUtterance
+  } = props;
   const { projectId } = router.query;
   const [entityRef, setEntityRef] = useState(null);
   const [selectionState, setSelectionState] = useState(null);
@@ -215,12 +227,74 @@ const IntentEditor = props => {
     }
   };
 
+  const onIntentAnnotate = () => {
+    annotateUtterance({
+      id: projectId,
+      utterance: getContentState(editorState).blocks[0].text
+    }).then(response => {
+      const { annotateUtterance: annotatedUtterance } = response.data;
+      const generatedEditorState = {};
+      generatedEditorState.blocks = [
+        {
+          text: annotatedUtterance.text,
+          type: 'unstyled',
+          entityRanges: annotatedUtterance.annotations.map(
+            (annotation, index) => {
+              const { entity } = annotation;
+              let key = '';
+              const foundParam = params.find(
+                param => param.entity.id === entity.id
+              );
+              if (foundParam) {
+                // eslint-disable-next-line prefer-destructuring
+                key = foundParam.key;
+              } else {
+                key = uuid();
+              }
+              annotatedUtterance.annotations[index].key = key;
+              return {
+                offset: annotation.offset,
+                length: annotation.length,
+                key
+              };
+            }
+          )
+        }
+      ];
+      generatedEditorState.entityMap = {};
+      annotatedUtterance.annotations.forEach(annotation => {
+        const { key, entity } = annotation;
+        generatedEditorState.entityMap[key] = {
+          type: 'ENTITY',
+          mutability: 'IMMUTABLE',
+          data: {
+            offset: annotation.offset,
+            length: annotation.length,
+            entity,
+            color: getColor(key),
+            paramKey: key
+          }
+        };
+      });
+      setEditorState(
+        EditorState.createWithContent(
+          convertFromRaw(generatedEditorState),
+          generateDecorator(() => {
+            return compProps => (
+              <EntityChip {...compProps} setEntityRef={setNewEntityRef} />
+            );
+          })
+        )
+      );
+      onChange(generatedEditorState);
+    });
+  };
+
   return (
-    <React.Fragment>
+    <div className={classNames(className, classes.root, classes.fullWidth)}>
       <div
         onClick={focusEditor}
         className={classNames(
-          className,
           classes.inputRoot,
           classes.multiline,
           classes.fullWidth
@@ -313,7 +387,16 @@ const IntentEditor = props => {
           </Fade>
         )}
       </Popper>
-    </React.Fragment>
+      <Tooltip title="Annotate" placement="right" aria-label="Annotate">
+        <IconButton
+          onClick={onIntentAnnotate}
+          className={classes.iconButton}
+          aria-label="Annotate"
+        >
+          <LabelIcon />
+        </IconButton>
+      </Tooltip>
+    </div>
   );
 };
 
@@ -325,9 +408,10 @@ IntentEditor.propTypes = {
   initialValue: PropTypes.object.isRequired,
   params: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
+  annotateUtterance: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
-  className: PropTypes.string,
-  router: PropTypes.object.isRequired
+  router: PropTypes.object.isRequired,
+  className: PropTypes.string
 };
 
-export default withStyles(style)(withRouter(IntentEditor));
+export default withStyles(style)(connect(withRouter(IntentEditor)));

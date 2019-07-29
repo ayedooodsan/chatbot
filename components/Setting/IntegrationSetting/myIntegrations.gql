@@ -1,0 +1,11 @@
+query myIntegrations (
+  $projectId: String!
+) {
+  myIntegrations (
+    projectId: $projectId
+  ) {
+    id
+    vendor
+    setting
+  }
+}

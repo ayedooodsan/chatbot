@@ -1,18 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import withStyles from '@material-ui/core/styles/withStyles';
 import MessagesLayoutProvider from '../MessagesLayoutProvider';
 import TextEditor from '../../../common/TextEditor';
 import ZohoSelectResponse from './SelectInput';
+import ZohoSuggestionResponse from './SuggestionInput';
 import ZohoLinksResponse from './LinksInput';
 import ZohoImageResponse from './ImageInput';
-import style from './style';
+import ZohoHandoverResponse from './HandoverInput';
 
 const Zoho = props => {
   const messageTypes = [
     { value: 'text', label: 'Text Response' },
     { value: 'select', label: 'Select Response' },
+    { value: 'suggestion', label: 'Suggestion Response' },
     { value: 'links', label: 'Link Response' },
+    { value: 'forward', label: 'Handover Response' },
     { value: 'image', label: 'Image Response' }
   ];
   const { messages, onChange } = props;
@@ -50,6 +52,22 @@ const Zoho = props => {
         />
       );
     }
+    if (message.type === 'suggestion') {
+      return (
+        <ZohoSuggestionResponse
+          value={message.value}
+          onChange={value => changeMessage({ ...message, value })}
+        />
+      );
+    }
+    if (message.type === 'forward') {
+      return (
+        <ZohoHandoverResponse
+          value={message.value}
+          onChange={value => changeMessage({ ...message, value })}
+        />
+      );
+    }
   };
 
   const initialMessageValue = messageType => {
@@ -61,6 +79,14 @@ const Zoho = props => {
         value: []
       };
     }
+    if (messageType === 'forward') {
+      return {
+        key: Date.now() + Math.random(),
+        platform: 'zoho',
+        type: messageType,
+        value: ''
+      };
+    }
     if (messageType === 'select') {
       return {
         key: Date.now() + Math.random(),
@@ -68,6 +94,16 @@ const Zoho = props => {
         type: messageType,
         value: {
           options: ['']
+        }
+      };
+    }
+    if (messageType === 'suggestion') {
+      return {
+        key: Date.now() + Math.random(),
+        platform: 'zoho',
+        type: messageType,
+        value: {
+          suggestions: ['']
         }
       };
     }
@@ -125,4 +161,4 @@ Zoho.propTypes = {
   messages: PropTypes.array
 };
 
-export default withStyles(style)(Zoho);
+export default Zoho;

@@ -12,7 +12,7 @@ import Reply from '@material-ui/icons/Reply';
 import _ from 'lodash';
 import MessageView from './MessageView';
 import platformOptions from '../RobotDialogInput/const';
-import BubbleChat from '../BubbleChat';
+import BubbleChat from '../../common/BubbleChat';
 import style from './style';
 import { REPLY_ROBOT, EDIT_ROBOT, DELETE_ROBOT } from '../DialogInput/constant';
 
@@ -25,7 +25,7 @@ const RobotMessage = props => {
   const [activePlatform, setActivePlatform] = useState(platforms[0]);
   const [chats, setChats] = useState(payloadGroup[activePlatform]);
   const completePlatformOptions = [
-    { value: 'default', label: 'Default' },
+    { value: 'zoho', label: 'Zoho' },
     ...platformOptions
   ];
 
@@ -87,9 +87,16 @@ const RobotMessage = props => {
               <div className={classes.headerBubble}>
                 {index === 0 && (
                   <React.Fragment>
-                    <Typography variant="subtitle2" color="primary">
-                      {activeMessage.title}
-                    </Typography>
+                    <div>
+                      <Typography variant="subtitle2" color="primary">
+                        {activeMessage.title}
+                      </Typography>
+                      {activeMessage.actionName && (
+                        <Typography variant="subtitle2">
+                          {activeMessage.actionName} ACTION
+                        </Typography>
+                      )}
+                    </div>
                     <Paper className={classes.buttons}>
                       <IconButton
                         className={classes.iconButton}
@@ -136,9 +143,16 @@ const RobotMessage = props => {
         <BubbleChat type="self" selected={selected}>
           <React.Fragment>
             <div className={classes.headerBubble}>
-              <Typography variant="subtitle2" color="primary">
-                {activeMessage.title}
-              </Typography>
+              <div>
+                <Typography variant="subtitle2" color="primary">
+                  {activeMessage.title}
+                </Typography>
+                {activeMessage.actionName && (
+                  <Typography variant="subtitle2">
+                    {activeMessage.actionName} ACTION
+                  </Typography>
+                )}
+              </div>
               <Paper className={classes.buttons}>
                 <IconButton
                   className={classes.iconButton}
