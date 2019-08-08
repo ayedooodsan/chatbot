@@ -58,7 +58,6 @@ class Training extends Component {
         if (!foundTrainingInput) {
           currentTrainingInputs.push({
             title,
-            type: 'unpredicted',
             userSays: [userSay.toString()]
           });
         } else {
