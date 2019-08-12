@@ -11,6 +11,7 @@ import Pagination from 'material-ui-flat-pagination';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
+import FilterModal from '../../common/FilterModal';
 import style from './style';
 
 const SimpleSubNavHead = props => {
@@ -71,6 +72,7 @@ const SimpleSubNavHead = props => {
           <IconButton color="primary" onClick={toggleSearch} size="medium">
             {openSearch ? <Clear /> : <Search />}
           </IconButton>
+          <FilterModal filters={[]} setFilters={console.log} />
         </div>
       </div>
       {openSearch && (

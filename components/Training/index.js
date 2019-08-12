@@ -26,6 +26,7 @@ class Training extends Component {
   state = {
     openSearch: false,
     keyword: '',
+    filters: [],
     pagination: {
       limit: 20,
       offset: 0
@@ -104,6 +105,7 @@ class Training extends Component {
       pagination,
       uploadProductDialogStatus,
       openSearch,
+      filters,
       type
     } = this.state;
     const { projectId, trainingId, classes } = this.props;
@@ -111,6 +113,7 @@ class Training extends Component {
       <MyTrainings
         type={type}
         keyword={keyword}
+        filters={filters}
         projectId={projectId}
         limit={pagination.limit}
         offset={pagination.offset}
