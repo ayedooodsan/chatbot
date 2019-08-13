@@ -26,6 +26,7 @@ class Training extends Component {
   state = {
     openSearch: false,
     keyword: '',
+    filters: [],
     pagination: {
       limit: 20,
       offset: 0
@@ -98,18 +99,24 @@ class Training extends Component {
     this.setState({ type: value });
   };
 
+  setFilters = filters => {
+    this.setState({ filters });
+  };
+
   render() {
     const {
       keyword,
       pagination,
       uploadProductDialogStatus,
       openSearch,
+      filters,
       type
     } = this.state;
     const { projectId, trainingId, classes } = this.props;
     return (
       <MyTrainings
         type={type}
+        filters={filters}
         keyword={keyword}
         projectId={projectId}
         limit={pagination.limit}
@@ -125,6 +132,8 @@ class Training extends Component {
                     <SimpleHeader
                       openSearch={openSearch}
                       setOpenSearch={this.setOpenSearch}
+                      filters={filters}
+                      setFilters={this.setFilters}
                       title="Trainings"
                       onAddItem={this.openCreateItemDialog}
                       handleClickPagination={this.setOffsetPagination}
