@@ -99,6 +99,10 @@ class Training extends Component {
     this.setState({ type: value });
   };
 
+  setFilters = filters => {
+    this.setState({ filters });
+  };
+
   render() {
     const {
       keyword,
@@ -112,8 +116,8 @@ class Training extends Component {
     return (
       <MyTrainings
         type={type}
-        keyword={keyword}
         filters={filters}
+        keyword={keyword}
         projectId={projectId}
         limit={pagination.limit}
         offset={pagination.offset}
@@ -128,6 +132,8 @@ class Training extends Component {
                     <SimpleHeader
                       openSearch={openSearch}
                       setOpenSearch={this.setOpenSearch}
+                      filters={filters}
+                      setFilters={this.setFilters}
                       title="Trainings"
                       onAddItem={this.openCreateItemDialog}
                       handleClickPagination={this.setOffsetPagination}

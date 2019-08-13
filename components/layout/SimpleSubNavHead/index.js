@@ -28,7 +28,9 @@ const SimpleSubNavHead = props => {
     noPagination,
     advancedSearch,
     openSearch,
-    setOpenSearch
+    setOpenSearch,
+    filters,
+    setFilters
   } = props;
   const searchInputRef = useRef(null);
 
@@ -72,7 +74,7 @@ const SimpleSubNavHead = props => {
           <IconButton color="primary" onClick={toggleSearch} size="medium">
             {openSearch ? <Clear /> : <Search />}
           </IconButton>
-          <FilterModal filters={[]} setFilters={console.log} />
+          {filters && <FilterModal filters={filters} setFilters={setFilters} />}
         </div>
       </div>
       {openSearch && (
@@ -126,7 +128,9 @@ SimpleSubNavHead.defaultProps = {
   setAdvancedSearch: null,
   noPagination: false,
   pagination: {},
-  handleClickPagination: null
+  handleClickPagination: null,
+  filters: null,
+  setFilters: null
 };
 
 SimpleSubNavHead.propTypes = {
@@ -137,6 +141,8 @@ SimpleSubNavHead.propTypes = {
   keyword: PropTypes.string.isRequired,
   openSearch: PropTypes.bool.isRequired,
   setOpenSearch: PropTypes.func.isRequired,
+  setFilters: PropTypes.func,
+  filters: PropTypes.array,
   pagination: PropTypes.object,
   handleClickPagination: PropTypes.func,
   hasAdvanceSearch: PropTypes.bool,

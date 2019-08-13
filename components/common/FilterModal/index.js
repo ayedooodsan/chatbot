@@ -42,7 +42,17 @@ const FilterModal = props => {
   };
 
   const deliverMyFilters = () => {
-    setFilters(myFilters);
+    setFilters(
+      myFilters.map(filter => {
+        if (filter.type === 'createdAt') {
+          return {
+            type: 'createdAt',
+            value: filter.value.format('YYYY-MM-DD')
+          };
+        }
+        return filter;
+      })
+    );
     setOpen(false);
   };
 
@@ -76,18 +86,18 @@ const FilterModal = props => {
                 clearable
                 fullWidth
                 margin="dense"
-                label="Date"
+                label="Created Date"
                 variant="outlined"
-                value={getFilterValue('date')}
-                onChange={newDate => onFilterChange('date', newDate)}
+                value={getFilterValue('createdAt')}
+                onChange={newDate => onFilterChange('createdAt', newDate)}
                 format="DD/MM/YYYY"
               />
             </MuiPickersUtilsProvider>
-            {getFilterValue('date') && (
+            {getFilterValue('createdAt') && (
               <div>
                 <IconButton
                   aria-label="toggle password visibility"
-                  onClick={() => onFilterChange('date', null)}
+                  onClick={() => onFilterChange('createdAt', null)}
                 >
                   <Clear />
                 </IconButton>
