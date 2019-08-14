@@ -1,8 +1,10 @@
 const style = {
   card: {
-    maxWidth: 300,
-    marginLeft: 'auto',
-    marginTop: 6
+    margin: '-15px -10px',
+    marginTop: '6px',
+    borderRadius: 0,
+    boxShadow: 'none',
+    borderBottomLeftRadius: 15
   },
   media: {
     width: 300,

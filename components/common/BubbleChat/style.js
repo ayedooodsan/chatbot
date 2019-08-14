@@ -97,40 +97,6 @@ const style = () => ({
     boxShadow: '1px 1px 3px 0px rgba(0,0,0,0.2)',
     position: 'relative',
     borderBottomRightRadius: 0
-  },
-  wasekusr: {
-    color: 'white',
-    position: 'absolute',
-    left: '-13px',
-    top: '-3px',
-    width: '20px',
-    height: '20px',
-    transform: 'scaleX(-1)'
-  },
-  yeausr: {
-    color: 'rgba(0,0,0,0.1)',
-    position: 'absolute',
-    left: '-13px',
-    top: '-2px',
-    width: '20px',
-    height: '20px',
-    transform: 'scaleX(-1)'
-  },
-  wasek: {
-    color: '#ecfffe',
-    position: 'absolute',
-    right: '-13px',
-    bottom: '-4px',
-    width: '20px',
-    height: '20px'
-  },
-  yea: {
-    color: 'rgba(0,0,0,0.1)',
-    position: 'absolute',
-    right: '-13px',
-    bottom: '-5px',
-    width: '20px',
-    height: '20px'
   }
 });
 
