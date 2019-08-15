@@ -22,8 +22,35 @@ const RobotMessage = props => {
   const { payload } = activeMessage;
   const payloadGroup = _.groupBy(payload, el => el.platform);
   const platforms = Object.keys(payloadGroup);
+  const getChats = (currentActivePlatform, currentPayloadGroup) => {
+    if (currentActivePlatform === 'facebook') {
+      return currentPayloadGroup[currentActivePlatform].reduce(
+        (currentChats, chat) => {
+          if (chat.type === 'card') {
+            const foundCurrentCardChatIndex = currentChats.findIndex(
+              currentChat => currentChat.type === 'card'
+            );
+            if (foundCurrentCardChatIndex !== -1) {
+              currentChats[foundCurrentCardChatIndex].value.push(chat.value);
+            } else {
+              currentChats.push({
+                platform: 'facebook',
+                type: 'card',
+                value: [chat.value]
+              });
+            }
+          } else {
+            currentChats.push(chat);
+          }
+          return currentChats;
+        },
+        []
+      );
+    }
+    return currentPayloadGroup[currentActivePlatform];
+  };
   const [activePlatform, setActivePlatform] = useState(platforms[0]);
-  const [chats, setChats] = useState(payloadGroup[activePlatform]);
+  const [chats, setChats] = useState(getChats(activePlatform, payloadGroup));
   const completePlatformOptions = [
     { value: 'zoho', label: 'Zoho' },
     ...platformOptions
@@ -31,11 +58,11 @@ const RobotMessage = props => {
 
   useEffect(() => {
     setActivePlatform(platforms[0]);
-    setChats(payloadGroup[platforms[0]]);
+    setChats(getChats(platforms[0], payloadGroup));
   }, [messages]);
 
   useEffect(() => {
-    setChats(payloadGroup[activePlatform]);
+    setChats(getChats(activePlatform, payloadGroup));
   }, [activePlatform]);
 
   return (

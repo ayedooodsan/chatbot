@@ -11,6 +11,7 @@ import ZohoHandoverView from '../Zoho/HandoverView';
 import FacebookTextView from '../Facebook/TextView';
 import FacebookButtonView from '../Facebook/ButtonView';
 import FacebookQuickReplyView from '../Facebook/QuickReplyView';
+import FacebookCardView from '../Facebook/CardView';
 
 const MessageView = props => {
   const { value, type, platform } = props;
@@ -37,6 +38,8 @@ const MessageView = props => {
     View = FacebookButtonView;
   } else if (platform === 'facebook' && type === 'quickReply') {
     View = FacebookQuickReplyView;
+  } else if (platform === 'facebook' && type === 'card') {
+    View = FacebookCardView;
   }
   return View && <View value={value} />;
 };

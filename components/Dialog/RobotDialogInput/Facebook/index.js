@@ -4,12 +4,14 @@ import MessagesLayoutProvider from '../MessagesLayoutProvider';
 import TextEditor from '../../../common/TextEditor';
 import FacebookQuickReplyResponse from './QuickReplyInput';
 import FacebookButtonResponse from './ButtonInput';
+import FacebookCardResponse from './CardInput';
 
 const Facebook = props => {
   const messageTypes = [
     { value: 'text', label: 'Text Response' },
-    { value: 'quickReply', label: 'Quick Replies' },
-    { value: 'button', label: 'Buttons' }
+    { value: 'quickReply', label: 'Quick Reply' },
+    { value: 'button', label: 'Button' },
+    { value: 'card', label: 'Card' }
   ];
   const { messages, onChange } = props;
   const renderMessage = (message, changeMessage) => {
@@ -33,6 +35,14 @@ const Facebook = props => {
     if (message.type === 'button') {
       return (
         <FacebookButtonResponse
+          value={message.value}
+          onChange={value => changeMessage({ ...message, value })}
+        />
+      );
+    }
+    if (message.type === 'card') {
+      return (
+        <FacebookCardResponse
           value={message.value}
           onChange={value => changeMessage({ ...message, value })}
         />
@@ -72,6 +82,22 @@ const Facebook = props => {
               key: Date.now() + Math.random(),
               title: '',
               value: ''
+            }
+          ]
+        }
+      };
+    }
+    if (messageType === 'card') {
+      return {
+        key: Date.now() + Math.random(),
+        platform: 'facebook',
+        type: messageType,
+        value: {
+          title: '',
+          buttons: [
+            {
+              key: Date.now() + Math.random(),
+              text: ''
             }
           ]
         }

@@ -77,7 +77,7 @@ const QuickReplyInput = props => {
 
   return (
     <ResponseContainer
-      label="Quick Replies"
+      label="Quick Reply"
       focus={focus}
       error={hasError}
       onClickAway={onClickAway}
