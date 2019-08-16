@@ -10,7 +10,6 @@ const QuickReplyView = props => {
   return (
     <React.Fragment>
       <Typography variant="caption">{value.title}</Typography>
-      <Typography variant="caption">These are my replies:</Typography>
       {value.replies.map(reply => (
         <Chip
           key={reply}
