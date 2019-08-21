@@ -9,16 +9,27 @@ import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 
 function renderInput(inputProps) {
-  const { InputProps, classes, ref, ...other } = inputProps;
+  const { InputProps, classes, autoFocus, ref, ...other } = inputProps;
+  const { onChange, ...otherInputProps } = InputProps;
+  const onFormatedChange = event => {
+    const formatedKeyword = event.target.value.replace(/[^a-zA-Z\d\s_.-]/, '');
+    onChange({
+      target: {
+        value: formatedKeyword
+      }
+    });
+  };
   return (
     <TextField
+      autoFocus={autoFocus}
       InputProps={{
         inputRef: ref,
         classes: {
           root: classes.inputRoot,
           input: classes.inputInput
         },
-        ...InputProps
+        onChange: onFormatedChange,
+        ...otherInputProps
       }}
       {...other}
     />

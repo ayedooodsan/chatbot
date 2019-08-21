@@ -179,9 +179,10 @@ class Training extends Component {
                                       <React.Fragment>
                                         <span>
                                           {(
-                                            (myTraining.request -
+                                            ((myTraining.request -
                                               myTraining.noMatch) /
-                                            myTraining.request
+                                              myTraining.request) *
+                                            100
                                           ).toFixed(2)}
                                           {'% '}
                                           Predicted

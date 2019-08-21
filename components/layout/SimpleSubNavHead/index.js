@@ -82,7 +82,11 @@ const SimpleSubNavHead = props => {
           <TextField
             value={keyword}
             onChange={event => {
-              setKeyword(event.target.value);
+              const formatedKeyword = event.target.value.replace(
+                /[^a-zA-Z\d\s:_.]/,
+                ''
+              );
+              setKeyword(formatedKeyword);
               handleClickPagination(0);
             }}
             inputRef={searchInputRef}
