@@ -31,7 +31,7 @@ const IntentField = props => {
               currentParams.push(foundParams);
             } else {
               currentParams.push({
-                name: entity.title,
+                name: entity.title.replace(/[^a-zA-Z0-9_]/g, '_'),
                 entity,
                 key: paramKey
               });
@@ -49,6 +49,7 @@ const IntentField = props => {
     const newBlock = rawEditorState.blocks[0];
     const { entityMap } = rawEditorState;
     const newIntent = {
+      key: initialValue.key,
       text: newBlock.text,
       entityRanges: newBlock.entityRanges.map(entityRange => ({
         offset: entityRange.offset,

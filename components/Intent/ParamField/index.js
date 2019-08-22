@@ -7,6 +7,7 @@ const ParamField = props => {
   const onUpdateIntents = () => {
     updateIntents((intents, params) => {
       const newIntents = intents.map(intent => ({
+        key: intent.key,
         text: intent.text,
         entityRanges: intent.entityRanges.filter(entityRange => {
           const foundEntity = params.find(
