@@ -67,7 +67,7 @@ const IntegrationSetting = props => {
       if (action === 'DISCONNECT') {
         setDisconnectDialogOpen(false);
       } else {
-        setDisconnectDialogOpen(false);
+        setDefaultDialogOpen(false);
       }
     });
   };
