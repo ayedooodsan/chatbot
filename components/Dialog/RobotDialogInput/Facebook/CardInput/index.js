@@ -42,7 +42,7 @@ const CardInput = props => {
       title: value.title,
       subtitle: value.subtitle,
       buttons: value.buttons.map(button => ({
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         text: button.text,
         postback: button.postback
       }))
@@ -161,7 +161,11 @@ const CardInput = props => {
         onClick={() =>
           addArrayValue(
             'buttons',
-            { key: Date.now() + Math.random(), postback: null, text: '' },
+            {
+              key: new Date().getTime() + Math.random(),
+              postback: null,
+              text: ''
+            },
             { value: null }
           )
         }

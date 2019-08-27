@@ -43,7 +43,7 @@ const LinksInput = props => {
       text: value.text,
       image: value.image,
       links: value.links.map(link => ({
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         text: link.text,
         url: link.url,
         icon: link.icon
@@ -184,7 +184,12 @@ const LinksInput = props => {
         onClick={() =>
           addArrayValue(
             'links',
-            { key: Date.now() + Math.random(), text: '', url: '', icon: '' },
+            {
+              key: new Date().getTime() + Math.random(),
+              text: '',
+              url: '',
+              icon: ''
+            },
             { text: null, url: null, icon: null }
           )
         }

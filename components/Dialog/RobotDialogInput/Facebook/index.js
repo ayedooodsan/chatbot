@@ -53,7 +53,7 @@ const Facebook = props => {
   const initialMessageValue = messageType => {
     if (messageType === 'text') {
       return {
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         platform: 'facebook',
         type: messageType,
         value: []
@@ -61,7 +61,7 @@ const Facebook = props => {
     }
     if (messageType === 'quickReply') {
       return {
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         platform: 'facebook',
         type: messageType,
         value: {
@@ -72,14 +72,14 @@ const Facebook = props => {
     }
     if (messageType === 'button') {
       return {
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         platform: 'facebook',
         type: messageType,
         value: {
           text: '',
           buttons: [
             {
-              key: Date.now() + Math.random(),
+              key: new Date().getTime() + Math.random(),
               title: '',
               value: ''
             }
@@ -89,14 +89,14 @@ const Facebook = props => {
     }
     if (messageType === 'card') {
       return {
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         platform: 'facebook',
         type: messageType,
         value: {
           title: '',
           buttons: [
             {
-              key: Date.now() + Math.random(),
+              key: new Date().getTime() + Math.random(),
               text: ''
             }
           ]

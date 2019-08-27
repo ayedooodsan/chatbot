@@ -51,7 +51,8 @@
     "@material-ui/icons": "^3.0.2",
     "@zeit/next-css": "^1.0.1",
     "apollo-boost": "0.3.1",
-    "apollo-client-preset": "1.0.8",
+    "apollo-link": "^1.2.12",
+    "apollo-link-ws": "^1.0.18",
     "apollo-upload-client": "^10.0.1",
     "babel-plugin-import-graphql": "2.7.0",
     "chalk": "2.4.2",
@@ -104,6 +105,7 @@
     "redux": "4.0.1",
     "redux-thunk": "^2.3.0",
     "rimraf": "2.6.3",
+    "subscriptions-transport-ws": "^0.9.16",
     "uuid": "^3.3.2"
   },
   "devDependencies": {

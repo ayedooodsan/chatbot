@@ -78,7 +78,7 @@ class Dialog extends Component {
         offset={pagination.offset}
         limit={pagination.limit}
       >
-        {myDialogs => (
+        {(myDialogs, loading) => (
           <LayoutProvider
             navigation={() => <Navigation />}
             subNavigation={() => (
@@ -93,7 +93,7 @@ class Dialog extends Component {
                       handleClickPagination={this.setOffsetPagination}
                       pagination={{
                         ...pagination,
-                        dataLength: myDialogs.pageInfo.total
+                        dataLength: loading ? 0 : myDialogs.pageInfo.total
                       }}
                       keyword={keyword}
                       setKeyword={this.setKeyword}
@@ -101,7 +101,7 @@ class Dialog extends Component {
                   )
                 }
                 body={() =>
-                  myDialogs && myDialogs.dialogs.length > 0 ? (
+                  !loading && myDialogs && myDialogs.dialogs.length > 0 ? (
                     <List component="nav">
                       {myDialogs.dialogs.map(myDialog => (
                         <Link
@@ -138,7 +138,7 @@ class Dialog extends Component {
                       className={classes.noData}
                       color="primary"
                     >
-                      No data available.
+                      {loading ? 'Searching...' : 'No data available.'}
                     </Typography>
                   )
                 }

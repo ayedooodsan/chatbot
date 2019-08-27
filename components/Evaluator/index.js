@@ -32,11 +32,67 @@ class Evaluator extends React.Component {
     open: false
   };
 
+  projectTrainingNotificationKey = null;
+
   componentDidMount() {
     const { router } = this.props;
     this.setState({
       sessionTag: router.query.projectId + Math.random()
     });
+  }
+
+  componentDidUpdate() {
+    const {
+      router,
+      subscribeProjectTraining,
+      subscribeProjectTrained
+    } = this.props;
+    if (subscribeProjectTraining) {
+      subscribeProjectTraining({
+        id: router.query.projectId,
+        onSubscriptionData: userName => {
+          const { me, actions } = this.props;
+          if (me.username !== userName) {
+            this.setState({
+              training: true,
+              open: false
+            });
+            this.projectTrainingNotificationKey = actions.notify({
+              message: `Project training started by ${userName}. Your last update at this moment also will be trained.`,
+              variant: 'info',
+              autoHideDuration: 120000
+            });
+          }
+        }
+      });
+    }
+    if (subscribeProjectTrained) {
+      subscribeProjectTrained({
+        id: router.query.projectId,
+        onSubscriptionData: userName => {
+          const { me, actions, project } = this.props;
+          if (me.username !== userName) {
+            if (this.projectTrainingNotificationKey) {
+              actions.closeNotification(this.projectTrainingNotificationKey);
+              this.projectTrainingNotificationKey = null;
+            }
+            this.setState({
+              training: false
+            });
+            let message = `Project training by ${userName} completed.`;
+            if (project.needTrain) {
+              message +=
+                ' You can train again to make sure your new data trained.';
+            }
+            actions.notify({
+              message,
+              variant: 'success',
+              autoHideDuration: 10000
+            });
+          }
+        }
+      });
+    }
   }
 
   handleClick = event => {
@@ -99,7 +155,7 @@ class Evaluator extends React.Component {
         utterance: '',
         messages: [
           ...state.messages,
-          { key: Date.now(), text: utterance },
+          { key: new Date().getTime(), text: utterance },
           null
         ]
       }),
@@ -123,7 +179,7 @@ class Evaluator extends React.Component {
     }).then(response => {
       const { detectIntent: detectedIntent } = response.data;
       const formatedDetectedIntent = {
-        key: Date.now(),
+        key: new Date().getTime(),
         ...detectedIntent,
         contexts: detectedIntent.contexts.map(context => ({
           ...context,
@@ -162,12 +218,10 @@ class Evaluator extends React.Component {
     const { anchorEl, open, utterance, messages, training } = this.state;
     const id = open ? 'evaluator-popper' : null;
     let trainButtonText = '';
-    if (project.needTrain) {
-      if (training) {
-        trainButtonText = 'Training';
-      } else {
-        trainButtonText = 'Train';
-      }
+    if (training) {
+      trainButtonText = 'Training';
+    } else if (project.needTrain) {
+      trainButtonText = 'Train';
     } else {
       trainButtonText = 'Trained';
     }
@@ -285,13 +339,20 @@ class Evaluator extends React.Component {
 
 Evaluator.defaultProps = {
   router: {},
-  project: {}
+  project: {},
+  me: {},
+  subscribeProjectTraining: null,
+  subscribeProjectTrained: null
 };
 
 Evaluator.propTypes = {
   classes: PropTypes.object.isRequired,
   detectIntent: PropTypes.func.isRequired,
   trainProject: PropTypes.func.isRequired,
+  actions: PropTypes.object.isRequired,
+  subscribeProjectTraining: PropTypes.func,
+  subscribeProjectTrained: PropTypes.func,
+  me: PropTypes.object,
   project: PropTypes.object,
   router: PropTypes.object
 };

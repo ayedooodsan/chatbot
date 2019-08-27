@@ -36,14 +36,14 @@ const Default = props => {
       return {
         platform: 'default',
         type: messageType,
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         value: []
       };
     }
     return {
       platform: 'default',
       type: 'code',
-      key: Date.now() + Math.random(),
+      key: new Date().getTime() + Math.random(),
       value: '{\n    "attribute": "value"\n}'
     };
   };

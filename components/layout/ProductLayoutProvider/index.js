@@ -15,11 +15,11 @@ class ProductLayoutProvider extends Component {
     const { productValues, subProductValues } = this.props;
     this.setState({
       productValues: productValues.map(productValue => ({
-        key: productValue.id || Date.now() + Math.random(),
+        key: productValue.id || new Date().getTime() + Math.random(),
         ...productValue
       })),
       subProductValues: subProductValues.map(subProductValue => ({
-        key: subProductValue.id || Date.now() + Math.random(),
+        key: subProductValue.id || new Date().getTime() + Math.random(),
         ...subProductValue
       })),
       title: this.props.title
@@ -61,11 +61,11 @@ class ProductLayoutProvider extends Component {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
         productValues: productValues.map(productValue => ({
-          key: productValue.id || Date.now() + Math.random(),
+          key: productValue.id || new Date().getTime() + Math.random(),
           ...productValue
         })),
         subProductValues: subProductValues.map(subProductValue => ({
-          key: subProductValue.id || Date.now() + Math.random(),
+          key: subProductValue.id || new Date().getTime() + Math.random(),
           ...subProductValue
         })),
         title: this.props.title
@@ -107,7 +107,7 @@ class ProductLayoutProvider extends Component {
     this.setState(prevState => {
       const newValues = [...prevState.productValues];
       newValues.push({
-        key: initialValue.id || Date.now() + Math.random(),
+        key: initialValue.id || new Date().getTime() + Math.random(),
         ...initialValue
       });
       return { productValues: newValues };
@@ -145,7 +145,7 @@ class ProductLayoutProvider extends Component {
     this.setState(prevState => {
       const newValues = prevState.subProductValues;
       newValues.push({
-        key: initialValue.id || Date.now() + Math.random(),
+        key: initialValue.id || new Date().getTime() + Math.random(),
         ...initialValue
       });
       return { subProductValues: newValues };
