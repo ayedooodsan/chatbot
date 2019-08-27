@@ -97,7 +97,7 @@ class Entity extends Component {
             projectId={projectId}
             keyword={keyword}
           >
-            {entityProvider => (
+            {(entityProvider, loading) => (
               <SubNavigation
                 header={() =>
                   entityProvider && (
@@ -112,7 +112,7 @@ class Entity extends Component {
                       handleClickPagination={this.setOffsetPagination}
                       pagination={{
                         ...pagination,
-                        dataLength: entityProvider.pageInfo.total
+                        dataLength: loading ? 0 : entityProvider.pageInfo.total
                       }}
                       keyword={keyword}
                       setKeyword={this.setKeyword}
@@ -120,7 +120,9 @@ class Entity extends Component {
                   )
                 }
                 body={() =>
-                  entityProvider && entityProvider.entities.length > 0 ? (
+                  !loading &&
+                  entityProvider &&
+                  entityProvider.entities.length > 0 ? (
                     <List component="nav">
                       {entityProvider.entities.map((myEntity, index) => (
                         <Link
@@ -167,7 +169,7 @@ class Entity extends Component {
                       className={classes.noData}
                       color="primary"
                     >
-                      No data available.
+                      {loading ? 'Searching...' : 'No data available.'}
                     </Typography>
                   )
                 }

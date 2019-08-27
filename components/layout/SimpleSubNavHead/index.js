@@ -64,9 +64,16 @@ const SimpleSubNavHead = props => {
   return (
     <React.Fragment>
       <div className={classes.title}>
-        <Typography variant="h6" className={classes.menuTitle}>
-          {title}
-        </Typography>
+        <div>
+          <Typography variant="h6" className={classes.menuTitle}>
+            {title}
+          </Typography>
+          {pagination && (
+            <Typography variant="caption">
+              Total: {pagination.dataLength}
+            </Typography>
+          )}
+        </div>
         <div>
           <IconButton color="primary" size="medium" onClick={onAddItem}>
             <Add />
