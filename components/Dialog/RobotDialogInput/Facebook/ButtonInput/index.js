@@ -40,7 +40,7 @@ const ButtonInput = props => {
     {
       text: value.text,
       buttons: value.buttons.map(button => ({
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         title: button.title,
         value: button.value
       }))
@@ -147,7 +147,7 @@ const ButtonInput = props => {
         onClick={() =>
           addArrayValue(
             'buttons',
-            { key: Date.now() + Math.random(), value: '', title: '' },
+            { key: new Date().getTime() + Math.random(), value: '', title: '' },
             { value: null }
           )
         }

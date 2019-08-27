@@ -36,7 +36,7 @@ const SuggestionInput = props => {
   } = useResponseState(
     {
       suggestions: value.suggestions.map(suggestion => ({
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         value: suggestion
       }))
     },
@@ -109,7 +109,7 @@ const SuggestionInput = props => {
         onClick={() =>
           addArrayValue(
             'suggestions',
-            { key: Date.now() + Math.random(), value: '' },
+            { key: new Date().getTime() + Math.random(), value: '' },
             { value: null }
           )
         }

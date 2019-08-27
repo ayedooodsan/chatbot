@@ -193,7 +193,7 @@ function SimpleAutoComplete(props) {
                         className={classes.createIntent}
                         {...getItemProps({
                           item: {
-                            id: Date.now() + Math.random(),
+                            id: new Date().getTime() + Math.random(),
                             title: inputValue,
                             isNew: true
                           }

@@ -38,7 +38,7 @@ class DialogProduct extends Component {
       ...message,
       payload: message.payload
         ? message.payload.map(payloadEl => ({
-            key: Date.now() + Math.random(),
+            key: new Date().getTime() + Math.random(),
             type: payloadEl.type,
             platform: payloadEl.platform,
             value: JSON.parse(payloadEl.value)
@@ -75,7 +75,7 @@ class DialogProduct extends Component {
         ...message,
         payload: message.payload
           ? message.payload.map(payloadEl => ({
-              key: Date.now() + Math.random(),
+              key: new Date().getTime() + Math.random(),
               type: payloadEl.type,
               platform: payloadEl.platform,
               value: JSON.parse(payloadEl.value)

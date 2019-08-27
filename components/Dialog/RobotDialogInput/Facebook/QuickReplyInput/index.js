@@ -39,7 +39,7 @@ const QuickReplyInput = props => {
     {
       title: value.title,
       replies: value.replies.map(reply => ({
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         value: reply
       }))
     },
@@ -120,7 +120,7 @@ const QuickReplyInput = props => {
         onClick={() =>
           addArrayValue(
             'replies',
-            { key: Date.now() + Math.random(), value: '' },
+            { key: new Date().getTime() + Math.random(), value: '' },
             { value: null }
           )
         }
