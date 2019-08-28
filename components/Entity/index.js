@@ -97,30 +97,30 @@ class Entity extends Component {
             projectId={projectId}
             keyword={keyword}
           >
-            {entityProvider => (
+            {(entityProvider, loading) => (
               <SubNavigation
-                header={() =>
-                  entityProvider && (
-                    <SimpleHeader
-                      openSearch={openSearch}
-                      setOpenSearch={this.setOpenSearch}
-                      hasAdvanceSearch
-                      advancedSearch={advancedSearch}
-                      setAdvancedSearch={this.setAdvancedSearch}
-                      title="Entities"
-                      onAddItem={this.openCreateItemDialog}
-                      handleClickPagination={this.setOffsetPagination}
-                      pagination={{
-                        ...pagination,
-                        dataLength: entityProvider.pageInfo.total
-                      }}
-                      keyword={keyword}
-                      setKeyword={this.setKeyword}
-                    />
-                  )
-                }
+                header={() => (
+                  <SimpleHeader
+                    openSearch={openSearch}
+                    setOpenSearch={this.setOpenSearch}
+                    hasAdvanceSearch
+                    advancedSearch={advancedSearch}
+                    setAdvancedSearch={this.setAdvancedSearch}
+                    title="Entities"
+                    onAddItem={this.openCreateItemDialog}
+                    handleClickPagination={this.setOffsetPagination}
+                    pagination={{
+                      ...pagination,
+                      dataLength: loading ? 0 : entityProvider.pageInfo.total
+                    }}
+                    keyword={keyword}
+                    setKeyword={this.setKeyword}
+                  />
+                )}
                 body={() =>
-                  entityProvider && entityProvider.entities.length > 0 ? (
+                  !loading &&
+                  entityProvider &&
+                  entityProvider.entities.length > 0 ? (
                     <List component="nav">
                       {entityProvider.entities.map((myEntity, index) => (
                         <Link
@@ -140,7 +140,6 @@ class Entity extends Component {
                               <ListItem
                                 className={classes.listItem}
                                 dense
-                                variant
                                 button
                               >
                                 <ListItemText
@@ -167,7 +166,7 @@ class Entity extends Component {
                       className={classes.noData}
                       color="primary"
                     >
-                      No data available.
+                      {loading ? 'Searching...' : 'No data available.'}
                     </Typography>
                   )
                 }

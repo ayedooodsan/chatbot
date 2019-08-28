@@ -12,9 +12,10 @@ import useResponseState from '../../useResponseState';
 
 const validation = values => {
   const errors = {
-    suggestions: values.suggestions.map(suggestion => {
-      if (!suggestion.value || suggestion.value === '') {
-        return { value: 'Suggestion name is required' };
+    title: !values.title || values.title === '' ? 'Title is required' : null,
+    replies: values.replies.map(reply => {
+      if (!reply.value || reply.value === '') {
+        return { value: 'Reply name is required' };
       }
       return { value: null };
     })
@@ -22,26 +23,29 @@ const validation = values => {
   return errors;
 };
 
-const SuggestionInput = props => {
+const QuickReplyInput = props => {
   const [focus, setFocus] = useState(false);
   const [hasError, setHasError] = useState(false);
   const { classes, value, onChange } = props;
   const {
     values,
     errors,
+    onChangeValue,
     onChangeObjectValueArray,
     addArrayValue,
     deleteArrayValue,
     onSubmit
   } = useResponseState(
     {
-      suggestions: value.suggestions.map(suggestion => ({
+      title: value.title,
+      replies: value.replies.map(reply => ({
         key: new Date().getTime() + Math.random(),
-        value: suggestion
+        value: reply
       }))
     },
     {
-      suggestions: value.suggestions.map(() => ({
+      title: null,
+      replies: value.replies.map(() => ({
         value: null
       }))
     },
@@ -49,81 +53,88 @@ const SuggestionInput = props => {
   );
 
   useEffect(() => {
-    const hasNewError = errors.suggestions.some(
-      suggestion => suggestion.value !== null
-    );
+    const hasNewError =
+      errors.replies.some(reply => reply.value !== null) && errors.title;
     setHasError(hasNewError);
   }, [errors]);
 
   useEffect(() => {
     onChange({
-      suggestions: values.suggestions.map((suggestion, index) =>
-        suggestion.value === '' ? `#${index + 1} suggestion` : suggestion.value
+      title: values.title || 'Title',
+      replies: values.replies.map((reply, index) =>
+        reply.value === '' ? `#${index + 1} reply` : reply.value
       )
     });
   }, [values]);
 
   const onClickAway = () => {
     const { errors: newError } = onSubmit();
-    const hasNewError = newError.suggestions.some(
-      suggestion => suggestion.value !== null
-    );
+    const hasNewError =
+      newError.replies.some(reply => reply.value !== null) && errors.title;
     setHasError(hasNewError);
     setFocus(false);
   };
 
   return (
     <ResponseContainer
-      label="Suggestion Response"
+      label="Quick Reply"
       focus={focus}
       error={hasError}
       onClickAway={onClickAway}
     >
-      {values.suggestions.map((suggestion, index) => (
-        <div key={suggestion.key} className={classes.suggestionRoot}>
+      <InputBase
+        fullWidth
+        placeholder="Title (required)"
+        onFocus={() => setFocus(true)}
+        error={Boolean(errors.title)}
+        onChange={event => onChangeValue('title', event.target.value)}
+        value={values.title}
+      />
+      {values.replies.map((reply, index) => (
+        <div key={reply.key} className={classes.suggestionRoot}>
           <IconButton
             className={classes.iconButton}
-            onClick={() => deleteArrayValue('suggestions', index)}
+            onClick={() => deleteArrayValue('replies', index)}
           >
             <Delete fontSize="small" />
           </IconButton>
           <Divider className={classes.divider} />
           <InputBase
             fullWidth
-            placeholder="Suggestion name (required)"
+            placeholder="Reply name (required)"
             onFocus={() => setFocus(true)}
-            error={Boolean(errors.suggestions[index].value)}
+            error={Boolean(errors.replies[index].value)}
             onChange={event =>
               onChangeObjectValueArray(
-                'suggestions',
+                'replies',
                 index,
                 'value',
                 event.target.value
               )
             }
-            value={suggestion.value}
+            value={reply.value}
           />
         </div>
       ))}
       <Button
         onClick={() =>
           addArrayValue(
-            'suggestions',
+            'replies',
             { key: new Date().getTime() + Math.random(), value: '' },
             { value: null }
           )
         }
       >
-        Add Suggestion
+        Add Reply
       </Button>
     </ResponseContainer>
   );
 };
 
-SuggestionInput.propTypes = {
+QuickReplyInput.propTypes = {
   classes: PropTypes.object.isRequired,
   value: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired
 };
 
-export default withStyles(style)(SuggestionInput);
+export default withStyles(style)(QuickReplyInput);

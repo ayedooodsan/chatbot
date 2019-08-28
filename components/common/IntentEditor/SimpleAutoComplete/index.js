@@ -11,7 +11,15 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 function renderInput(inputProps) {
   const { InputProps, classes, autoFocus, ...other } = inputProps;
-
+  const { onChange, ...otherInputProps } = InputProps;
+  const onFormatedChange = event => {
+    const formatedKeyword = event.target.value.replace(/[^a-zA-Z\d\s_.-]/, '');
+    onChange({
+      target: {
+        value: formatedKeyword
+      }
+    });
+  };
   return (
     <TextField
       autoFocus={autoFocus}
@@ -20,7 +28,8 @@ function renderInput(inputProps) {
           root: classes.inputRoot,
           input: classes.inputInput
         },
-        ...InputProps
+        onChange: onFormatedChange,
+        ...otherInputProps
       }}
       {...other}
     />

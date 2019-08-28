@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -110,6 +110,19 @@ const IntentEditor = props => {
       })
     )
   );
+  useEffect(() => {
+    const newBlock = convertFromRaw(generateEditorState(initialValue));
+    setEditorState(
+      EditorState.createWithContent(
+        newBlock,
+        generateDecorator(() => {
+          return compProps => (
+            <EntityChip {...compProps} setEntityRef={setNewEntityRef} />
+          );
+        })
+      )
+    );
+  }, [initialValue]);
   const {
     state: { length, anchorEl, focused, offset },
     updateSelection,

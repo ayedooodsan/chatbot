@@ -1,0 +1,11 @@
+mutation freeDetectIntent (
+  $id: String!
+  $sessionTag: String!
+  $utterance: String!
+) {
+  freeDetectIntent(
+    id: $id
+    sessionTag: $sessionTag
+    utterance: $utterance
+  )
+}

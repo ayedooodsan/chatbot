@@ -1,0 +1,9 @@
+subscription projectTrained (
+  $id: String!
+) {
+  projectTrained (
+    id: $id
+  ) {
+    username
+  }
+}

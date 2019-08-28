@@ -96,30 +96,30 @@ class Intent extends Component {
             projectId={projectId}
             keyword={keyword}
           >
-            {intentProvider => (
+            {(intentProvider, loading) => (
               <SubNavigation
-                header={() =>
-                  intentProvider && (
-                    <SimpleHeader
-                      openSearch={openSearch}
-                      setOpenSearch={this.setOpenSearch}
-                      hasAdvanceSearch
-                      advancedSearch={advancedSearch}
-                      setAdvancedSearch={this.setAdvancedSearch}
-                      title="Intents"
-                      onAddItem={this.openCreateItemDialog}
-                      handleClickPagination={this.setOffsetPagination}
-                      pagination={{
-                        ...pagination,
-                        dataLength: intentProvider.pageInfo.total
-                      }}
-                      keyword={keyword}
-                      setKeyword={this.setKeyword}
-                    />
-                  )
-                }
+                header={() => (
+                  <SimpleHeader
+                    openSearch={openSearch}
+                    setOpenSearch={this.setOpenSearch}
+                    hasAdvanceSearch
+                    advancedSearch={advancedSearch}
+                    setAdvancedSearch={this.setAdvancedSearch}
+                    title="Intents"
+                    onAddItem={this.openCreateItemDialog}
+                    handleClickPagination={this.setOffsetPagination}
+                    pagination={{
+                      ...pagination,
+                      dataLength: loading ? 0 : intentProvider.pageInfo.total
+                    }}
+                    keyword={keyword}
+                    setKeyword={this.setKeyword}
+                  />
+                )}
                 body={() =>
-                  intentProvider && intentProvider.intents.length > 0 ? (
+                  !loading &&
+                  intentProvider &&
+                  intentProvider.intents.length > 0 ? (
                     <List component="nav">
                       {intentProvider.intents.map((myIntent, index) => (
                         <Link
@@ -166,7 +166,7 @@ class Intent extends Component {
                       className={classes.noData}
                       color="primary"
                     >
-                      No data available.
+                      {loading ? 'Searching...' : 'No data available.'}
                     </Typography>
                   )
                 }

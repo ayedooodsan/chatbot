@@ -11,6 +11,7 @@ import Pagination from 'material-ui-flat-pagination';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
+import FilterModal from '../../common/FilterModal';
 import style from './style';
 
 const SimpleSubNavHead = props => {
@@ -27,7 +28,9 @@ const SimpleSubNavHead = props => {
     noPagination,
     advancedSearch,
     openSearch,
-    setOpenSearch
+    setOpenSearch,
+    filters,
+    setFilters
   } = props;
   const searchInputRef = useRef(null);
 
@@ -61,9 +64,16 @@ const SimpleSubNavHead = props => {
   return (
     <React.Fragment>
       <div className={classes.title}>
-        <Typography variant="h6" className={classes.menuTitle}>
-          {title}
-        </Typography>
+        <div>
+          <Typography variant="h6" className={classes.menuTitle}>
+            {title}
+          </Typography>
+          {pagination && (
+            <Typography variant="caption">
+              Total: {pagination.dataLength}
+            </Typography>
+          )}
+        </div>
         <div>
           <IconButton color="primary" size="medium" onClick={onAddItem}>
             <Add />
@@ -71,6 +81,7 @@ const SimpleSubNavHead = props => {
           <IconButton color="primary" onClick={toggleSearch} size="medium">
             {openSearch ? <Clear /> : <Search />}
           </IconButton>
+          {filters && <FilterModal filters={filters} setFilters={setFilters} />}
         </div>
       </div>
       {openSearch && (
@@ -78,7 +89,11 @@ const SimpleSubNavHead = props => {
           <TextField
             value={keyword}
             onChange={event => {
-              setKeyword(event.target.value);
+              const formatedKeyword = event.target.value.replace(
+                /[^a-zA-Z\d\s:_.]/,
+                ''
+              );
+              setKeyword(formatedKeyword);
               handleClickPagination(0);
             }}
             inputRef={searchInputRef}
@@ -124,7 +139,9 @@ SimpleSubNavHead.defaultProps = {
   setAdvancedSearch: null,
   noPagination: false,
   pagination: {},
-  handleClickPagination: null
+  handleClickPagination: null,
+  filters: null,
+  setFilters: null
 };
 
 SimpleSubNavHead.propTypes = {
@@ -135,6 +152,8 @@ SimpleSubNavHead.propTypes = {
   keyword: PropTypes.string.isRequired,
   openSearch: PropTypes.bool.isRequired,
   setOpenSearch: PropTypes.func.isRequired,
+  setFilters: PropTypes.func,
+  filters: PropTypes.array,
   pagination: PropTypes.object,
   handleClickPagination: PropTypes.func,
   hasAdvanceSearch: PropTypes.bool,

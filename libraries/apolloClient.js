@@ -1,20 +1,42 @@
 import { ApolloClient } from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { ApolloLink, from } from 'apollo-client-preset';
+import { ApolloLink, split } from 'apollo-link';
 import { onError } from 'apollo-link-error';
 import { createUploadLink } from 'apollo-upload-client';
+import { WebSocketLink } from 'apollo-link-ws';
+import { getMainDefinition } from 'apollo-utilities';
 import promiseToObservable from './promiseToObservable';
 import { dispatchers } from '../redux/notifier';
 import persist from './persist';
-import uri from '../graphql-url';
+import { httpUrl, wsUrl } from '../graphql-url';
 
 let apolloClient = null;
 
 function createClient(headers, token, initialState, reduxStore) {
+  const wsLink = process.browser
+    ? new WebSocketLink({
+        uri: wsUrl,
+        options: {
+          reconnect: true
+        }
+      })
+    : null;
+
   const httpLink = createUploadLink({
-    uri,
+    uri: httpUrl,
     credentials: 'same-origin'
   });
+
+  const terminatingLink = process.browser
+    ? split(
+        ({ query }) => {
+          const { kind, operation } = getMainDefinition(query);
+          return kind === 'OperationDefinition' && operation === 'subscription';
+        },
+        wsLink,
+        httpLink
+      )
+    : httpLink;
 
   const errorLink = onError(({ graphQLErrors, forward, operation }) => {
     if (graphQLErrors) {
@@ -53,7 +75,7 @@ function createClient(headers, token, initialState, reduxStore) {
     const operationType = operation.query.definitions[0].operation;
     if (
       process.browser &&
-      operationType !== 'query' &&
+      operationType === 'mutation' &&
       !operation.getContext().hideLoading
     ) {
       const loadingSnackbarKey = new Date().getTime() + Math.random();
@@ -90,33 +112,37 @@ function createClient(headers, token, initialState, reduxStore) {
   });
 
   const authLink = new ApolloLink((operation, forward) => {
-    operation.setContext({
-      headers: {
-        'x-token': accessToken.token || '',
-        'x-refresh-token': accessToken.refreshToken || ''
-      }
-    });
-    return forward(operation).map(response => {
-      const context = operation.getContext();
-      const responseHeaders = context.response.headers;
-
-      if (responseHeaders) {
-        const newToken = responseHeaders.get('x-token');
-        const newRefreshToken = responseHeaders.get('x-refresh-token');
-        if (newToken !== null && newRefreshToken !== null) {
-          persist.willSetAccessToken(
-            JSON.stringify({ token: newToken, refreshToken: newRefreshToken })
-          );
+    const operationType = operation.query.definitions[0].operation;
+    if (operationType !== 'subscription') {
+      operation.setContext({
+        headers: {
+          'x-token': accessToken.token || '',
+          'x-refresh-token': accessToken.refreshToken || ''
         }
-      }
-
-      return response;
-    });
+      });
+      return forward(operation).map(response => {
+        const context = operation.getContext();
+        const responseHeaders = context.response.headers;
+        if (responseHeaders) {
+          const newToken = responseHeaders.get('x-token');
+          const newRefreshToken = responseHeaders.get('x-refresh-token');
+          if (newToken !== null && newRefreshToken !== null) {
+            persist.willSetAccessToken(
+              JSON.stringify({ token: newToken, refreshToken: newRefreshToken })
+            );
+          }
+        }
+        return response;
+      });
+    }
+    return forward(operation);
   });
 
   return new ApolloClient({
     headers,
-    link: errorLink.concat(from([loadingLink, authLink, httpLink])),
+    link: errorLink.concat(
+      ApolloLink.from([loadingLink, authLink, terminatingLink])
+    ),
     connectToDevTools: process.browser,
     ssrMode: !process.browser,
     cache: new InMemoryCache().restore(initialState || {})

@@ -1,5 +1,6 @@
 query myTrainings (
   $projectId: String!
+  $filters: [Filter!]
   $limit: Int
   $offset: Int
   $keyword: String
@@ -9,6 +10,7 @@ query myTrainings (
     limit: $limit
     offset: $offset
     keyword: $keyword
+    filters: $filters
   ) {
     trainings {
     	id

@@ -1,11 +1,10 @@
 const style = {
   card: {
-    maxWidth: 300,
     margin: '-15px -10px',
-    backgroundColor: '#ecfffe',
-    borderRadius: '15px',
-    borderBottomRightRadius: 0,
-    boxShadow: 'none'
+    marginTop: '6px',
+    borderRadius: 0,
+    boxShadow: 'none',
+    borderBottomLeftRadius: 15
   },
   media: {
     width: 300,

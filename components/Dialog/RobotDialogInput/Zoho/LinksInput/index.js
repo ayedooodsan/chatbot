@@ -7,7 +7,7 @@ import Divider from '@material-ui/core/Divider';
 import Delete from '@material-ui/icons/Delete';
 import withStyles from '@material-ui/core/styles/withStyles';
 import ResponseContainer from '../../ResponseContainer';
-import style from './style';
+import style from '../../Facebook/ButtonInput/style';
 import useResponseState from '../../useResponseState';
 
 const validation = values => {
@@ -43,7 +43,7 @@ const LinksInput = props => {
       text: value.text,
       image: value.image,
       links: value.links.map(link => ({
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         text: link.text,
         url: link.url,
         icon: link.icon
@@ -184,7 +184,12 @@ const LinksInput = props => {
         onClick={() =>
           addArrayValue(
             'links',
-            { key: Date.now() + Math.random(), text: '', url: '', icon: '' },
+            {
+              key: new Date().getTime() + Math.random(),
+              text: '',
+              url: '',
+              icon: ''
+            },
             { text: null, url: null, icon: null }
           )
         }

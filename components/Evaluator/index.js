@@ -9,11 +9,13 @@ import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
 import Delete from '@material-ui/icons/Delete';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import { withRouter } from 'next/router';
 import Scrollbar from 'react-scrollbars-custom';
+import Bubblechat from '../common/BubbleChat';
 import UserMessage from './UserMessage';
 import BotMessage from './BotMessage';
 import BotLoading from './BotLoading';
@@ -29,14 +31,95 @@ class Evaluator extends React.Component {
       contexts: []
     },
     anchorEl: null,
+    free: true,
     open: false
   };
+
+  projectTrainingNotificationKey = null;
+
+  unsubscribeProjectTraining = null;
+
+  unsubscribeProjectTrained = null;
 
   componentDidMount() {
     const { router } = this.props;
     this.setState({
       sessionTag: router.query.projectId + Math.random()
     });
+  }
+
+  componentDidUpdate(prevProps) {
+    const {
+      router,
+      subscribeProjectTraining,
+      subscribeProjectTrained
+    } = this.props;
+    if (
+      prevProps.subscribeProjectTraining !== subscribeProjectTraining &&
+      prevProps.subscribeProjectTrained !== subscribeProjectTrained
+    ) {
+      if (subscribeProjectTraining) {
+        if (this.unsubscribeProjectTraining) {
+          this.unsubscribeProjectTraining();
+        }
+        this.unsubscribeProjectTraining = subscribeProjectTraining({
+          id: router.query.projectId,
+          onSubscriptionData: userName => {
+            const { me, actions } = this.props;
+            if (me.username !== userName) {
+              this.setState({
+                training: true,
+                open: false
+              });
+              this.projectTrainingNotificationKey = actions.notify({
+                message: `Project training started by ${userName}. Your last update at this moment also will be trained.`,
+                variant: 'info',
+                autoHideDuration: 120000
+              });
+            }
+          }
+        });
+      }
+      if (subscribeProjectTrained) {
+        if (this.unsubscribeProjectTrained) {
+          this.unsubscribeProjectTrained();
+        }
+        this.unsubscribeProjectTrained = subscribeProjectTrained({
+          id: router.query.projectId,
+          onSubscriptionData: userName => {
+            const { me, actions, project } = this.props;
+            if (me.username !== userName) {
+              if (this.projectTrainingNotificationKey) {
+                actions.closeNotification(this.projectTrainingNotificationKey);
+                this.projectTrainingNotificationKey = null;
+              }
+              this.setState({
+                training: false
+              });
+              let message = `Project training by ${userName} completed.`;
+              if (project.needTrain) {
+                message +=
+                  ' You can train again to make sure your new data trained.';
+              }
+              actions.notify({
+                message,
+                variant: 'success',
+                autoHideDuration: 10000
+              });
+            }
+          }
+        });
+      }
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.unsubscribeProjectTraining) {
+      this.unsubscribeProjectTraining();
+    }
+    if (this.unsubscribeProjectTrained) {
+      this.unsubscribeProjectTrained();
+    }
   }
 
   handleClick = event => {
@@ -99,7 +182,7 @@ class Evaluator extends React.Component {
         utterance: '',
         messages: [
           ...state.messages,
-          { key: Date.now(), text: utterance },
+          { key: new Date().getTime(), text: utterance },
           null
         ]
       }),
@@ -123,7 +206,7 @@ class Evaluator extends React.Component {
     }).then(response => {
       const { detectIntent: detectedIntent } = response.data;
       const formatedDetectedIntent = {
-        key: Date.now(),
+        key: new Date().getTime(),
         ...detectedIntent,
         contexts: detectedIntent.contexts.map(context => ({
           ...context,
@@ -157,17 +240,59 @@ class Evaluator extends React.Component {
     });
   };
 
+  freeDetectIntent = event => {
+    event.preventDefault();
+    const { utterance, sessionTag } = this.state;
+    this.setState(
+      state => ({
+        utterance: '',
+        messages: [
+          ...state.messages,
+          { key: new Date().getTime(), text: utterance },
+          null
+        ]
+      }),
+      () => {
+        this.scrollbar.scrollToBottom();
+      }
+    );
+    const { router, freeDetectIntent } = this.props;
+    freeDetectIntent({
+      id: router.query.projectId,
+      utterance,
+      sessionTag
+    }).then(response => {
+      const { freeDetectIntent: freeDetectedIntent } = response.data;
+      this.setState(
+        state => {
+          const newMessages = [...state.messages];
+          newMessages[newMessages.length - 2] = {
+            ...newMessages[newMessages.length - 2]
+          };
+          newMessages[newMessages.length - 1] = {
+            key: new Date().getTime(),
+            text: freeDetectedIntent
+          };
+          return {
+            messages: newMessages
+          };
+        },
+        () => {
+          this.scrollbar.scrollToBottom();
+        }
+      );
+    });
+  };
+
   render() {
     const { classes, project } = this.props;
-    const { anchorEl, open, utterance, messages, training } = this.state;
+    const { anchorEl, open, utterance, messages, training, free } = this.state;
     const id = open ? 'evaluator-popper' : null;
     let trainButtonText = '';
-    if (project.needTrain) {
-      if (training) {
-        trainButtonText = 'Training';
-      } else {
-        trainButtonText = 'Train';
-      }
+    if (training) {
+      trainButtonText = 'Training';
+    } else if (project.needTrain) {
+      trainButtonText = 'Train';
     } else {
       trainButtonText = 'Trained';
     }
@@ -230,26 +355,45 @@ class Evaluator extends React.Component {
                     {messages.map((message, index) =>
                       index % 2 === 0 ? (
                         <React.Fragment key={message.key}>
-                          {}
-                          <UserMessage
-                            text={message.text}
-                            dialogName={
-                              (index === 0 ||
-                                message.dialogName !==
-                                  messages[index - 2].dialogName) &&
-                              message.dialogName
-                                ? message.dialogName
-                                : null
-                            }
-                          />
+                          {!free && (
+                            <UserMessage
+                              text={message.text}
+                              dialogName={
+                                (index === 0 ||
+                                  message.dialogName !==
+                                    messages[index - 2].dialogName) &&
+                                message.dialogName
+                                  ? message.dialogName
+                                  : null
+                              }
+                            />
+                          )}
+                          {free && (
+                            <Bubblechat type="other">
+                              <Typography variant="caption">
+                                {message.text}
+                              </Typography>
+                            </Bubblechat>
+                          )}
                         </React.Fragment>
                       ) : (
                         <React.Fragment>
-                          {message && (
+                          {message && !free && (
                             <BotMessage
                               key={message.key}
                               detectedIntent={message}
                             />
+                          )}
+                          {message && free && (
+                            <Bubblechat type="self">
+                              <Typography variant="caption">
+                                {message.text ? (
+                                  message.text
+                                ) : (
+                                  <i>Empty Response</i>
+                                )}
+                              </Typography>
+                            </Bubblechat>
                           )}
                           {!message && <BotLoading />}
                         </React.Fragment>
@@ -259,7 +403,7 @@ class Evaluator extends React.Component {
                 </div>
                 <Divider />
                 <form
-                  onSubmit={this.detectIntent}
+                  onSubmit={free ? this.freeDetectIntent : this.detectIntent}
                   id="DetectIntentInput"
                   className={classes.inputContainer}
                 >
@@ -285,13 +429,21 @@ class Evaluator extends React.Component {
 
 Evaluator.defaultProps = {
   router: {},
-  project: {}
+  project: {},
+  me: {},
+  subscribeProjectTraining: null,
+  subscribeProjectTrained: null
 };
 
 Evaluator.propTypes = {
   classes: PropTypes.object.isRequired,
   detectIntent: PropTypes.func.isRequired,
+  freeDetectIntent: PropTypes.func.isRequired,
   trainProject: PropTypes.func.isRequired,
+  actions: PropTypes.object.isRequired,
+  subscribeProjectTraining: PropTypes.func,
+  subscribeProjectTrained: PropTypes.func,
+  me: PropTypes.object,
   project: PropTypes.object,
   router: PropTypes.object
 };

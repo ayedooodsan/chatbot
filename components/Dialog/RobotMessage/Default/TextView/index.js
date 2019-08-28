@@ -10,7 +10,10 @@ const TextView = props => {
     return (
       <React.Fragment>
         {values[0].split(/(\r\n|\r|\n)/gm).map(chunk => (
-          <Typography variant="caption" key={Date.now() + Math.random()}>
+          <Typography
+            variant="caption"
+            key={new Date().getTime() + Math.random()}
+          >
             {chunk}
           </Typography>
         ))}
@@ -24,7 +27,10 @@ const TextView = props => {
         {values.map(value => (
           <li key={value}>
             {value.split(/(\r\n|\r|\n)/gm).map(chunk => (
-              <Typography variant="caption" key={Date.now() + Math.random()}>
+              <Typography
+                variant="caption"
+                key={new Date().getTime() + Math.random()}
+              >
                 {chunk}
               </Typography>
             ))}

@@ -73,7 +73,7 @@ const Zoho = props => {
   const initialMessageValue = messageType => {
     if (messageType === 'text') {
       return {
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         platform: 'zoho',
         type: messageType,
         value: []
@@ -81,7 +81,7 @@ const Zoho = props => {
     }
     if (messageType === 'forward') {
       return {
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         platform: 'zoho',
         type: messageType,
         value: ''
@@ -89,7 +89,7 @@ const Zoho = props => {
     }
     if (messageType === 'select') {
       return {
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         platform: 'zoho',
         type: messageType,
         value: {
@@ -99,7 +99,7 @@ const Zoho = props => {
     }
     if (messageType === 'suggestion') {
       return {
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         platform: 'zoho',
         type: messageType,
         value: {
@@ -109,7 +109,7 @@ const Zoho = props => {
     }
     if (messageType === 'links') {
       return {
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         platform: 'zoho',
         type: messageType,
         value: {
@@ -117,7 +117,7 @@ const Zoho = props => {
           image: '',
           links: [
             {
-              key: Date.now() + Math.random(),
+              key: new Date().getTime() + Math.random(),
               url: '',
               text: '',
               icon: ''
@@ -128,7 +128,7 @@ const Zoho = props => {
     }
     if (messageType === 'image') {
       return {
-        key: Date.now() + Math.random(),
+        key: new Date().getTime() + Math.random(),
         platform: 'zoho',
         type: messageType,
         value: {

@@ -78,30 +78,28 @@ class Dialog extends Component {
         offset={pagination.offset}
         limit={pagination.limit}
       >
-        {myDialogs => (
+        {(myDialogs, loading) => (
           <LayoutProvider
             navigation={() => <Navigation />}
             subNavigation={() => (
               <SubNavigation
-                header={() =>
-                  myDialogs && (
-                    <SimpleHeader
-                      openSearch={openSearch}
-                      setOpenSearch={this.setOpenSearch}
-                      title="Dialogs"
-                      onAddItem={this.openCreateItemDialog}
-                      handleClickPagination={this.setOffsetPagination}
-                      pagination={{
-                        ...pagination,
-                        dataLength: myDialogs.pageInfo.total
-                      }}
-                      keyword={keyword}
-                      setKeyword={this.setKeyword}
-                    />
-                  )
-                }
+                header={() => (
+                  <SimpleHeader
+                    openSearch={openSearch}
+                    setOpenSearch={this.setOpenSearch}
+                    title="Dialogs"
+                    onAddItem={this.openCreateItemDialog}
+                    handleClickPagination={this.setOffsetPagination}
+                    pagination={{
+                      ...pagination,
+                      dataLength: loading ? 0 : myDialogs.pageInfo.total
+                    }}
+                    keyword={keyword}
+                    setKeyword={this.setKeyword}
+                  />
+                )}
                 body={() =>
-                  myDialogs && myDialogs.dialogs.length > 0 ? (
+                  !loading && myDialogs && myDialogs.dialogs.length > 0 ? (
                     <List component="nav">
                       {myDialogs.dialogs.map(myDialog => (
                         <Link
@@ -138,7 +136,7 @@ class Dialog extends Component {
                       className={classes.noData}
                       color="primary"
                     >
-                      No data available.
+                      {loading ? 'Searching...' : 'No data available.'}
                     </Typography>
                   )
                 }
