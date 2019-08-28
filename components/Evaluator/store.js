@@ -2,6 +2,7 @@ import { graphql, compose } from 'react-apollo';
 import { connect } from 'react-redux';
 import { dispatchers } from '../../redux/notifier';
 import detectIntentGql from './detectIntent.gql';
+import freeDetectIntentGql from './freeDetectIntent.gql';
 import trainProjectGql from './trainProject.gql';
 import projectGql from './project.gql';
 import projectTrainingGql from './projectTraining.gql';
@@ -81,6 +82,17 @@ const withDetectIntent = graphql(detectIntentGql, {
   })
 });
 
+const withFreeDetectIntent = graphql(freeDetectIntentGql, {
+  name: 'freeDetectIntent',
+  props: ({ freeDetectIntent }) => ({
+    freeDetectIntent: ({ id, sessionTag, utterance }) =>
+      freeDetectIntent({
+        variables: { id, sessionTag, utterance },
+        context: { hideLoading: true }
+      })
+  })
+});
+
 const mapDispatchToProps = dispatch => ({
   actions: {
     notify({ message, variant, autoHideDuration }) {
@@ -106,6 +118,7 @@ const mapDispatchToProps = dispatch => ({
 export default comp => {
   const compWithApollo = compose(
     withProject,
+    withFreeDetectIntent,
     withDetectIntent,
     withMe,
     withTrainProject

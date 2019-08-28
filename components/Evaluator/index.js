@@ -9,11 +9,13 @@ import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
 import Delete from '@material-ui/icons/Delete';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import { withRouter } from 'next/router';
 import Scrollbar from 'react-scrollbars-custom';
+import Bubblechat from '../common/BubbleChat';
 import UserMessage from './UserMessage';
 import BotMessage from './BotMessage';
 import BotLoading from './BotLoading';
@@ -29,6 +31,7 @@ class Evaluator extends React.Component {
       contexts: []
     },
     anchorEl: null,
+    free: true,
     open: false
   };
 
@@ -107,6 +110,15 @@ class Evaluator extends React.Component {
           }
         });
       }
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.unsubscribeProjectTraining) {
+      this.unsubscribeProjectTraining();
+    }
+    if (this.unsubscribeProjectTrained) {
+      this.unsubscribeProjectTrained();
     }
   }
 
@@ -228,9 +240,53 @@ class Evaluator extends React.Component {
     });
   };
 
+  freeDetectIntent = event => {
+    event.preventDefault();
+    const { utterance, sessionTag } = this.state;
+    this.setState(
+      state => ({
+        utterance: '',
+        messages: [
+          ...state.messages,
+          { key: new Date().getTime(), text: utterance },
+          null
+        ]
+      }),
+      () => {
+        this.scrollbar.scrollToBottom();
+      }
+    );
+    const { router, freeDetectIntent } = this.props;
+    freeDetectIntent({
+      id: router.query.projectId,
+      utterance,
+      sessionTag
+    }).then(response => {
+      const { freeDetectIntent: freeDetectedIntent } = response.data;
+      this.setState(
+        state => {
+          const newMessages = [...state.messages];
+          newMessages[newMessages.length - 2] = {
+            ...newMessages[newMessages.length - 2]
+          };
+          newMessages[newMessages.length - 1] = {
+            key: new Date().getTime(),
+            text: freeDetectedIntent
+          };
+          return {
+            messages: newMessages
+          };
+        },
+        () => {
+          this.scrollbar.scrollToBottom();
+        }
+      );
+    });
+  };
+
   render() {
     const { classes, project } = this.props;
-    const { anchorEl, open, utterance, messages, training } = this.state;
+    const { anchorEl, open, utterance, messages, training, free } = this.state;
     const id = open ? 'evaluator-popper' : null;
     let trainButtonText = '';
     if (training) {
@@ -299,26 +355,45 @@ class Evaluator extends React.Component {
                     {messages.map((message, index) =>
                       index % 2 === 0 ? (
                         <React.Fragment key={message.key}>
-                          {}
-                          <UserMessage
-                            text={message.text}
-                            dialogName={
-                              (index === 0 ||
-                                message.dialogName !==
-                                  messages[index - 2].dialogName) &&
-                              message.dialogName
-                                ? message.dialogName
-                                : null
-                            }
-                          />
+                          {!free && (
+                            <UserMessage
+                              text={message.text}
+                              dialogName={
+                                (index === 0 ||
+                                  message.dialogName !==
+                                    messages[index - 2].dialogName) &&
+                                message.dialogName
+                                  ? message.dialogName
+                                  : null
+                              }
+                            />
+                          )}
+                          {free && (
+                            <Bubblechat type="other">
+                              <Typography variant="caption">
+                                {message.text}
+                              </Typography>
+                            </Bubblechat>
+                          )}
                         </React.Fragment>
                       ) : (
                         <React.Fragment>
-                          {message && (
+                          {message && !free && (
                             <BotMessage
                               key={message.key}
                               detectedIntent={message}
                             />
+                          )}
+                          {message && free && (
+                            <Bubblechat type="self">
+                              <Typography variant="caption">
+                                {message.text ? (
+                                  message.text
+                                ) : (
+                                  <i>Empty Response</i>
+                                )}
+                              </Typography>
+                            </Bubblechat>
                           )}
                           {!message && <BotLoading />}
                         </React.Fragment>
@@ -328,7 +403,7 @@ class Evaluator extends React.Component {
                 </div>
                 <Divider />
                 <form
-                  onSubmit={this.detectIntent}
+                  onSubmit={free ? this.freeDetectIntent : this.detectIntent}
                   id="DetectIntentInput"
                   className={classes.inputContainer}
                 >
@@ -363,6 +438,7 @@ Evaluator.defaultProps = {
 Evaluator.propTypes = {
   classes: PropTypes.object.isRequired,
   detectIntent: PropTypes.func.isRequired,
+  freeDetectIntent: PropTypes.func.isRequired,
   trainProject: PropTypes.func.isRequired,
   actions: PropTypes.object.isRequired,
   subscribeProjectTraining: PropTypes.func,
