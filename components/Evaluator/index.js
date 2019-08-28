@@ -390,7 +390,7 @@ class Evaluator extends React.Component {
                                 {message.text ? (
                                   message.text
                                 ) : (
-                                  <i>Empty Default Response</i>
+                                  <i>Empty Response</i>
                                 )}
                               </Typography>
                             </Bubblechat>
