@@ -26,7 +26,7 @@ const withProject = graphql(projectGql, {
       loading,
       project,
       subscribeProjectTraining: ({ id, onSubscriptionData }) => {
-        subscribeToMore({
+        return subscribeToMore({
           document: projectTrainingGql,
           variables: { id },
           updateQuery: (prev, { subscriptionData }) => {
@@ -35,7 +35,7 @@ const withProject = graphql(projectGql, {
         });
       },
       subscribeProjectTrained: ({ id, onSubscriptionData }) => {
-        subscribeToMore({
+        return subscribeToMore({
           document: projectTrainedGql,
           variables: { id },
           updateQuery: (prev, { subscriptionData }) => {

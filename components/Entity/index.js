@@ -140,7 +140,6 @@ class Entity extends Component {
                               <ListItem
                                 className={classes.listItem}
                                 dense
-                                variant
                                 button
                               >
                                 <ListItemText

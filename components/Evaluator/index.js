@@ -34,6 +34,10 @@ class Evaluator extends React.Component {
 
   projectTrainingNotificationKey = null;
 
+  unsubscribeProjectTraining = null;
+
+  unsubscribeProjectTrained = null;
+
   componentDidMount() {
     const { router } = this.props;
     this.setState({
@@ -41,57 +45,68 @@ class Evaluator extends React.Component {
     });
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     const {
       router,
       subscribeProjectTraining,
       subscribeProjectTrained
     } = this.props;
-    if (subscribeProjectTraining) {
-      subscribeProjectTraining({
-        id: router.query.projectId,
-        onSubscriptionData: userName => {
-          const { me, actions } = this.props;
-          if (me.username !== userName) {
-            this.setState({
-              training: true,
-              open: false
-            });
-            this.projectTrainingNotificationKey = actions.notify({
-              message: `Project training started by ${userName}. Your last update at this moment also will be trained.`,
-              variant: 'info',
-              autoHideDuration: 120000
-            });
-          }
+    if (
+      prevProps.subscribeProjectTraining !== subscribeProjectTraining &&
+      prevProps.subscribeProjectTrained !== subscribeProjectTrained
+    ) {
+      if (subscribeProjectTraining) {
+        if (this.unsubscribeProjectTraining) {
+          this.unsubscribeProjectTraining();
         }
-      });
-    }
-    if (subscribeProjectTrained) {
-      subscribeProjectTrained({
-        id: router.query.projectId,
-        onSubscriptionData: userName => {
-          const { me, actions, project } = this.props;
-          if (me.username !== userName) {
-            if (this.projectTrainingNotificationKey) {
-              actions.closeNotification(this.projectTrainingNotificationKey);
-              this.projectTrainingNotificationKey = null;
+        this.unsubscribeProjectTraining = subscribeProjectTraining({
+          id: router.query.projectId,
+          onSubscriptionData: userName => {
+            const { me, actions } = this.props;
+            if (me.username !== userName) {
+              this.setState({
+                training: true,
+                open: false
+              });
+              this.projectTrainingNotificationKey = actions.notify({
+                message: `Project training started by ${userName}. Your last update at this moment also will be trained.`,
+                variant: 'info',
+                autoHideDuration: 120000
+              });
             }
-            this.setState({
-              training: false
-            });
-            let message = `Project training by ${userName} completed.`;
-            if (project.needTrain) {
-              message +=
-                ' You can train again to make sure your new data trained.';
-            }
-            actions.notify({
-              message,
-              variant: 'success',
-              autoHideDuration: 10000
-            });
           }
+        });
+      }
+      if (subscribeProjectTrained) {
+        if (this.unsubscribeProjectTrained) {
+          this.unsubscribeProjectTrained();
         }
-      });
+        this.unsubscribeProjectTrained = subscribeProjectTrained({
+          id: router.query.projectId,
+          onSubscriptionData: userName => {
+            const { me, actions, project } = this.props;
+            if (me.username !== userName) {
+              if (this.projectTrainingNotificationKey) {
+                actions.closeNotification(this.projectTrainingNotificationKey);
+                this.projectTrainingNotificationKey = null;
+              }
+              this.setState({
+                training: false
+              });
+              let message = `Project training by ${userName} completed.`;
+              if (project.needTrain) {
+                message +=
+                  ' You can train again to make sure your new data trained.';
+              }
+              actions.notify({
+                message,
+                variant: 'success',
+                autoHideDuration: 10000
+              });
+            }
+          }
+        });
+      }
     }
   }
 
