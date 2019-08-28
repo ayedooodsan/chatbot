@@ -83,23 +83,21 @@ class Dialog extends Component {
             navigation={() => <Navigation />}
             subNavigation={() => (
               <SubNavigation
-                header={() =>
-                  myDialogs && (
-                    <SimpleHeader
-                      openSearch={openSearch}
-                      setOpenSearch={this.setOpenSearch}
-                      title="Dialogs"
-                      onAddItem={this.openCreateItemDialog}
-                      handleClickPagination={this.setOffsetPagination}
-                      pagination={{
-                        ...pagination,
-                        dataLength: loading ? 0 : myDialogs.pageInfo.total
-                      }}
-                      keyword={keyword}
-                      setKeyword={this.setKeyword}
-                    />
-                  )
-                }
+                header={() => (
+                  <SimpleHeader
+                    openSearch={openSearch}
+                    setOpenSearch={this.setOpenSearch}
+                    title="Dialogs"
+                    onAddItem={this.openCreateItemDialog}
+                    handleClickPagination={this.setOffsetPagination}
+                    pagination={{
+                      ...pagination,
+                      dataLength: loading ? 0 : myDialogs.pageInfo.total
+                    }}
+                    keyword={keyword}
+                    setKeyword={this.setKeyword}
+                  />
+                )}
                 body={() =>
                   !loading && myDialogs && myDialogs.dialogs.length > 0 ? (
                     <List component="nav">

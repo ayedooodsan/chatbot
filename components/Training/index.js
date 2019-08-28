@@ -127,25 +127,23 @@ class Training extends Component {
             navigation={() => <Navigation />}
             subNavigation={() => (
               <SubNavigation
-                header={() =>
-                  myTrainings && (
-                    <SimpleHeader
-                      openSearch={openSearch}
-                      setOpenSearch={this.setOpenSearch}
-                      filters={filters}
-                      setFilters={this.setFilters}
-                      title="Trainings"
-                      onAddItem={this.openCreateItemDialog}
-                      handleClickPagination={this.setOffsetPagination}
-                      pagination={{
-                        ...pagination,
-                        dataLength: loading ? 0 : myTrainings.pageInfo.total
-                      }}
-                      keyword={keyword}
-                      setKeyword={this.setKeyword}
-                    />
-                  )
-                }
+                header={() => (
+                  <SimpleHeader
+                    openSearch={openSearch}
+                    setOpenSearch={this.setOpenSearch}
+                    filters={filters}
+                    setFilters={this.setFilters}
+                    title="Trainings"
+                    onAddItem={this.openCreateItemDialog}
+                    handleClickPagination={this.setOffsetPagination}
+                    pagination={{
+                      ...pagination,
+                      dataLength: loading ? 0 : myTrainings.pageInfo.total
+                    }}
+                    keyword={keyword}
+                    setKeyword={this.setKeyword}
+                  />
+                )}
                 body={() =>
                   !loading &&
                   myTrainings &&

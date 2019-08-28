@@ -99,26 +99,24 @@ class Entity extends Component {
           >
             {(entityProvider, loading) => (
               <SubNavigation
-                header={() =>
-                  entityProvider && (
-                    <SimpleHeader
-                      openSearch={openSearch}
-                      setOpenSearch={this.setOpenSearch}
-                      hasAdvanceSearch
-                      advancedSearch={advancedSearch}
-                      setAdvancedSearch={this.setAdvancedSearch}
-                      title="Entities"
-                      onAddItem={this.openCreateItemDialog}
-                      handleClickPagination={this.setOffsetPagination}
-                      pagination={{
-                        ...pagination,
-                        dataLength: loading ? 0 : entityProvider.pageInfo.total
-                      }}
-                      keyword={keyword}
-                      setKeyword={this.setKeyword}
-                    />
-                  )
-                }
+                header={() => (
+                  <SimpleHeader
+                    openSearch={openSearch}
+                    setOpenSearch={this.setOpenSearch}
+                    hasAdvanceSearch
+                    advancedSearch={advancedSearch}
+                    setAdvancedSearch={this.setAdvancedSearch}
+                    title="Entities"
+                    onAddItem={this.openCreateItemDialog}
+                    handleClickPagination={this.setOffsetPagination}
+                    pagination={{
+                      ...pagination,
+                      dataLength: loading ? 0 : entityProvider.pageInfo.total
+                    }}
+                    keyword={keyword}
+                    setKeyword={this.setKeyword}
+                  />
+                )}
                 body={() =>
                   !loading &&
                   entityProvider &&
@@ -142,7 +140,6 @@ class Entity extends Component {
                               <ListItem
                                 className={classes.listItem}
                                 dense
-                                variant
                                 button
                               >
                                 <ListItemText

@@ -98,26 +98,24 @@ class Intent extends Component {
           >
             {(intentProvider, loading) => (
               <SubNavigation
-                header={() =>
-                  intentProvider && (
-                    <SimpleHeader
-                      openSearch={openSearch}
-                      setOpenSearch={this.setOpenSearch}
-                      hasAdvanceSearch
-                      advancedSearch={advancedSearch}
-                      setAdvancedSearch={this.setAdvancedSearch}
-                      title="Intents"
-                      onAddItem={this.openCreateItemDialog}
-                      handleClickPagination={this.setOffsetPagination}
-                      pagination={{
-                        ...pagination,
-                        dataLength: loading ? 0 : intentProvider.pageInfo.total
-                      }}
-                      keyword={keyword}
-                      setKeyword={this.setKeyword}
-                    />
-                  )
-                }
+                header={() => (
+                  <SimpleHeader
+                    openSearch={openSearch}
+                    setOpenSearch={this.setOpenSearch}
+                    hasAdvanceSearch
+                    advancedSearch={advancedSearch}
+                    setAdvancedSearch={this.setAdvancedSearch}
+                    title="Intents"
+                    onAddItem={this.openCreateItemDialog}
+                    handleClickPagination={this.setOffsetPagination}
+                    pagination={{
+                      ...pagination,
+                      dataLength: loading ? 0 : intentProvider.pageInfo.total
+                    }}
+                    keyword={keyword}
+                    setKeyword={this.setKeyword}
+                  />
+                )}
                 body={() =>
                   !loading &&
                   intentProvider &&
