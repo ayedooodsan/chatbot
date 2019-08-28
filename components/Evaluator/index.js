@@ -110,6 +110,15 @@ class Evaluator extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    if (this.unsubscribeProjectTraining) {
+      this.unsubscribeProjectTraining();
+    }
+    if (this.unsubscribeProjectTrained) {
+      this.unsubscribeProjectTrained();
+    }
+  }
+
   handleClick = event => {
     const { currentTarget } = event;
     const { router } = this.props;
