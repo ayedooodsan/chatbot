@@ -46,70 +46,16 @@ class Evaluator extends React.Component {
     this.setState({
       sessionTag: router.query.projectId + Math.random()
     });
+    this.subscribeProjectTrainingInfo();
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      router,
-      subscribeProjectTraining,
-      subscribeProjectTrained
-    } = this.props;
+    const { subscribeProjectTraining, subscribeProjectTrained } = this.props;
     if (
       prevProps.subscribeProjectTraining !== subscribeProjectTraining &&
       prevProps.subscribeProjectTrained !== subscribeProjectTrained
     ) {
-      if (subscribeProjectTraining) {
-        if (this.unsubscribeProjectTraining) {
-          this.unsubscribeProjectTraining();
-        }
-        this.unsubscribeProjectTraining = subscribeProjectTraining({
-          id: router.query.projectId,
-          onSubscriptionData: userName => {
-            const { me, actions } = this.props;
-            if (me.username !== userName) {
-              this.setState({
-                training: true,
-                open: false
-              });
-              this.projectTrainingNotificationKey = actions.notify({
-                message: `Project training started by ${userName}. Your last update at this moment also will be trained.`,
-                variant: 'info',
-                autoHideDuration: 120000
-              });
-            }
-          }
-        });
-      }
-      if (subscribeProjectTrained) {
-        if (this.unsubscribeProjectTrained) {
-          this.unsubscribeProjectTrained();
-        }
-        this.unsubscribeProjectTrained = subscribeProjectTrained({
-          id: router.query.projectId,
-          onSubscriptionData: userName => {
-            const { me, actions, project } = this.props;
-            if (me.username !== userName) {
-              if (this.projectTrainingNotificationKey) {
-                actions.closeNotification(this.projectTrainingNotificationKey);
-                this.projectTrainingNotificationKey = null;
-              }
-              this.setState({
-                training: false
-              });
-              let message = `Project training by ${userName} completed.`;
-              if (project.needTrain) {
-                message +=
-                  ' You can train again to make sure your new data trained.';
-              }
-              actions.notify({
-                message,
-                variant: 'success',
-                autoHideDuration: 10000
-              });
-            }
-          }
-        });
-      }
+      this.subscribeProjectTrainingInfo();
     }
   }
 
@@ -283,6 +229,66 @@ class Evaluator extends React.Component {
       );
     });
   };
+
+  subscribeProjectTrainingInfo() {
+    const {
+      router,
+      subscribeProjectTraining,
+      subscribeProjectTrained
+    } = this.props;
+    if (subscribeProjectTraining) {
+      if (this.unsubscribeProjectTraining) {
+        this.unsubscribeProjectTraining();
+      }
+      this.unsubscribeProjectTraining = subscribeProjectTraining({
+        id: router.query.projectId,
+        onSubscriptionData: userName => {
+          const { me, actions } = this.props;
+          if (me.username !== userName) {
+            this.setState({
+              training: true,
+              open: false
+            });
+            this.projectTrainingNotificationKey = actions.notify({
+              message: `Project training started by ${userName}. Your last update at this moment also will be trained.`,
+              variant: 'info',
+              autoHideDuration: 120000
+            });
+          }
+        }
+      });
+    }
+    if (subscribeProjectTrained) {
+      if (this.unsubscribeProjectTrained) {
+        this.unsubscribeProjectTrained();
+      }
+      this.unsubscribeProjectTrained = subscribeProjectTrained({
+        id: router.query.projectId,
+        onSubscriptionData: userName => {
+          const { me, actions, project } = this.props;
+          if (me.username !== userName) {
+            if (this.projectTrainingNotificationKey) {
+              actions.closeNotification(this.projectTrainingNotificationKey);
+              this.projectTrainingNotificationKey = null;
+            }
+            this.setState({
+              training: false
+            });
+            let message = `Project training by ${userName} completed.`;
+            if (project.needTrain) {
+              message +=
+                ' You can train again to make sure your new data trained.';
+            }
+            actions.notify({
+              message,
+              variant: 'success',
+              autoHideDuration: 10000
+            });
+          }
+        }
+      });
+    }
+  }
 
   render() {
     const { classes, project } = this.props;

@@ -98,6 +98,7 @@ const sendAction = (
       selectedMessage.payload = values.message;
       selectedMessage.title = values.title || 'Untitled Bot Response';
       selectedMessage.actionName = values.actionName;
+      selectedMessage.webhookUsed = values.webhookUsed;
       newParentId =
         computedActiveMessageIds[computedActiveMessageIds.length - 1].id;
       break;
@@ -174,6 +175,7 @@ const sendAction = (
         payload: values.message,
         title: values.title || 'Untitled Bot Response',
         actionName: values.actionName,
+        webhookUsed: values.webhookUsed,
         depth: payload.depth + 1
       });
       const activeMessageIdIndex = computedActiveMessageIds.findIndex(
