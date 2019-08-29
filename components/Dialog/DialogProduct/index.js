@@ -252,6 +252,7 @@ class DialogProduct extends Component {
           }))
         : null,
       actionName: rawMessage.actionName ? rawMessage.actionName : null,
+      webhookUsed: rawMessage.webhookUsed,
       title: rawMessage.title,
       type: rawMessage.type,
       depth: rawMessage.depth,
@@ -317,7 +318,7 @@ class DialogProduct extends Component {
           />
         </div>
         <Grid container className={classes.body}>
-          <Grid item xs className={classes.messages}>
+          <Grid item xs={5} className={classes.messages}>
             {rawMessages.length === 0 && _.isEqual(dialogInputProps, {}) && (
               <div className={classes.startContainer}>
                 <Button
@@ -399,7 +400,7 @@ class DialogProduct extends Component {
               </Scrollbar>
             )}
           </Grid>
-          <Grid item xs>
+          <Grid item xs={7}>
             <Paper className={classes.inputContainer}>
               <DialogInput
                 key={`${dialogInputProps.type}-${

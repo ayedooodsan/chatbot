@@ -11,6 +11,7 @@ query dialog (
       type
       title
       actionName
+      webhookUsed
       intent {
         id
         title

@@ -9,6 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
 import Reply from '@material-ui/icons/Reply';
+import FlashOn from '@material-ui/icons/FlashOn';
 import _ from 'lodash';
 import MessageView from './MessageView';
 import platformOptions from '../RobotDialogInput/const';
@@ -222,6 +223,16 @@ const RobotMessage = props => {
           </React.Fragment>
         </BubbleChat>
       )}
+      <div className={classes.chipContainer}>
+        {activeMessage.webhookUsed && (
+          <Chip
+            icon={<FlashOn />}
+            label="Webhook Used"
+            variant="outlined"
+            color="primary"
+          />
+        )}
+      </div>
     </React.Fragment>
   );
 };

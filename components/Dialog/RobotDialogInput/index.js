@@ -1,8 +1,11 @@
+/* eslint-disable prefer-destructuring */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 import Scrollbar from 'react-scrollbars-custom';
 import {
   EDIT_ROBOT,
@@ -18,18 +21,19 @@ const RobotDialogInput = props => {
   let messages = [];
   let title = '';
   let actionName = '';
+  let webhookUsed = false;
   if (type === EDIT_ROBOT) {
     messages = payload.payload ? payload.payload : [];
-    // eslint-disable-next-line prefer-destructuring
     title = payload.title;
-    // eslint-disable-next-line prefer-destructuring
     actionName = payload.actionName;
+    webhookUsed = Boolean(payload.webhookUsed);
   } else if (type === EDIT_USER_PARAM) {
     messages = payload.param.prompts;
   }
   const [messageValues, setMessageValues] = useState(messages);
   const [messageTitle, setMessageTitle] = useState(title);
   const [messageActionName, setMessageActionName] = useState(actionName);
+  const [messageWebhookUsed, setMessageWebhookUsed] = useState(webhookUsed);
   return (
     <React.Fragment>
       <form className={classes.root}>
@@ -66,6 +70,18 @@ const RobotDialogInput = props => {
                 variant="outlined"
                 fullWidth
               />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={messageWebhookUsed}
+                    onChange={event =>
+                      setMessageWebhookUsed(event.target.checked)
+                    }
+                    color="primary"
+                  />
+                }
+                label="Enable webhook call for this bot response"
+              />
               <PlatformContainer
                 activePlatform={payload.activePlatform}
                 messages={messageValues}
@@ -83,7 +99,8 @@ const RobotDialogInput = props => {
               send({
                 title: messageTitle,
                 message: messageValues,
-                actionName: messageActionName
+                actionName: messageActionName,
+                webhookUsed: messageWebhookUsed
               })
             }
           >
