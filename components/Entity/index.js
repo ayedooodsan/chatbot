@@ -111,7 +111,10 @@ class Entity extends Component {
                     handleClickPagination={this.setOffsetPagination}
                     pagination={{
                       ...pagination,
-                      dataLength: loading ? 0 : entityProvider.pageInfo.total
+                      dataLength:
+                        loading || !entityProvider
+                          ? 0
+                          : entityProvider.pageInfo.total
                     }}
                     keyword={keyword}
                     setKeyword={this.setKeyword}

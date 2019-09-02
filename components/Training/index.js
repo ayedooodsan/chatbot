@@ -138,7 +138,8 @@ class Training extends Component {
                     handleClickPagination={this.setOffsetPagination}
                     pagination={{
                       ...pagination,
-                      dataLength: loading ? 0 : myTrainings.pageInfo.total
+                      dataLength:
+                        loading || !myTrainings ? 0 : myTrainings.pageInfo.total
                     }}
                     keyword={keyword}
                     setKeyword={this.setKeyword}
