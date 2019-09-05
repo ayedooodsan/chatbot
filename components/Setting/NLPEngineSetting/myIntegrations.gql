@@ -1,0 +1,12 @@
+query myIntegrations (
+  $projectId: String!
+) {
+  myIntegrations (
+    projectId: $projectId
+    type: "nlp"
+  ) {
+    id
+    vendor
+    setting
+  }
+}

@@ -1,0 +1,16 @@
+mutation updateIntegration (
+  $id: String!
+  $vendor: String!
+  $setting: String
+) {
+  updateIntegration (
+    id: $id
+    vendor: $vendor
+    setting: $setting
+    type: "log"
+  ) {
+    id
+    vendor
+    setting
+  }
+}
