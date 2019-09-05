@@ -13,7 +13,8 @@ import style from './style';
 import GeneralSetting from './GeneralSetting';
 import BackupSetting from './BackupSetting';
 import ShareSetting from './ShareSetting';
-import IntegrationSetting from './IntegrationSetting';
+import NLPEngineSetting from './NLPEngineSetting';
+import LogSetting from './LogSetting';
 import connect from './store';
 
 const Setting = props => {
@@ -27,7 +28,11 @@ const Setting = props => {
     settingMenu.push({ name: 'Share', type: 'share' });
     settingMenu.push({
       name: 'NLP Engine',
-      type: 'integration'
+      type: 'nlpIntegration'
+    });
+    settingMenu.push({
+      name: 'Log Engine',
+      type: 'logIntegration'
     });
   }
 
@@ -49,8 +54,12 @@ const Setting = props => {
         SettingProduct = ShareSetting;
         break;
       }
-      case 'integration': {
-        SettingProduct = IntegrationSetting;
+      case 'nlpIntegration': {
+        SettingProduct = NLPEngineSetting;
+        break;
+      }
+      case 'logIntegration': {
+        SettingProduct = LogSetting;
         break;
       }
       default: {

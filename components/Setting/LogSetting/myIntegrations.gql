@@ -3,6 +3,7 @@ query myIntegrations (
 ) {
   myIntegrations (
     projectId: $projectId
+    type: "log"
   ) {
     id
     vendor

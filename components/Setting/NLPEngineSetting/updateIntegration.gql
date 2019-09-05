@@ -7,6 +7,7 @@ mutation updateIntegration (
     id: $id
     vendor: $vendor
     setting: $setting
+    type: "nlp"
   ) {
     id
     vendor
