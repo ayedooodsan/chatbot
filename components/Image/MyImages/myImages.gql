@@ -1,0 +1,22 @@
+query myImages (
+  $projectId: String!
+  $limit: Int
+  $offset: Int
+  $keyword: String
+) {
+  myImages (
+    projectId: $projectId
+    limit: $limit
+    offset: $offset
+    keyword: $keyword
+  ) {
+    images {
+    	id
+      name
+      url
+    }
+    pageInfo {
+      total
+    }
+  }
+}

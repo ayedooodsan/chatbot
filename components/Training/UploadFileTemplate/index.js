@@ -32,15 +32,13 @@ const UploadFileTemplate = props => {
         title="Copied"
         placement="top"
       >
-        <Button className={classes.button}>
-          <Clipboard
-            onSuccess={() => setOpen(true)}
-            component="span"
-            data-clipboard-target="#uploadFileTemplate"
-          >
-            copy to clipboard
-          </Clipboard>
-        </Button>
+        <Clipboard
+          onSuccess={() => setOpen(true)}
+          component="span"
+          data-clipboard-target="#uploadFileTemplate"
+        >
+          <Button className={classes.button}>copy to clipboard</Button>
+        </Clipboard>
       </Tooltip>
       <Table className={classes.table}>
         <TableHead>

@@ -309,7 +309,7 @@ class DialogProduct extends Component {
           <ProductHead
             productName={title}
             deleteMessage={`Delete ${title} Dialog`}
-            deleteSubMessage="To delete this dialog, please enter the first word on dialog title."
+            deleteSubMessage={`To delete this dialog, please enter "DELETE".`}
             onChange={this.onChangeTitle}
             onSave={this.onSave}
             onDelete={this.onDelete}

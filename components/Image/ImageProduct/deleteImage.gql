@@ -1,0 +1,7 @@
+mutation deleteImage (
+  $id: String!
+) {
+  deleteImage (
+    id: $id
+  )
+}

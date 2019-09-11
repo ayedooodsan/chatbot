@@ -51,7 +51,7 @@ const EntityProduct = props => {
           <ProductHead
             productName={entityTitle}
             deleteMessage={`Delete ${entityTitle} Entity`}
-            deleteSubMessage="To delete this entity, please enter the first word on entity title."
+            deleteSubMessage={`To delete this entity, please enter "DELETE".`}
             onChange={onChangeTitle}
             onSave={onSave(getEntityProduct)}
             onDelete={onDelete}
