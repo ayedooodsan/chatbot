@@ -306,7 +306,7 @@ const GeneralSetting = props => {
                   productName={title.input.value}
                   handleConfirm={onDelete}
                   message={`Delete ${title.input.value} Project`}
-                  subMessage="To delete this project, please enter the first word on project title."
+                  subMessage={`To delete this project, please enter "DELETE" on project title.`}
                 />
               </React.Fragment>
             )}

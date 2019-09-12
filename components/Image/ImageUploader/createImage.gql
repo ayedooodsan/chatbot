@@ -1,0 +1,14 @@
+mutation createImage (
+  $projectId: String!
+  $name: String!
+  $file: Upload!
+) {
+  createImage (
+    projectId: $projectId
+    name: $name
+    file: $file
+  ) {
+    name
+    url
+  }
+}

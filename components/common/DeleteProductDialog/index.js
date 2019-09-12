@@ -10,14 +10,7 @@ import TextField from '@material-ui/core/TextField';
 
 const DeleteProductDialog = props => {
   const [firstWord, setFirstWord] = useState('');
-  const {
-    open,
-    handleClose,
-    handleConfirm,
-    message,
-    productName,
-    subMessage
-  } = props;
+  const { open, handleClose, handleConfirm, message, subMessage } = props;
   const onChange = event => {
     setFirstWord(event.target.value);
   };
@@ -53,7 +46,7 @@ const DeleteProductDialog = props => {
             value={firstWord}
             onChange={onChange}
             autoFocus
-            placeholder="The First Word"
+            placeholder="DELETE"
             margin="dense"
             variant="outlined"
             fullWidth
@@ -65,7 +58,7 @@ const DeleteProductDialog = props => {
           </Button>
           <Button
             form="DeleteProductDialog"
-            disabled={firstWord !== productName.split(' ')[0]}
+            disabled={firstWord !== 'DELETE'}
             type="submit"
             color="primary"
           >
@@ -77,17 +70,12 @@ const DeleteProductDialog = props => {
   );
 };
 
-DeleteProductDialog.defaultProps = {
-  productName: ''
-};
-
 DeleteProductDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   handleConfirm: PropTypes.func.isRequired,
   message: PropTypes.string.isRequired,
-  subMessage: PropTypes.string.isRequired,
-  productName: PropTypes.string
+  subMessage: PropTypes.string.isRequired
 };
 
 export default DeleteProductDialog;

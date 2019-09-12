@@ -5,8 +5,9 @@ import style from './style';
 
 const SimpleProductLayoutProvider = props => {
   const { classes, header, product, onSave } = props;
+  const RootComponent = onSave ? 'form' : 'div';
   return (
-    <form
+    <RootComponent
       className={classes.root}
       onSubmit={onSave}
       id="SimpleProductLayoutProvider"
@@ -15,7 +16,7 @@ const SimpleProductLayoutProvider = props => {
       <div className={classes.body}>
         <div className={classes.product}>{product()}</div>
       </div>
-    </form>
+    </RootComponent>
   );
 };
 

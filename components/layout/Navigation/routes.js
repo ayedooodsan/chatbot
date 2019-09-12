@@ -6,6 +6,7 @@ import Settings from '@material-ui/icons/SettingsOutlined';
 import LocalLibrary from '@material-ui/icons/LocalLibraryOutlined';
 import InsertChart from '@material-ui/icons/InsertChartOutlined';
 import LockOpen from '@material-ui/icons/LockOpenOutlined';
+import Image from '@material-ui/icons/Image';
 
 const routes = [
   [
@@ -23,6 +24,11 @@ const routes = [
       route: '/dialog',
       name: 'Dialogs',
       icon: <QuestionAnswer />
+    },
+    {
+      route: '/image',
+      name: 'Images',
+      icon: <Image />
     }
   ],
   [
