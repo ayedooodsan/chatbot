@@ -94,7 +94,6 @@ const DialogAnalytics = props => {
               return (
                 <TableRow key={dialogAnalyticGroup.groupid}>
                   <TableCell component="th" scope="row">
-                    {dialogAnalyticGroup.groupid} <br />
                     {dialogAnalyticGroup.from}
                   </TableCell>
                   <TableCell align="center">
