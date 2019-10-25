@@ -18,7 +18,7 @@ import SimpleProductBody from '../../layout/SimpleProductBody';
 import style from './style';
 import connect from './store';
 
-const IntegrationSetting = props => {
+const NLPEngineSetting = props => {
   const { classes, myIntegrations, updateIntegration } = props;
   const [dialogflowDialogOpen, setDialogflowDialogOpen] = useState(false);
   const [defaultDialogOpen, setDefaultDialogOpen] = useState(false);
@@ -188,15 +188,15 @@ const IntegrationSetting = props => {
   );
 };
 
-IntegrationSetting.defaultProps = {
+NLPEngineSetting.defaultProps = {
   myIntegrations: []
 };
 
-IntegrationSetting.propTypes = {
+NLPEngineSetting.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
   updateIntegration: PropTypes.func.isRequired,
   myIntegrations: PropTypes.array
 };
 
-export default withStyles(style)(connect(IntegrationSetting));
+export default withStyles(style)(connect(NLPEngineSetting));

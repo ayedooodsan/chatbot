@@ -70,7 +70,6 @@ const UploadFileDialog = props => {
                 accept={acceptType}
                 style={{ display: 'none' }}
                 id="uploadFile"
-                multiple
                 type="file"
                 onChange={onChangeFile}
               />

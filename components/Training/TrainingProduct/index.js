@@ -115,7 +115,7 @@ const TrainingProduct = props => {
           <ProductHead
             productName={trainingTitle}
             deleteMessage={`Delete ${trainingTitle} Training`}
-            deleteSubMessage="To delete this training, please enter the first word on training title."
+            deleteSubMessage={`To delete this training, please enter "DELETE".`}
             onChange={onChangeTitle}
             onSave={onSave(getTrainingProduct)}
             onDelete={onDelete}

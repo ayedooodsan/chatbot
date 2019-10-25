@@ -11,6 +11,7 @@ routes.add('entity', '/:projectId/entity/:entityId?', 'entity');
 routes.add('training', '/:projectId/training/:trainingId?', 'training');
 routes.add('setting', '/:projectId/setting/:settingType?', 'setting');
 routes.add('analytic', '/:projectId/analytic', 'analytic');
+routes.add('image', '/:projectId/image', 'image');
 // @RANEndRoutes
 // ------------ ROUTES ---------------
 //

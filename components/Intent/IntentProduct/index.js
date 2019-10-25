@@ -69,7 +69,7 @@ const IntentProduct = props => {
           <ProductHead
             productName={intentTitle}
             deleteMessage={`Delete ${intentTitle} Intent`}
-            deleteSubMessage="To delete this intent, please enter the first word on intent title."
+            deleteSubMessage={`To delete this intent, please enter "DELETE".`}
             onChange={onChangeTitle}
             onSave={onSave(getIntentProduct)}
             onDelete={onDelete}

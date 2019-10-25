@@ -11,7 +11,8 @@ const withTraining = graphql(trainingGql, {
   options: props => ({
     variables: {
       id: props.trainingId
-    }
+    },
+    fetchPolicy: 'network-only'
   }),
   props: ({ training: { loading, training, error } }) => {
     if (error) {

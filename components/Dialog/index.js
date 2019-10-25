@@ -92,7 +92,8 @@ class Dialog extends Component {
                     handleClickPagination={this.setOffsetPagination}
                     pagination={{
                       ...pagination,
-                      dataLength: loading ? 0 : myDialogs.pageInfo.total
+                      dataLength:
+                        loading || !myDialogs ? 0 : myDialogs.pageInfo.total
                     }}
                     keyword={keyword}
                     setKeyword={this.setKeyword}

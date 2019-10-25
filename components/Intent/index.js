@@ -110,7 +110,10 @@ class Intent extends Component {
                     handleClickPagination={this.setOffsetPagination}
                     pagination={{
                       ...pagination,
-                      dataLength: loading ? 0 : intentProvider.pageInfo.total
+                      dataLength:
+                        loading || !intentProvider
+                          ? 0
+                          : intentProvider.pageInfo.total
                     }}
                     keyword={keyword}
                     setKeyword={this.setKeyword}
