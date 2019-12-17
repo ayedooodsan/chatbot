@@ -68,6 +68,7 @@
     "draft-js-multidecorators": "^1.0.0",
     "draft-js-prism": "^1.0.6",
     "express": "4.16.4",
+    "file-saver": "^2.0.2",
     "final-form": "^4.13.0",
     "graphql": "^14.3.0",
     "helmet": "3.16.0",
