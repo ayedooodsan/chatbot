@@ -153,7 +153,9 @@ class ProductLayoutProvider extends Component {
   };
 
   onChangeTitle = event => {
-    this.setState({ title: event.target.value });
+    this.setState({
+      title: event.target.value.replace(/[^a-zA-Z\d\s]/, '')
+    });
   };
 
   getProduct = (productFilter, subProductFilter) => {

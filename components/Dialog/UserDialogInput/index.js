@@ -18,7 +18,10 @@ import { EDIT_USER } from '../DialogInput/constant';
 
 const onSubmit = props => {
   return values => {
-    props.send(values);
+    props.send({
+      ...values,
+      title: values.title.replace(/[^a-zA-Z\d\s]/, '')
+    });
   };
 };
 
