@@ -96,7 +96,7 @@ class DialogProduct extends Component {
 
   onChangeTitle = event => {
     this.setState({
-      title: event.target.value.replace(/[^a-zA-Z\d\s]/, '')
+      title: event.target.value.replace(/[^a-zA-Z\d\s-_]/, '')
     });
   };
 

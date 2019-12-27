@@ -90,7 +90,7 @@ const SimpleSubNavHead = props => {
             value={keyword}
             onChange={event => {
               const formatedKeyword = event.target.value.replace(
-                /[^a-zA-Z\d\s]/,
+                /[^a-zA-Z\d\s-_]/,
                 ''
               );
               setKeyword(formatedKeyword);
