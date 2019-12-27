@@ -20,7 +20,7 @@ const onSubmit = props => {
   return values => {
     props.send({
       ...values,
-      title: values.title.replace(/[^a-zA-Z\d\s]/, '')
+      title: values.title.replace(/[^a-zA-Z\d\s-_]/, '')
     });
   };
 };

@@ -57,7 +57,7 @@ const RobotDialogInput = props => {
                 value={messageTitle}
                 onChange={event =>
                   setMessageTitle(
-                    event.target.value.replace(/[^a-zA-Z\d\s]/, '')
+                    event.target.value.replace(/[^a-zA-Z\d\s-_]/, '')
                   )
                 }
                 label="Title"
