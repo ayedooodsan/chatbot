@@ -55,7 +55,11 @@ const RobotDialogInput = props => {
                 className={classes.textField}
                 autoFocus
                 value={messageTitle}
-                onChange={event => setMessageTitle(event.target.value)}
+                onChange={event =>
+                  setMessageTitle(
+                    event.target.value.replace(/[^a-zA-Z\d\s]/, '')
+                  )
+                }
                 label="Title"
                 margin="dense"
                 variant="outlined"
