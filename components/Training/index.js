@@ -16,6 +16,8 @@ import SubNavigation from '../layout/SubNavigation';
 import SimpleHeader from '../layout/SimpleSubNavHead';
 import UploadProductDialog from '../common/UploadProductDialog';
 import TrainingProduct from './TrainingProduct';
+import SearchTrainings from './SearchTrainings';
+import SearchView from '../common/SearchView';
 import connect from './store';
 import { Link } from '../../routes';
 import style from './style';
@@ -103,6 +105,16 @@ class Training extends Component {
     this.setState({ filters });
   };
 
+  setAdvancedSearch = value => {
+    this.setState({
+      advancedSearch: value,
+      pagination: {
+        limit: 20,
+        offset: 0
+      }
+    });
+  };
+
   render() {
     const {
       keyword,
@@ -110,27 +122,32 @@ class Training extends Component {
       uploadProductDialogStatus,
       openSearch,
       filters,
+      advancedSearch,
       type
     } = this.state;
     const { projectId, trainingId, classes } = this.props;
+    const TrainingsProvider = advancedSearch ? SearchTrainings : MyTrainings;
     return (
-      <MyTrainings
-        type={type}
-        filters={filters}
-        keyword={keyword}
-        projectId={projectId}
-        limit={pagination.limit}
-        offset={pagination.offset}
-      >
-        {(myTrainings, loading) => (
-          <LayoutProvider
-            navigation={() => <Navigation />}
-            subNavigation={() => (
+      <LayoutProvider
+        navigation={() => <Navigation />}
+        subNavigation={() => (
+          <TrainingsProvider
+            type={type}
+            filters={filters}
+            keyword={keyword}
+            projectId={projectId}
+            limit={pagination.limit}
+            offset={pagination.offset}
+          >
+            {(myTrainings, loading) => (
               <SubNavigation
                 header={() => (
                   <SimpleHeader
                     openSearch={openSearch}
                     setOpenSearch={this.setOpenSearch}
+                    hasAdvanceSearch
+                    advancedSearch={advancedSearch}
+                    setAdvancedSearch={this.setAdvancedSearch}
                     filters={filters}
                     setFilters={this.setFilters}
                     title="Trainings"
@@ -151,58 +168,68 @@ class Training extends Component {
                   myTrainings.trainings.length > 0 ? (
                     <React.Fragment>
                       <List component="nav">
-                        {myTrainings.trainings.map(myTraining => (
+                        {myTrainings.trainings.map((myTraining, index) => (
                           <Link
                             route={`/${projectId}/training/${myTraining.id}`}
                             key={myTraining.id}
                           >
                             <Tooltip title={myTraining.title} placement="right">
-                              <ListItem
-                                className={classes.listItem}
-                                divider
-                                dense
-                                button
-                              >
-                                <ListItemText
-                                  primary={myTraining.title}
-                                  primaryTypographyProps={{
-                                    variant: 'body2',
-                                    noWrap: true,
-                                    className: classNames({
-                                      [classes.listItemPrimaryTextActive]: this.activeTraining(
-                                        myTraining.id
-                                      )
-                                    })
-                                  }}
-                                  secondary={
-                                    <React.Fragment>
-                                      <span>
-                                        {(
-                                          ((myTraining.request -
-                                            myTraining.noMatch) /
-                                            myTraining.request) *
-                                          100
-                                        ).toFixed(2)}
-                                        {'% '}
-                                        Predicted
-                                      </span>
-                                      <span>
-                                        {moment(myTraining.createdAt).format(
-                                          '— MM/DD/YYYY'
-                                        )}
-                                      </span>
-                                    </React.Fragment>
-                                  }
-                                  secondaryTypographyProps={{
-                                    variant: 'caption',
-                                    className: classNames({
-                                      [classes.listItemSecondaryTextActive]: this.activeTraining(
-                                        myTraining.id
-                                      )
-                                    })
-                                  }}
+                              {advancedSearch ? (
+                                <SearchView
+                                  productTitle={myTraining.title}
+                                  activeId={trainingId}
+                                  index={index}
+                                  id={myTraining.id}
+                                  searchResult={myTraining.searchResult}
                                 />
-                              </ListItem>
+                              ) : (
+                                <ListItem
+                                  className={classes.listItem}
+                                  divider
+                                  dense
+                                  button
+                                >
+                                  <ListItemText
+                                    primary={myTraining.title}
+                                    primaryTypographyProps={{
+                                      variant: 'body2',
+                                      noWrap: true,
+                                      className: classNames({
+                                        [classes.listItemPrimaryTextActive]: this.activeTraining(
+                                          myTraining.id
+                                        )
+                                      })
+                                    }}
+                                    secondary={
+                                      <React.Fragment>
+                                        <span>
+                                          {(
+                                            ((myTraining.request -
+                                              myTraining.noMatch) /
+                                              myTraining.request) *
+                                            100
+                                          ).toFixed(2)}
+                                          {'% '}
+                                          Predicted
+                                        </span>
+                                        <span>
+                                          {moment(myTraining.createdAt).format(
+                                            '— MM/DD/YYYY'
+                                          )}
+                                        </span>
+                                      </React.Fragment>
+                                    }
+                                    secondaryTypographyProps={{
+                                      variant: 'caption',
+                                      className: classNames({
+                                        [classes.listItemSecondaryTextActive]: this.activeTraining(
+                                          myTraining.id
+                                        )
+                                      })
+                                    }}
+                                  />
+                                </ListItem>
+                              )}
                             </Tooltip>
                           </Link>
                         ))}
@@ -220,23 +247,23 @@ class Training extends Component {
                 }
               />
             )}
-          >
-            {trainingId && (
-              <TrainingProduct trainingId={trainingId} projectId={projectId} />
-            )}
-            <UploadProductDialog
-              placeholder="Choose Unpredicted User Input File"
-              message="Upload Unpredicted User Input"
-              submessage="You can upload unpredicted user inputs to the Training tool in one .xlsx file (follow the template below)."
-              open={uploadProductDialogStatus}
-              handleClose={this.closeCreateItemDialog}
-              handleConfirm={this.createItem}
-            >
-              <UploadFileTemplate />
-            </UploadProductDialog>
-          </LayoutProvider>
+          </TrainingsProvider>
         )}
-      </MyTrainings>
+      >
+        {trainingId && (
+          <TrainingProduct trainingId={trainingId} projectId={projectId} />
+        )}
+        <UploadProductDialog
+          placeholder="Choose Unpredicted User Input File"
+          message="Upload Unpredicted User Input"
+          submessage="You can upload unpredicted user inputs to the Training tool in one .xlsx file (follow the template below)."
+          open={uploadProductDialogStatus}
+          handleClose={this.closeCreateItemDialog}
+          handleConfirm={this.createItem}
+        >
+          <UploadFileTemplate />
+        </UploadProductDialog>
+      </LayoutProvider>
     );
   }
 }
