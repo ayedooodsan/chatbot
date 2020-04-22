@@ -1,0 +1,15 @@
+mutation downloadHistories (
+  $projectId: String!,
+  $startDate: String!,
+  $endDate: String!,
+) {
+  downloadHistories (
+    projectId: $projectId,
+    startDate: $startDate,
+    endDate: $endDate,
+  ) {
+    stream
+    filename
+    mimetype
+  }
+}

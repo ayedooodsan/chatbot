@@ -44,7 +44,7 @@ class MyApp extends App {
           options={{ trickleSpeed: 50 }}
         />
         <Head>
-          <title>My page</title>
+          <title>Console Kalina</title>
         </Head>
         {/* Wrap every page in Jss and Theme providers */}
         <JssProvider

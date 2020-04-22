@@ -6,5 +6,6 @@ mutation exportProject (
   ) {
     stream
     filename
+    mimetype
   }
 }

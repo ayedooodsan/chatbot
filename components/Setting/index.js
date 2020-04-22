@@ -15,13 +15,15 @@ import BackupSetting from './BackupSetting';
 import ShareSetting from './ShareSetting';
 import NLPEngineSetting from './NLPEngineSetting';
 import LogSetting from './LogSetting';
+import RawHistorySetting from './RawHistorySetting';
 import connect from './store';
 
 const Setting = props => {
   const { projectId, classes, settingType, role } = props;
   const settingMenu = [
     { name: 'General', type: 'general' },
-    { name: 'Backup', type: 'backup' }
+    { name: 'Backup', type: 'backup' },
+    { name: 'Raw History', type: 'rawHistory' }
   ];
 
   if (role === 'Admin') {
@@ -60,6 +62,10 @@ const Setting = props => {
       }
       case 'logIntegration': {
         SettingProduct = LogSetting;
+        break;
+      }
+      case 'rawHistory': {
+        SettingProduct = RawHistorySetting;
         break;
       }
       default: {
