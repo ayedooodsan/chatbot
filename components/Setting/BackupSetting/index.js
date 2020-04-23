@@ -9,7 +9,7 @@ import UploadFileDialog from '../../common/UploadFileDialog';
 import SimpleProductLayoutProvider from '../../layout/SimpleProductLayoutProvider';
 import SimpleProductHead from '../../layout/SimpleProductHead';
 import SimpleProductBody from '../../layout/SimpleProductBody';
-import { downloadZIP } from '../../../libraries/download';
+import downloadBase64 from '../../../libraries/download';
 import style from './style';
 import connect from './store';
 
@@ -19,15 +19,13 @@ const BackupSetting = props => {
 
   const onChangeBackup = file => {
     setImporDialogOpen(false);
-    importProject({ id: projectId, file }).then(response => {
-      console.log(response);
-    });
+    importProject({ id: projectId, file }).then(() => {});
   };
 
   const onDownload = () => {
     exportProject({ id: projectId }).then(response => {
-      const { filename, stream } = response.data.exportProject;
-      downloadZIP({ fileName: filename, zip: stream });
+      const { filename, stream, mimetype } = response.data.exportProject;
+      downloadBase64({ filename, stream, mimetype });
     });
   };
 
