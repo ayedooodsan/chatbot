@@ -213,9 +213,9 @@ class Training extends Component {
                                           Predicted
                                         </span>
                                         <span>
-                                          {moment(myTraining.createdAt).format(
-                                            '— MM/DD/YYYY'
-                                          )}
+                                          {moment(
+                                            myTraining.startQueryTime
+                                          ).format('— DD MMM YYYY')}
                                         </span>
                                       </React.Fragment>
                                     }

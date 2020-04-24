@@ -42,17 +42,25 @@ const FilterModal = props => {
   };
 
   const deliverMyFilters = () => {
-    setFilters(
-      myFilters.map(filter => {
-        if (filter.type === 'createdAt') {
-          return {
-            type: 'createdAt',
-            value: filter.value.format('YYYY-MM-DD')
-          };
-        }
-        return filter;
-      })
-    );
+    const newFilters = [];
+    myFilters.forEach(filter => {
+      if (filter.type === 'userSays.queryTime') {
+        newFilters.push({
+          type: 'userSays.queryTime',
+          operator: '$gte',
+          value: filter.value.startOf('day').toISOString()
+        });
+        newFilters.push({
+          type: 'userSays.queryTime',
+          operator: '$lt',
+          value: filter.value
+            .add(1, 'days')
+            .endOf('day')
+            .toISOString()
+        });
+      }
+    });
+    setFilters(newFilters);
     setOpen(false);
   };
 
@@ -86,18 +94,20 @@ const FilterModal = props => {
                 clearable
                 fullWidth
                 margin="dense"
-                label="Created Date"
+                label="Query Time"
                 variant="outlined"
-                value={getFilterValue('createdAt')}
-                onChange={newDate => onFilterChange('createdAt', newDate)}
+                value={getFilterValue('userSays.queryTime')}
+                onChange={newDate =>
+                  onFilterChange('userSays.queryTime', newDate)
+                }
                 format="DD/MM/YYYY"
               />
             </MuiPickersUtilsProvider>
-            {getFilterValue('createdAt') && (
+            {getFilterValue('userSays.queryTime') && (
               <div>
                 <IconButton
                   aria-label="toggle password visibility"
-                  onClick={() => onFilterChange('createdAt', null)}
+                  onClick={() => onFilterChange('userSays.queryTime', null)}
                 >
                   <Clear />
                 </IconButton>

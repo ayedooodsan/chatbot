@@ -17,7 +17,7 @@ query myTrainings (
       title
       request
       noMatch
-      createdAt
+      startQueryTime
     }
     pageInfo {
       total
