@@ -5,6 +5,7 @@ export const AUTH_SIGNIN = 'AUTH/SIGNIN';
 export const AUTH_SIGNOUT = 'AUTH/SIGNOUT';
 export const AUTH_SERVERERROR = 'AUTH/SERVERERROR';
 export const AUTH_PROJECT_ROLE = 'AUTH/PROJECT_ROLE';
+export const AUTH_USERNAME = 'AUTH/USERNAME';
 
 // Initial State
 const initialState = {
@@ -12,7 +13,8 @@ const initialState = {
   token: null,
   refreshToken: null,
   role: null,
-  error: null
+  error: null,
+  username: null
 };
 
 // Reducer
@@ -32,6 +34,8 @@ const reducer = (state = initialState, action) => {
       return { ...state, authenticated: false, error: action.error };
     case AUTH_PROJECT_ROLE:
       return { ...state, role: action.role };
+    case AUTH_USERNAME:
+      return { ...state, username: action.username };
     default:
       return state;
   }
@@ -49,6 +53,10 @@ actionCreators.signOut = () => ({ type: AUTH_SIGNOUT });
 actionCreators.setProjectRole = role => ({
   type: AUTH_PROJECT_ROLE,
   role
+});
+actionCreators.setUsername = username => ({
+  type: AUTH_USERNAME,
+  username
 });
 
 // Discpatchers
@@ -68,6 +76,11 @@ dispatchers.signOut = () => {
 dispatchers.setProjectRole = role => {
   persist.willSetProjectRole(role);
   return actionCreators.setProjectRole(role);
+};
+
+dispatchers.setUsername = username => {
+  persist.willSetUsername(username);
+  return actionCreators.setUsername(username);
 };
 
 export { actionCreators, reducer, dispatchers };

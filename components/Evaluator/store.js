@@ -1,6 +1,7 @@
 import { graphql, compose } from 'react-apollo';
 import { connect } from 'react-redux';
 import { dispatchers } from '../../redux/notifier';
+import { dispatchers as dispatchersAuth } from '../../redux/auth';
 import detectIntentGql from './detectIntent.gql';
 import freeDetectIntentGql from './freeDetectIntent.gql';
 import trainProjectGql from './trainProject.gql';
@@ -111,6 +112,9 @@ const mapDispatchToProps = dispatch => ({
     },
     closeNotification(key) {
       dispatch(dispatchers.closeSnackbar(key));
+    },
+    setUserMeInfo(username) {
+      dispatch(dispatchersAuth.setUsername(username));
     }
   }
 });

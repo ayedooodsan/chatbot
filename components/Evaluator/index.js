@@ -50,13 +50,18 @@ class Evaluator extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { subscribeProjectTraining, subscribeProjectTrained } = this.props;
+    const {
+      subscribeProjectTraining,
+      subscribeProjectTrained,
+      me: { username }
+    } = this.props;
     if (
       prevProps.subscribeProjectTraining !== subscribeProjectTraining &&
       prevProps.subscribeProjectTrained !== subscribeProjectTrained
     ) {
       this.subscribeProjectTrainingInfo();
     }
+    this.setUsername(username);
   }
 
   componentWillUnmount() {
@@ -228,6 +233,11 @@ class Evaluator extends React.Component {
         }
       );
     });
+  };
+
+  setUsername = username => {
+    const { actions } = this.props;
+    actions.setUserMeInfo(username);
   };
 
   subscribeProjectTrainingInfo() {

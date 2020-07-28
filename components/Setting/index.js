@@ -19,7 +19,7 @@ import RawHistorySetting from './RawHistorySetting';
 import connect from './store';
 
 const Setting = props => {
-  const { projectId, classes, settingType, role } = props;
+  const { projectId, classes, settingType, role, username } = props;
   const settingMenu = [
     { name: 'General', type: 'general' },
     { name: 'Backup', type: 'backup' },
@@ -28,14 +28,16 @@ const Setting = props => {
 
   if (role === 'Admin') {
     settingMenu.push({ name: 'Share', type: 'share' });
-    settingMenu.push({
-      name: 'NLP Engine',
-      type: 'nlpIntegration'
-    });
-    settingMenu.push({
-      name: 'Log Engine',
-      type: 'logIntegration'
-    });
+    if (username === 'kalina') {
+      settingMenu.push({
+        name: 'NLP Engine',
+        type: 'nlpIntegration'
+      });
+      settingMenu.push({
+        name: 'Log Engine',
+        type: 'logIntegration'
+      });
+    }
   }
 
   const activeSettingType = currentSettingType =>
@@ -127,13 +129,15 @@ const Setting = props => {
 
 Setting.defaultProps = {
   settingType: null,
-  role: 'Collaborator'
+  role: 'Collaborator',
+  username: ''
 };
 
 Setting.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
   role: PropTypes.string,
+  username: PropTypes.string,
   settingType: PropTypes.string
 };
 
