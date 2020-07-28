@@ -9,6 +9,10 @@ export default class persist {
     return 'role';
   }
 
+  static get ACCESS_USERNAME() {
+    return 'username';
+  }
+
   static async willGetAccessToken() {
     const token = await cookies.get(persist.ACCESS_TOKEN_KEY);
     return token;
@@ -35,6 +39,11 @@ export default class persist {
     const status = await cookies.set(persist.ACCESS_ROLE_KEY, value, {
       expires: 4
     });
+    return status;
+  }
+
+  static async willSetUsername(value) {
+    const status = await cookies.set(persist.ACCESS_USERNAME, value);
     return status;
   }
 
