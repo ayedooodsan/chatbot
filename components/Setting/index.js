@@ -28,16 +28,17 @@ const Setting = props => {
 
   if (role === 'Admin') {
     settingMenu.push({ name: 'Share', type: 'share' });
-    if (username === 'kalina') {
-      settingMenu.push({
-        name: 'NLP Engine',
-        type: 'nlpIntegration'
-      });
-      settingMenu.push({
-        name: 'Log Engine',
-        type: 'logIntegration'
-      });
-    }
+  }
+
+  if (username === 'kalina') {
+    settingMenu.push({
+      name: 'NLP Engine',
+      type: 'nlpIntegration'
+    });
+    settingMenu.push({
+      name: 'Log Engine',
+      type: 'logIntegration'
+    });
   }
 
   const activeSettingType = currentSettingType =>
