@@ -301,7 +301,11 @@ class Evaluator extends React.Component {
   }
 
   render() {
-    const { classes, project } = this.props;
+    const {
+      classes,
+      project,
+      projectSetting: { NLPStatus }
+    } = this.props;
     const { anchorEl, open, utterance, messages, training, free } = this.state;
     const id = open ? 'evaluator-popper' : null;
     let trainButtonText = '';
@@ -321,7 +325,7 @@ class Evaluator extends React.Component {
               variant="extended"
               size="medium"
               color="primary"
-              disabled={training || !project.needTrain}
+              disabled={training || !project.needTrain || !NLPStatus}
               onClick={this.trainProject}
             >
               {trainButtonText}
@@ -446,6 +450,7 @@ class Evaluator extends React.Component {
 Evaluator.defaultProps = {
   router: {},
   project: {},
+  projectSetting: {},
   me: {},
   subscribeProjectTraining: null,
   subscribeProjectTrained: null
@@ -461,6 +466,7 @@ Evaluator.propTypes = {
   subscribeProjectTrained: PropTypes.func,
   me: PropTypes.object,
   project: PropTypes.object,
+  projectSetting: PropTypes.object,
   router: PropTypes.object
 };
 
