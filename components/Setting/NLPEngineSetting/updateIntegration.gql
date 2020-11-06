@@ -2,15 +2,18 @@ mutation updateIntegration (
   $id: String!
   $vendor: String!
   $setting: String
+  $status: Boolean
 ) {
   updateIntegration (
     id: $id
     vendor: $vendor
     setting: $setting
     type: "nlp"
+    status: $status
   ) {
     id
     vendor
     setting
+    status
   }
 }

@@ -8,5 +8,6 @@ query myIntegrations (
     id
     vendor
     setting
+    status
   }
 }

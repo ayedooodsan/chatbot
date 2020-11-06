@@ -119,6 +119,8 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
+const mapStateToProps = ({ projectSetting }) => ({ projectSetting });
+
 export default comp => {
   const compWithApollo = compose(
     withProject,
@@ -128,7 +130,7 @@ export default comp => {
     withTrainProject
   )(comp);
   return connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
   )(compWithApollo);
 };

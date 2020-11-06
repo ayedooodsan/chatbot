@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Button from '@material-ui/core/Button';
@@ -19,11 +20,21 @@ import style from './style';
 import connect from './store';
 
 const NLPEngineSetting = props => {
-  const { classes, myIntegrations, updateIntegration } = props;
+  const { classes, myIntegrations, updateIntegration, actions } = props;
   const [dialogflowDialogOpen, setDialogflowDialogOpen] = useState(false);
   const [defaultDialogOpen, setDefaultDialogOpen] = useState(false);
   const [disconnectDialogOpen, setDisconnectDialogOpen] = useState(false);
   const [myIntegration] = myIntegrations;
+
+  const getNLPStatus = () => {
+    const NLPStatus = myIntegration ? myIntegration.status : false;
+    actions.setNLPStatus(NLPStatus);
+  };
+
+  useEffect(() => {
+    getNLPStatus();
+  });
+
   const integrationList = [
     {
       vendor: 'Default',
@@ -32,14 +43,18 @@ const NLPEngineSetting = props => {
         <Avatar>
           <MemoryIcon />
         </Avatar>
-      )
+      ),
+      status: myIntegration ? myIntegration.status : false,
+      setting: myIntegration && myIntegration.setting !== null
     },
     {
       vendor: 'Dialogflow',
       isConnected: myIntegration && myIntegration.vendor === 'Dialogflow',
       avatar: (
         <Avatar alt="Dialogflow Icon" src="/static/img/dialogflow-logo.png" />
-      )
+      ),
+      status: myIntegration ? myIntegration.status : false,
+      setting: myIntegration && myIntegration.setting !== null
     }
   ];
 
@@ -62,7 +77,7 @@ const NLPEngineSetting = props => {
     updateIntegration({
       id: myIntegration.id,
       vendor: 'Default',
-      setting: null
+      status: true
     }).then(() => {
       if (action === 'DISCONNECT') {
         setDisconnectDialogOpen(false);
@@ -72,12 +87,17 @@ const NLPEngineSetting = props => {
     });
   };
 
-  const onConnect = vendor => {
+  const onTurnOn = vendor => {
     if (vendor === 'Dialogflow') {
-      setDialogflowDialogOpen(true);
+      updateIntegration({
+        id: myIntegration.id,
+        vendor,
+        status: true
+      }).then(() => {});
     } else if (vendor === 'Default') {
       setDefaultDialogOpen(true);
     }
+    actions.setNLPStatus(true);
   };
 
   const onEdit = vendor => {
@@ -86,8 +106,27 @@ const NLPEngineSetting = props => {
     }
   };
 
-  const onDisconnect = () => {
-    setDisconnectDialogOpen(true);
+  const onTurnOff = vendor => {
+    updateIntegration({
+      id: myIntegration.id,
+      vendor: 'Default',
+      status: false
+    }).then(() => {});
+    actions.setNLPStatus(false);
+  };
+
+  const buttonEnv = listItem => {
+    return (
+      <Button
+        className={classes.button}
+        color="primary"
+        variant="contained"
+        onClick={() => onEdit(listItem.vendor)}
+        style={{ marginRight: 20 }}
+      >
+        {!listItem.setting ? 'Setup ENV' : 'Change ENV'}
+      </Button>
+    );
   };
 
   return (
@@ -117,7 +156,7 @@ const NLPEngineSetting = props => {
                   about Google Cloud Platform Service Account.
                 </span>
               )}
-              actionName="CONNECT"
+              actionName="SAVE"
             />
             <ActionConfirmDialog
               open={disconnectDialogOpen}
@@ -143,39 +182,34 @@ const NLPEngineSetting = props => {
                   <ListItemAvatar>{listItem.avatar}</ListItemAvatar>
                   <ListItemText
                     primary={listItem.vendor}
-                    secondary={
-                      listItem.isConnected ? 'Connected' : 'Disconnected'
-                    }
+                    secondary={listItem.isConnected ? 'On' : 'Off'}
                   />
                   <ListItemSecondaryAction>
                     {listItem.isConnected ? (
                       listItem.vendor !== 'Default' && (
                         <React.Fragment>
-                          <Button
-                            className={classes.button}
-                            color="primary"
-                            variant="contained"
-                            onClick={() => onEdit(listItem.vendor)}
-                          >
-                            Edit
-                          </Button>
+                          {buttonEnv(listItem)}
                           <Button
                             variant="contained"
-                            className={classes.button}
-                            onClick={() => onDisconnect()}
+                            onClick={() => onTurnOff(listItem.vendor)}
+                            disabled={!listItem.setting}
                           >
-                            Disconnect
+                            Turn Off
                           </Button>
                         </React.Fragment>
                       )
                     ) : (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => onConnect(listItem.vendor)}
-                      >
-                        Connect
-                      </Button>
+                      <React.Fragment>
+                        {listItem.vendor !== 'Default' && buttonEnv(listItem)}
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => onTurnOn(listItem.vendor)}
+                          disabled={!listItem.setting}
+                        >
+                          Turn On
+                        </Button>
+                      </React.Fragment>
                     )}
                   </ListItemSecondaryAction>
                 </ListItem>
@@ -196,6 +230,7 @@ NLPEngineSetting.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
   updateIntegration: PropTypes.func.isRequired,
+  actions: PropTypes.object.isRequired,
   myIntegrations: PropTypes.array
 };
 
