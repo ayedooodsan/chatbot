@@ -1,0 +1,15 @@
+mutation updateWebhookProject (
+  $id: String!
+  $webhookUrl: String
+  $webhookUsername: String
+) {
+  updateWebhookProject (
+    id: $id
+    webhookUrl: $webhookUrl
+    webhookUsername: $webhookUsername
+  ) {
+    id
+    webhookUrl
+    webhookUsername
+  }
+}

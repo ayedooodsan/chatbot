@@ -146,15 +146,12 @@ app.prepare().then(() => {
     }
 
     if (ngrok) {
-      ngrok.connect(
-        port,
-        (innerErr, url) => {
-          if (innerErr) {
-            return logger.error(innerErr);
-          }
-          logger.appStarted(port, prettyHost, url);
+      ngrok.connect(port, (innerErr, url) => {
+        if (innerErr) {
+          return logger.error(innerErr);
         }
-      );
+        logger.appStarted(port, prettyHost, url);
+      });
     } else {
       logger.appStarted(port, prettyHost);
     }
