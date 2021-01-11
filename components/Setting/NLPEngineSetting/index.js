@@ -16,6 +16,7 @@ import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
+import Switch from '@material-ui/core/Switch';
 import ActionConfirmDialog from '../../common/ActionConfirmDialog';
 import UploadFileDialog from '../../common/UploadFileDialog';
 import SimpleProductLayoutProvider from '../../layout/SimpleProductLayoutProvider';
@@ -37,6 +38,9 @@ const NLPEngineSetting = props => {
   const [dialogflowDialogOpen, setDialogflowDialogOpen] = useState(false);
   const [defaultDialogOpen, setDefaultDialogOpen] = useState(false);
   const [disconnectDialogOpen, setDisconnectDialogOpen] = useState(false);
+  const [available, setAvailable] = useState(
+    webhookProject.webhookAvailable || false
+  );
   const [urlValue, setUrlValue] = useState(webhookProject.webhookUrl || '');
   const [usernameValue, setUsernameValue] = useState(
     webhookProject.webhookUsername || ''
@@ -149,7 +153,8 @@ const NLPEngineSetting = props => {
   const onSaveWebhook = () => {
     const payload = {
       webhookUrl: urlValue,
-      webhookUsername: usernameValue
+      webhookUsername: usernameValue,
+      webhookAvailable: available
     };
     updateWebhookProject({
       id: projectId,
@@ -161,6 +166,7 @@ const NLPEngineSetting = props => {
     if (webhookProject) {
       setUrlValue(webhookProject.webhookUrl);
       setUsernameValue(webhookProject.webhookUsername);
+      setAvailable(webhookProject.webhookAvailable);
     }
   }, [webhookProject]);
 
@@ -175,7 +181,7 @@ const NLPEngineSetting = props => {
               open={dialogflowDialogOpen}
               handleClose={() => setDialogflowDialogOpen(false)}
               handleConfirm={setDialogflowIntegration}
-              placeholder="Type CONNECT and click the connect button"
+              placeholder="Type SAVE and click the save button"
               message="Upload Google Cloud Platform Service Account key"
               subMessage={() => (
                 <span>
@@ -291,12 +297,29 @@ const NLPEngineSetting = props => {
                   />
                 </FormControl>
               </Grid>
+              <Grid item>
+                <FormControl fullWidth>
+                  <Typography
+                    style={{
+                      fontSize: 12
+                    }}
+                    component="p"
+                  >
+                    Available
+                  </Typography>
+                  <Switch
+                    checked={available}
+                    onChange={() => setAvailable(!available)}
+                    value="checkedB"
+                    color="primary"
+                  />
+                </FormControl>
+              </Grid>
               <Grid
                 item
                 style={{
                   display: 'flex',
-                  justifyContent: 'flex-end',
-                  marginTop: 20
+                  justifyContent: 'flex-end'
                 }}
               >
                 <Button

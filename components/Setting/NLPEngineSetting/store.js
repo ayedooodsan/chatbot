@@ -50,12 +50,18 @@ const mapDispatchToProps = dispatch => ({
 const withUpdateWebhookProject = graphql(updateWebhookProjectGql, {
   name: 'updateWebhookProject',
   props: ({ updateWebhookProject }) => ({
-    updateWebhookProject: ({ id, webhookUrl, webhookUsername }) =>
+    updateWebhookProject: ({
+      id,
+      webhookUrl,
+      webhookUsername,
+      webhookAvailable
+    }) =>
       updateWebhookProject({
         variables: {
           id,
           webhookUrl,
-          webhookUsername
+          webhookUsername,
+          webhookAvailable
         },
         refetchQueries: ['myProjects', 'project']
       })
