@@ -63,6 +63,7 @@ const Zoho = props => {
     if (message.type === 'forward') {
       return (
         <ZohoHandoverResponse
+          label="Handover Response"
           value={message.value}
           onChange={value => changeMessage({ ...message, value })}
         />
