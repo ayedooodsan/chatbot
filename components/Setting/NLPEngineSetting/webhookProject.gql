@@ -1,0 +1,11 @@
+query webhookProject (
+  $id: String!
+) {
+  project (
+    id: $id
+  ) {
+    webhookUrl
+    webhookUsername
+    webhookAvailable
+  }
+}

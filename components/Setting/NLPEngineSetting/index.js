@@ -11,6 +11,12 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import MemoryIcon from '@material-ui/icons/Memory';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import FormControl from '@material-ui/core/FormControl';
+import Divider from '@material-ui/core/Divider';
+import Typography from '@material-ui/core/Typography';
+import Switch from '@material-ui/core/Switch';
 import ActionConfirmDialog from '../../common/ActionConfirmDialog';
 import UploadFileDialog from '../../common/UploadFileDialog';
 import SimpleProductLayoutProvider from '../../layout/SimpleProductLayoutProvider';
@@ -20,10 +26,25 @@ import style from './style';
 import connect from './store';
 
 const NLPEngineSetting = props => {
-  const { classes, myIntegrations, updateIntegration, actions } = props;
+  const {
+    classes,
+    myIntegrations,
+    updateIntegration,
+    actions,
+    projectId,
+    updateWebhookProject,
+    webhookProject
+  } = props;
   const [dialogflowDialogOpen, setDialogflowDialogOpen] = useState(false);
   const [defaultDialogOpen, setDefaultDialogOpen] = useState(false);
   const [disconnectDialogOpen, setDisconnectDialogOpen] = useState(false);
+  const [available, setAvailable] = useState(
+    webhookProject.webhookAvailable || false
+  );
+  const [urlValue, setUrlValue] = useState(webhookProject.webhookUrl || '');
+  const [usernameValue, setUsernameValue] = useState(
+    webhookProject.webhookUsername || ''
+  );
   const [myIntegration] = myIntegrations;
 
   const getNLPStatus = () => {
@@ -129,6 +150,26 @@ const NLPEngineSetting = props => {
     );
   };
 
+  const onSaveWebhook = () => {
+    const payload = {
+      webhookUrl: urlValue,
+      webhookUsername: usernameValue,
+      webhookAvailable: available
+    };
+    updateWebhookProject({
+      id: projectId,
+      ...payload
+    }).then(() => {});
+  };
+
+  useEffect(() => {
+    if (webhookProject) {
+      setUrlValue(webhookProject.webhookUrl);
+      setUsernameValue(webhookProject.webhookUsername);
+      setAvailable(webhookProject.webhookAvailable);
+    }
+  }, [webhookProject]);
+
   return (
     <SimpleProductLayoutProvider
       header={() => <SimpleProductHead title="NLP Engine" noButton />}
@@ -140,7 +181,7 @@ const NLPEngineSetting = props => {
               open={dialogflowDialogOpen}
               handleClose={() => setDialogflowDialogOpen(false)}
               handleConfirm={setDialogflowIntegration}
-              placeholder="Type CONNECT and click the connect button"
+              placeholder="Type SAVE and click the save button"
               message="Upload Google Cloud Platform Service Account key"
               subMessage={() => (
                 <span>
@@ -163,8 +204,8 @@ const NLPEngineSetting = props => {
               handleClose={() => setDisconnectDialogOpen(false)}
               handleConfirm={() => setDefaultIntegration('DISCONNECT')}
               placeholder="Type DISCONNECT and click the disconnect button"
-              message="Disconnect from Dialogflow"
-              subMessage="Disconnect from Dialogflow and return to default setting."
+              message="Disconnect from NLP Engine"
+              subMessage="Disconnect from NLP Engine and return to default setting."
               actionName="DISCONNECT"
             />
             <ActionConfirmDialog
@@ -215,6 +256,82 @@ const NLPEngineSetting = props => {
                 </ListItem>
               ))}
             </List>
+            <Divider />
+            <Typography
+              style={{ fontSize: 16, fontWeight: 500, padding: '20px 0px 5px' }}
+              component="div"
+            >
+              Setup Webhook Config
+            </Typography>
+            <Grid
+              container
+              direction="column"
+              spacing={16}
+              style={{ padding: '0px 0px 20px' }}
+            >
+              <Grid item>
+                <FormControl fullWidth>
+                  <TextField
+                    value={urlValue}
+                    onChange={event => setUrlValue(event.target.value)}
+                    placeholder="Set Webhook URL"
+                    margin="dense"
+                    label="Webhook url"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item>
+                <FormControl fullWidth>
+                  <TextField
+                    value={usernameValue}
+                    onChange={event => setUsernameValue(event.target.value)}
+                    placeholder="Set Username"
+                    margin="dense"
+                    label="Username"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item>
+                <FormControl fullWidth>
+                  <Typography
+                    style={{
+                      fontSize: 12
+                    }}
+                    component="p"
+                  >
+                    Available
+                  </Typography>
+                  <Switch
+                    checked={available}
+                    onChange={() => setAvailable(!available)}
+                    value="checkedB"
+                    color="primary"
+                  />
+                </FormControl>
+              </Grid>
+              <Grid
+                item
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end'
+                }}
+              >
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  onClick={() => onSaveWebhook()}
+                >
+                  Save
+                </Button>
+              </Grid>
+            </Grid>
           </Paper>
         </SimpleProductBody>
       )}
@@ -223,7 +340,8 @@ const NLPEngineSetting = props => {
 };
 
 NLPEngineSetting.defaultProps = {
-  myIntegrations: []
+  myIntegrations: [],
+  webhookProject: {}
 };
 
 NLPEngineSetting.propTypes = {
@@ -231,7 +349,9 @@ NLPEngineSetting.propTypes = {
   projectId: PropTypes.string.isRequired,
   updateIntegration: PropTypes.func.isRequired,
   actions: PropTypes.object.isRequired,
-  myIntegrations: PropTypes.array
+  myIntegrations: PropTypes.array,
+  updateWebhookProject: PropTypes.func.isRequired,
+  webhookProject: PropTypes.object
 };
 
 export default withStyles(style)(connect(NLPEngineSetting));
