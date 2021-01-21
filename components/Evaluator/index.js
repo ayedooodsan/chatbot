@@ -11,14 +11,17 @@ import IconButton from '@material-ui/core/IconButton';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import Delete from '@material-ui/icons/Delete';
-import PlayIcon from '@material-ui/icons/PlayArrow';
-import StopIcon from '@material-ui/icons/Stop';
+import SettingsIcon from '@material-ui/icons/Settings';
+// import PlayIcon from '@material-ui/icons/PlayArrow';
+// import StopIcon from '@material-ui/icons/Stop';
 import { withRouter } from 'next/router';
 import Scrollbar from 'react-scrollbars-custom';
 import Bubblechat from '../common/BubbleChat';
 import UserMessage from './UserMessage';
 import BotMessage from './BotMessage';
 import BotLoading from './BotLoading';
+import DialogflowMesseger from '../DialogflowMesseger';
+import redirect from '../../libraries/redirect';
 import style from './style';
 import connect from './store';
 
@@ -235,6 +238,11 @@ class Evaluator extends React.Component {
     });
   };
 
+  redirectGeneralSetting = () => {
+    const { router } = this.props;
+    redirect({}, `/${router.query.projectId}/setting/general`);
+  };
+
   setUsername = username => {
     const { actions } = this.props;
     actions.setUserMeInfo(username);
@@ -318,12 +326,15 @@ class Evaluator extends React.Component {
     }
     return (
       <div>
-        <div className={classes.buttonContainer}>
+        <div
+          className={classes.buttonContainer}
+          style={{ right: project.agentId ? 90 : 20 }}
+        >
           <div className={classes.trainWrapper}>
             <Fab
               className={classes.button}
               variant="extended"
-              size="medium"
+              size="large"
               color="primary"
               disabled={training || !project.needTrain || !NLPStatus}
               onClick={this.trainProject}
@@ -334,7 +345,7 @@ class Evaluator extends React.Component {
               <CircularProgress size={24} className={classes.trainProgress} />
             )}
           </div>
-          <Fab
+          {/* <Fab
             className={classes.button}
             disabled={training}
             size="medium"
@@ -343,7 +354,25 @@ class Evaluator extends React.Component {
             onClick={this.handleClick}
           >
             {open ? <StopIcon /> : <PlayIcon />}
-          </Fab>
+          </Fab> */}
+          {project.agentId ? (
+            <DialogflowMesseger
+              title={project.title}
+              agentId={project.agentId}
+            />
+          ) : (
+            <>
+              <Fab
+                className={classes.button}
+                variant="extended"
+                size="large"
+                color="primary"
+                onClick={() => this.redirectGeneralSetting()}
+              >
+                <SettingsIcon style={{ marginRight: 5 }} /> Set Agent ID
+              </Fab>
+            </>
+          )}
         </div>
         <Popper
           id={id}

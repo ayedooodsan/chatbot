@@ -66,6 +66,9 @@ const Project = props => {
       if (response.data.updateActiveProject) {
         redirect({}, `/${newProjectId}/entity`);
       }
+      setTimeout(() => {
+        window.location.reload(true);
+      }, 1000);
     });
   };
 

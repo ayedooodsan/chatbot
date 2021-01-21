@@ -75,6 +75,7 @@ const GeneralSetting = props => {
   const description = useField('description', form);
   const timeZone = useField('timeZone', form);
   const language = useField('language', form);
+  const agentId = useField('agentId', form);
   return (
     <SimpleProductLayoutProvider
       header={() => (
@@ -275,6 +276,37 @@ const GeneralSetting = props => {
                       isTypeOfString(language.meta.error) && (
                         <FormHelperText margin="dense" error>
                           {language.meta.touched && language.meta.error}
+                        </FormHelperText>
+                      )}
+                  </div>
+                </Grid>
+                <Grid item md>
+                  <div className={classes.container}>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Agent ID
+                    </Typography>
+                    <Paper
+                      style={
+                        title.meta.touched && isTypeOfString(title.meta.error)
+                          ? {
+                              border: '1px solid red'
+                            }
+                          : {}
+                      }
+                      className={classes.fieldRoot}
+                      elevation={1}
+                    >
+                      <InputBase
+                        placeholder="Agent ID"
+                        fullWidth
+                        className={classes.input}
+                        {...agentId.input}
+                      />
+                    </Paper>
+                    {agentId.meta.touched &&
+                      isTypeOfString(agentId.meta.error) && (
+                        <FormHelperText margin="dense" error>
+                          {agentId.meta.touched && agentId.meta.error}
                         </FormHelperText>
                       )}
                   </div>

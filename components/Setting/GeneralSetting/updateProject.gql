@@ -4,6 +4,7 @@ mutation updateProject (
   $description: String
   $timeZone: String
   $language: String
+  $agentId: String
 ) {
   updateProject (
     id: $id
@@ -11,11 +12,13 @@ mutation updateProject (
     description: $description
     timeZone: $timeZone
     language: $language
+    agentId: $agentId
   ) {
     id
     title
     description
     timeZone
     language
+    agentId
   }
 }

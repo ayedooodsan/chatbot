@@ -49,9 +49,9 @@ const withLanguages = graphql(languagesGql, {
 const withUpdateProject = graphql(updateProjectGql, {
   name: 'updateProject',
   props: ({ updateProject }) => ({
-    updateProject: ({ id, title, description, timeZone, language }) =>
+    updateProject: ({ id, title, description, timeZone, language, agentId }) =>
       updateProject({
-        variables: { id, title, description, timeZone, language },
+        variables: { id, title, description, timeZone, language, agentId },
         refetchQueries: ['myProjects', 'project']
       })
   })

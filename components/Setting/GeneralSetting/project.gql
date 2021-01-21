@@ -8,5 +8,6 @@ query project (
     description
     language
     timeZone
+    agentId
   }
 }
