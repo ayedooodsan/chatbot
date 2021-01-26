@@ -1,8 +1,8 @@
 const style = theme => ({
   buttonContainer: {
     position: 'absolute',
-    bottom: 24,
-    right: theme.spacing.unit * 2
+    bottom: 24
+    // right: theme.spacing.unit * 2
   },
   buttonContainerMoveUp: {
     transform: 'translate3d(0, -46px, 0)',

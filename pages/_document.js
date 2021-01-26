@@ -32,6 +32,7 @@ class MyDocument extends Document {
           <Main />
           <NextScript />
         </body>
+        <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1" />
       </html>
     );
   }
