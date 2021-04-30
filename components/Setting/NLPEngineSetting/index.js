@@ -14,9 +14,11 @@ import MemoryIcon from '@material-ui/icons/Memory';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import Switch from '@material-ui/core/Switch';
+import { RemoveRedEye } from '@material-ui/icons';
 import ActionConfirmDialog from '../../common/ActionConfirmDialog';
 import UploadFileDialog from '../../common/UploadFileDialog';
 import SimpleProductLayoutProvider from '../../layout/SimpleProductLayoutProvider';
@@ -45,6 +47,16 @@ const NLPEngineSetting = props => {
   const [usernameValue, setUsernameValue] = useState(
     webhookProject.webhookUsername || ''
   );
+  const [gatewayUrl, setGatewayUrl] = useState(webhookProject.gatewayUrl || '');
+  const [basicAuthUsername, setBasicAuthUsername] = useState(
+    webhookProject.basicAuthUsername || ''
+  );
+  const [basicAuthPassword, setBasicAuthPassword] = useState(
+    webhookProject.basicAuthPassword || ''
+  );
+
+  const [showHidePassword, setShowHidePassword] = useState(true);
+
   const [myIntegration] = myIntegrations;
 
   const getNLPStatus = () => {
@@ -154,12 +166,19 @@ const NLPEngineSetting = props => {
     const payload = {
       webhookUrl: urlValue,
       webhookUsername: usernameValue,
-      webhookAvailable: available
+      webhookAvailable: available,
+      gatewayUrl,
+      basicAuthUsername,
+      basicAuthPassword
     };
     updateWebhookProject({
       id: projectId,
       ...payload
     }).then(() => {});
+  };
+
+  const togglePasswordMask = isShow => {
+    setShowHidePassword(isShow);
   };
 
   useEffect(() => {
@@ -312,6 +331,58 @@ const NLPEngineSetting = props => {
                     onChange={() => setAvailable(!available)}
                     value="checkedB"
                     color="primary"
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item>
+                <FormControl fullWidth>
+                  <TextField
+                    value={gatewayUrl}
+                    onChange={event => setGatewayUrl(event.target.value)}
+                    placeholder="Set Gateway URL"
+                    margin="dense"
+                    label="Set Gateway URL"
+                    size="small"
+                    fullWidth
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item>
+                <FormControl fullWidth>
+                  <TextField
+                    value={basicAuthUsername}
+                    onChange={event => setBasicAuthUsername(event.target.value)}
+                    placeholder="Basic Auth Username"
+                    margin="dense"
+                    label="Basic Auth Username"
+                    size="small"
+                    fullWidth
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item>
+                <FormControl fullWidth>
+                  <TextField
+                    value={basicAuthPassword}
+                    onChange={event => setBasicAuthPassword(event.target.value)}
+                    placeholder="Basic Auth Password"
+                    margin="dense"
+                    label="Basic Auth Password"
+                    size="small"
+                    fullWidth
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <RemoveRedEye
+                            className={classes.eye}
+                            onClick={() =>
+                              togglePasswordMask(!showHidePassword)
+                            }
+                          />
+                        </InputAdornment>
+                      )
+                    }}
+                    type={!showHidePassword ? 'password' : 'text'}
                   />
                 </FormControl>
               </Grid>
