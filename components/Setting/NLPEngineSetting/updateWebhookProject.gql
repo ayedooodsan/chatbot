@@ -6,6 +6,7 @@ mutation updateWebhookProject (
   $gatewayUrl: String
   $basicAuthUsername: String
   $basicAuthPassword: String
+  $timeoutMessage: String
 ) {
   updateWebhookProject (
     id: $id
@@ -15,6 +16,7 @@ mutation updateWebhookProject (
     gatewayUrl: $gatewayUrl
     basicAuthUsername: $basicAuthUsername
     basicAuthPassword: $basicAuthPassword
+    timeoutMessage: $timeoutMessage
   ) {
     id
     webhookUrl
@@ -23,5 +25,6 @@ mutation updateWebhookProject (
     gatewayUrl
     basicAuthUsername
     basicAuthPassword
+    timeoutMessage
   }
 }

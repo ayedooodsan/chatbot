@@ -54,6 +54,9 @@ const NLPEngineSetting = props => {
   const [basicAuthPassword, setBasicAuthPassword] = useState(
     webhookProject.basicAuthPassword || ''
   );
+  const [timeoutMessage, setTimeoutMessage] = useState(
+    webhookProject.timeoutMessage || ''
+  );
 
   const [showHidePassword, setShowHidePassword] = useState(true);
 
@@ -169,7 +172,8 @@ const NLPEngineSetting = props => {
       webhookAvailable: available,
       gatewayUrl,
       basicAuthUsername,
-      basicAuthPassword
+      basicAuthPassword,
+      timeoutMessage
     };
     updateWebhookProject({
       id: projectId,
@@ -383,6 +387,19 @@ const NLPEngineSetting = props => {
                       )
                     }}
                     type={!showHidePassword ? 'password' : 'text'}
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item>
+                <FormControl fullWidth>
+                  <TextField
+                    value={timeoutMessage}
+                    onChange={event => setTimeoutMessage(event.target.value)}
+                    placeholder="Timeout Message"
+                    margin="dense"
+                    label="Timeout Message"
+                    size="small"
+                    fullWidth
                   />
                 </FormControl>
               </Grid>
