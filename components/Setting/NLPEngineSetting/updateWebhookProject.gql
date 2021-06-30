@@ -3,16 +3,28 @@ mutation updateWebhookProject (
   $webhookUrl: String
   $webhookUsername: String
   $webhookAvailable: Boolean
+  $gatewayUrl: String
+  $basicAuthUsername: String
+  $basicAuthPassword: String
+  $timeoutMessage: String
 ) {
   updateWebhookProject (
     id: $id
     webhookUrl: $webhookUrl
     webhookUsername: $webhookUsername
     webhookAvailable: $webhookAvailable
+    gatewayUrl: $gatewayUrl
+    basicAuthUsername: $basicAuthUsername
+    basicAuthPassword: $basicAuthPassword
+    timeoutMessage: $timeoutMessage
   ) {
     id
     webhookUrl
     webhookUsername
     webhookAvailable
+    gatewayUrl
+    basicAuthUsername
+    basicAuthPassword
+    timeoutMessage
   }
 }

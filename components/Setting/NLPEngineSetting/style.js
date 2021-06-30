@@ -5,6 +5,10 @@ const style = {
   },
   button: {
     marginLeft: 10
+  },
+  eye: {
+    cursor: 'pointer',
+    backgroundColor: '#FFF'
   }
 };
 
