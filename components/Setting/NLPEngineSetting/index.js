@@ -19,6 +19,10 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import Switch from '@material-ui/core/Switch';
 import { RemoveRedEye } from '@material-ui/icons';
+import JSONInput from 'react-json-editor-ajrm';
+import locale from 'react-json-editor-ajrm/locale/en';
+import _ from 'lodash';
+
 import ActionConfirmDialog from '../../common/ActionConfirmDialog';
 import UploadFileDialog from '../../common/UploadFileDialog';
 import SimpleProductLayoutProvider from '../../layout/SimpleProductLayoutProvider';
@@ -37,6 +41,7 @@ const NLPEngineSetting = props => {
     updateWebhookProject,
     webhookProject
   } = props;
+
   const [dialogflowDialogOpen, setDialogflowDialogOpen] = useState(false);
   const [defaultDialogOpen, setDefaultDialogOpen] = useState(false);
   const [disconnectDialogOpen, setDisconnectDialogOpen] = useState(false);
@@ -59,6 +64,7 @@ const NLPEngineSetting = props => {
   );
 
   const [showHidePassword, setShowHidePassword] = useState(true);
+  const [headersValue, setHeadersValue] = useState({});
 
   const [myIntegration] = myIntegrations;
 
@@ -173,8 +179,10 @@ const NLPEngineSetting = props => {
       gatewayUrl,
       basicAuthUsername,
       basicAuthPassword,
-      timeoutMessage
+      timeoutMessage,
+      generalHeaders: JSON.stringify(headersValue)
     };
+
     updateWebhookProject({
       id: projectId,
       ...payload
@@ -186,10 +194,12 @@ const NLPEngineSetting = props => {
   };
 
   useEffect(() => {
-    if (webhookProject) {
+    if (!_.isEmpty(webhookProject)) {
       setUrlValue(webhookProject.webhookUrl);
       setUsernameValue(webhookProject.webhookUsername);
-      setAvailable(webhookProject.webhookAvailable);
+      setGatewayUrl(webhookProject.gatewayUrl);
+      setTimeoutMessage(webhookProject.timeoutMessage);
+      setHeadersValue(JSON.parse(webhookProject.generalHeaders));
     }
   }, [webhookProject]);
 
@@ -290,7 +300,7 @@ const NLPEngineSetting = props => {
               container
               direction="column"
               spacing={16}
-              style={{ padding: '0px 0px 20px' }}
+              style={{ padding: '0px 0px 50px' }}
             >
               <Grid item>
                 <FormControl fullWidth>
@@ -351,7 +361,7 @@ const NLPEngineSetting = props => {
                   />
                 </FormControl>
               </Grid>
-              <Grid item>
+              {/* <Grid item>
                 <FormControl fullWidth>
                   <TextField
                     value={basicAuthUsername}
@@ -389,7 +399,7 @@ const NLPEngineSetting = props => {
                     type={!showHidePassword ? 'password' : 'text'}
                   />
                 </FormControl>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 <FormControl fullWidth>
                   <TextField
@@ -400,6 +410,35 @@ const NLPEngineSetting = props => {
                     label="Timeout Message"
                     size="small"
                     fullWidth
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item>
+                <FormControl fullWidth>
+                  <Typography
+                    component="div"
+                    style={{
+                      fontSize: 16,
+                      fontWeight: 500,
+                      padding: '20px 0px 5px',
+                      marginBottom: 15
+                    }}
+                  >
+                    Setting Headers JSON
+                  </Typography>
+                  <JSONInput
+                    id="a_unique_id"
+                    theme="dark_vscode_tribute"
+                    placeholder={headersValue}
+                    colors={{
+                      string: '#DAA520'
+                    }}
+                    locale={locale}
+                    height="300px"
+                    width="100%"
+                    onChange={value => {
+                      setHeadersValue(value.jsObject);
+                    }}
                   />
                 </FormControl>
               </Grid>

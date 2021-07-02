@@ -58,7 +58,8 @@ const withUpdateWebhookProject = graphql(updateWebhookProjectGql, {
       gatewayUrl,
       basicAuthUsername,
       basicAuthPassword,
-      timeoutMessage
+      timeoutMessage,
+      generalHeaders
     }) =>
       updateWebhookProject({
         variables: {
@@ -69,7 +70,8 @@ const withUpdateWebhookProject = graphql(updateWebhookProjectGql, {
           gatewayUrl,
           basicAuthUsername,
           basicAuthPassword,
-          timeoutMessage
+          timeoutMessage,
+          generalHeaders
         },
         refetchQueries: ['myProjects', 'project']
       })
