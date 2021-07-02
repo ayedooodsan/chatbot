@@ -11,5 +11,6 @@ query webhookProject (
     basicAuthUsername
     basicAuthPassword
     timeoutMessage
+    generalHeaders
   }
 }
