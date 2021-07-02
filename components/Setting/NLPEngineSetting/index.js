@@ -21,6 +21,7 @@ import Switch from '@material-ui/core/Switch';
 import { RemoveRedEye } from '@material-ui/icons';
 import JSONInput from 'react-json-editor-ajrm';
 import locale from 'react-json-editor-ajrm/locale/en';
+import _ from 'lodash';
 
 import ActionConfirmDialog from '../../common/ActionConfirmDialog';
 import UploadFileDialog from '../../common/UploadFileDialog';
@@ -40,6 +41,7 @@ const NLPEngineSetting = props => {
     updateWebhookProject,
     webhookProject
   } = props;
+
   const [dialogflowDialogOpen, setDialogflowDialogOpen] = useState(false);
   const [defaultDialogOpen, setDefaultDialogOpen] = useState(false);
   const [disconnectDialogOpen, setDisconnectDialogOpen] = useState(false);
@@ -62,7 +64,7 @@ const NLPEngineSetting = props => {
   );
 
   const [showHidePassword, setShowHidePassword] = useState(true);
-  const [headersValue, setHeadersValue] = useState(null);
+  const [headersValue, setHeadersValue] = useState({});
 
   const [myIntegration] = myIntegrations;
 
@@ -178,8 +180,9 @@ const NLPEngineSetting = props => {
       basicAuthUsername,
       basicAuthPassword,
       timeoutMessage,
-      generalheaders: headersValue
+      generalHeaders: JSON.stringify(headersValue)
     };
+
     updateWebhookProject({
       id: projectId,
       ...payload
@@ -191,10 +194,12 @@ const NLPEngineSetting = props => {
   };
 
   useEffect(() => {
-    if (webhookProject) {
+    if (!_.isEmpty(webhookProject)) {
       setUrlValue(webhookProject.webhookUrl);
       setUsernameValue(webhookProject.webhookUsername);
-      setAvailable(webhookProject.webhookAvailable);
+      setGatewayUrl(webhookProject.gatewayUrl);
+      setTimeoutMessage(webhookProject.timeoutMessage);
+      setHeadersValue(JSON.parse(webhookProject.generalHeaders));
     }
   }, [webhookProject]);
 
