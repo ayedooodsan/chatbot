@@ -16,6 +16,7 @@ import ShareSetting from './ShareSetting';
 import NLPEngineSetting from './NLPEngineSetting';
 import LogSetting from './LogSetting';
 import RawHistorySetting from './RawHistorySetting';
+import ResetPassword from './ResetPassword';
 import connect from './store';
 
 const Setting = props => {
@@ -38,6 +39,10 @@ const Setting = props => {
     settingMenu.push({
       name: 'Log Engine',
       type: 'logIntegration'
+    });
+    settingMenu.push({
+      name: 'Reset Password',
+      type: 'resetPassword'
     });
   }
 
@@ -69,6 +74,10 @@ const Setting = props => {
       }
       case 'rawHistory': {
         SettingProduct = RawHistorySetting;
+        break;
+      }
+      case 'resetPassword': {
+        SettingProduct = ResetPassword;
         break;
       }
       default: {
