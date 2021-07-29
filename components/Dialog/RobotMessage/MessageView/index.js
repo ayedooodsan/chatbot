@@ -12,6 +12,10 @@ import FacebookTextView from '../Facebook/TextView';
 import FacebookButtonView from '../Facebook/ButtonView';
 import FacebookQuickReplyView from '../Facebook/QuickReplyView';
 import FacebookCardView from '../Facebook/CardView';
+import TelegramTextView from '../Telegram/TextView';
+import TelegramButtonView from '../Telegram/ButtonView';
+import TelegramQuickReplyView from '../Telegram/QuickReplyView';
+import TelegramCardView from '../Telegram/CardView';
 
 const MessageView = props => {
   const { value, type, platform } = props;
@@ -40,6 +44,14 @@ const MessageView = props => {
     View = FacebookQuickReplyView;
   } else if (platform === 'facebook' && type === 'card') {
     View = FacebookCardView;
+  } else if (platform === 'telegram' && type === 'text') {
+    View = TelegramTextView;
+  } else if (platform === 'telegram' && type === 'button') {
+    View = TelegramButtonView;
+  } else if (platform === 'telegram' && type === 'quickReply') {
+    View = TelegramQuickReplyView;
+  } else if (platform === 'telegram' && type === 'card') {
+    View = TelegramCardView;
   }
   return View && <View value={value} />;
 };
