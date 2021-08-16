@@ -200,6 +200,7 @@ const NLPEngineSetting = props => {
       setGatewayUrl(webhookProject.gatewayUrl);
       setTimeoutMessage(webhookProject.timeoutMessage);
       setHeadersValue(JSON.parse(webhookProject.generalHeaders));
+      setAvailable(webhookProject.webhookAvailable);
     }
   }, [webhookProject]);
 
