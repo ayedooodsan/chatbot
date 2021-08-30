@@ -1,0 +1,27 @@
+mutation saveQisqusIntegration (
+  $projectId: String!
+  $dialogflowProjectId: String!
+  $qiscusAccountEmail: String!
+  $qiscusAccountPassword: String!
+  $qiscusAppId: String!
+  $secretKeyBot: String!
+  $senderEmail: String!
+) {
+  saveQisqusIntegration (
+    projectId: $projectId
+    dialogflowProjectId: $dialogflowProjectId
+    qiscusAccountEmail: $qiscusAccountEmail
+    qiscusAccountPassword: $qiscusAccountPassword
+    qiscusAppId: $qiscusAppId
+    secretKeyBot: $secretKeyBot
+    senderEmail: $senderEmail
+  ) {
+      projectId
+      dialogflowProjectId
+      qiscusAccountEmail
+      qiscusAccountPassword
+      qiscusAppId
+      secretKeyBot
+      senderEmail
+  }
+}

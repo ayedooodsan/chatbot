@@ -17,6 +17,7 @@ import NLPEngineSetting from './NLPEngineSetting';
 import LogSetting from './LogSetting';
 import RawHistorySetting from './RawHistorySetting';
 import ResetPassword from './ResetPassword';
+import QisqusIntegration from './QisqusIntegration';
 import connect from './store';
 
 const Setting = props => {
@@ -29,6 +30,7 @@ const Setting = props => {
 
   if (role === 'Admin') {
     settingMenu.push({ name: 'Share', type: 'share' });
+    settingMenu.push({ name: 'Qisqus Integration', type: 'qisqusIntegration' });
   }
 
   if (username === 'kalina') {
@@ -78,6 +80,10 @@ const Setting = props => {
       }
       case 'resetPassword': {
         SettingProduct = ResetPassword;
+        break;
+      }
+      case 'qisqusIntegration': {
+        SettingProduct = QisqusIntegration;
         break;
       }
       default: {
