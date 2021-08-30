@@ -1,0 +1,20 @@
+query myIntegrations (
+  $projectId: String!
+) {
+  myIntegrations (
+    projectId: $projectId
+    type: "nlp"
+  ) {
+    id
+    vendor
+    setting
+    status
+    projectId
+    dialogflowProjectId
+    qiscusAccountEmail
+    qiscusAccountPassword
+    qiscusAppId
+    secretKeyBot
+    senderEmail
+  }
+}
