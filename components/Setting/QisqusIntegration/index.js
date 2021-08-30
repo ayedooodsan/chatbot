@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
+import _ from 'lodash';
 import SimpleProductLayoutProvider from '../../layout/SimpleProductLayoutProvider';
 import SimpleProductHead from '../../layout/SimpleProductHead';
 import SimpleProductBody from '../../layout/SimpleProductBody';
@@ -13,6 +14,8 @@ import style from './style';
 import connect from './store';
 
 const QisqusIntegration = props => {
+  const { classes, saveQisqusIntegration, projectId, myIntegrations } = props;
+
   const formField = {
     dialogflowProjectId: '',
     qiscusAccountEmail: '',
@@ -22,7 +25,6 @@ const QisqusIntegration = props => {
     senderEmail: ''
   };
 
-  const { classes, saveQisqusIntegration, projectId } = props;
   const [formValue, setFormValue] = useState(formField);
 
   const handleChangeForm = (target, value) => {
@@ -38,6 +40,21 @@ const QisqusIntegration = props => {
       ...payload
     }).then(() => {});
   };
+
+  useEffect(() => {
+    if (!_.isEmpty(myIntegrations)) {
+      const [myIntegration] = myIntegrations;
+      const qisqusDetail = {
+        dialogflowProjectId: myIntegration.dialogflowProjectId || '',
+        qiscusAccountEmail: myIntegration.qiscusAccountEmail || '',
+        qiscusAccountPassword: myIntegration.qiscusAccountPassword || '',
+        qiscusAppId: myIntegration.qiscusAppId || '',
+        secretKeyBot: myIntegration.secretKeyBot || '',
+        senderEmail: myIntegration.senderEmail || ''
+      };
+      setFormValue(qisqusDetail);
+    }
+  }, [myIntegrations]);
 
   return (
     <SimpleProductLayoutProvider
@@ -178,10 +195,15 @@ const QisqusIntegration = props => {
   );
 };
 
+QisqusIntegration.defaultProps = {
+  myIntegrations: []
+};
+
 QisqusIntegration.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
-  saveQisqusIntegration: PropTypes.func.isRequired
+  saveQisqusIntegration: PropTypes.func.isRequired,
+  myIntegrations: PropTypes.array
 };
 
 export default withStyles(style)(connect(QisqusIntegration));
