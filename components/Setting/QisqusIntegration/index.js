@@ -6,6 +6,10 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import _ from 'lodash';
 import SimpleProductLayoutProvider from '../../layout/SimpleProductLayoutProvider';
 import SimpleProductHead from '../../layout/SimpleProductHead';
@@ -26,6 +30,7 @@ const QisqusIntegration = props => {
   };
 
   const [formValue, setFormValue] = useState(formField);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChangeForm = (target, value) => {
     setFormValue(prevState => ({ ...prevState, [target]: value }));
@@ -39,6 +44,12 @@ const QisqusIntegration = props => {
     saveQisqusIntegration({
       ...payload
     }).then(() => {});
+  };
+
+  const handleClickShowPassword = () => {
+    setShowPassword(prevState => {
+      return !prevState;
+    });
   };
 
   useEffect(() => {
@@ -114,12 +125,29 @@ const QisqusIntegration = props => {
                               event.target.value
                             )
                           }
+                          type={showPassword ? 'text' : 'password'}
                           placeholder="Qiscus Account Password"
                           margin="dense"
                           label="Qiscus Account Password"
                           variant="outlined"
                           size="small"
                           fullWidth
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  aria-label="Toggle password visibility"
+                                  onClick={handleClickShowPassword}
+                                >
+                                  {showPassword ? (
+                                    <VisibilityOff />
+                                  ) : (
+                                    <Visibility />
+                                  )}
+                                </IconButton>
+                              </InputAdornment>
+                            )
+                          }}
                         />
                       </FormControl>
                     </Grid>
@@ -182,6 +210,7 @@ const QisqusIntegration = props => {
                     variant="contained"
                     color="primary"
                     onClick={() => onSubmitForm()}
+                    disabled={_.some(formValue, _.isEmpty)}
                   >
                     Save
                   </Button>
