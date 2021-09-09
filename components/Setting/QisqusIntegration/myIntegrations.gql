@@ -9,12 +9,5 @@ query myIntegrations (
     vendor
     setting
     status
-    projectId
-    dialogflowProjectId
-    qiscusAccountEmail
-    qiscusAccountPassword
-    qiscusAppId
-    secretKeyBot
-    senderEmail
   }
 }
