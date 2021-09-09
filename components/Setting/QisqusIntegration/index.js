@@ -18,7 +18,13 @@ import style from './style';
 import connect from './store';
 
 const QisqusIntegration = props => {
-  const { classes, saveQisqusIntegration, projectId, myIntegrations } = props;
+  const {
+    classes,
+    saveQisqusIntegration,
+    projectId,
+    myIntegrations,
+    myIntegrationsByIdNoAuth
+  } = props;
 
   const formField = {
     dialogflowProjectId: '',
@@ -55,17 +61,22 @@ const QisqusIntegration = props => {
   useEffect(() => {
     if (!_.isEmpty(myIntegrations)) {
       const [myIntegration] = myIntegrations;
+      const dfProjectId = JSON.parse(myIntegration.setting).project_id;
+      setFormValue({ ...formValue, dialogflowProjectId: dfProjectId });
+    }
+
+    if (!_.isEmpty(myIntegrationsByIdNoAuth)) {
+      const [myIntegration] = myIntegrationsByIdNoAuth;
       const qisqusDetail = {
-        dialogflowProjectId: myIntegration.dialogflowProjectId || '',
         qiscusAccountEmail: myIntegration.qiscusAccountEmail || '',
         qiscusAccountPassword: myIntegration.qiscusAccountPassword || '',
         qiscusAppId: myIntegration.qiscusAppId || '',
         secretKeyBot: myIntegration.secretKeyBot || '',
         senderEmail: myIntegration.senderEmail || ''
       };
-      setFormValue(qisqusDetail);
+      setFormValue({ ...formValue, ...qisqusDetail });
     }
-  }, [myIntegrations]);
+  }, [myIntegrations, myIntegrationsByIdNoAuth]);
 
   return (
     <SimpleProductLayoutProvider
@@ -77,7 +88,7 @@ const QisqusIntegration = props => {
               <Grid item xs={12} className={classes.grid}>
                 <Paper className={classes.verticalContainer} elevation={1}>
                   <Grid container style={{ flexDirection: 'column' }}>
-                    <Grid item>
+                    {/* <Grid item>
                       <FormControl fullWidth>
                         <TextField
                           value={formValue.dialogflowProjectId}
@@ -95,7 +106,7 @@ const QisqusIntegration = props => {
                           fullWidth
                         />
                       </FormControl>
-                    </Grid>
+                    </Grid> */}
                     <Grid item>
                       <FormControl fullWidth>
                         <TextField
@@ -225,14 +236,16 @@ const QisqusIntegration = props => {
 };
 
 QisqusIntegration.defaultProps = {
-  myIntegrations: []
+  myIntegrations: [],
+  myIntegrationsByIdNoAuth: []
 };
 
 QisqusIntegration.propTypes = {
   classes: PropTypes.object.isRequired,
   projectId: PropTypes.string.isRequired,
   saveQisqusIntegration: PropTypes.func.isRequired,
-  myIntegrations: PropTypes.array
+  myIntegrations: PropTypes.array,
+  myIntegrationsByIdNoAuth: PropTypes.array
 };
 
 export default withStyles(style)(connect(QisqusIntegration));

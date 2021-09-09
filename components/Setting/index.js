@@ -30,6 +30,10 @@ const Setting = props => {
 
   if (role === 'Admin') {
     settingMenu.push({ name: 'Share', type: 'share' });
+    settingMenu.push({
+      name: 'Qisqus Integration',
+      type: 'qisqusIntegration'
+    });
   }
 
   if (username === 'kalina') {

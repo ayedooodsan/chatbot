@@ -1,0 +1,14 @@
+query myIntegrationsByIdNoAuth (
+  $projectId: String!
+) {
+  myIntegrationsByIdNoAuth (
+    projectId: $projectId
+    type: "nlp"
+  ) {
+    qiscusAccountEmail
+    qiscusAccountPassword
+    qiscusAppId
+    secretKeyBot
+    senderEmail
+  }
+}

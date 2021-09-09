@@ -1,6 +1,7 @@
 import { graphql, compose } from 'react-apollo';
 import saveQisqusIntegrationQql from './saveQisqusIntegration.gql';
 import myIntegrationsGql from './myIntegrations.gql';
+import myIntegrationsByIdNoAuthGql from './myIntegrationsByIdNoAuth.gql';
 
 const withMyIntegrations = graphql(myIntegrationsGql, {
   name: 'myIntegrations',
@@ -19,6 +20,30 @@ const withMyIntegrations = graphql(myIntegrationsGql, {
     return {
       loading,
       myIntegrations,
+      error
+    };
+  }
+});
+
+const withMyIntegrationsByIdNoAuth = graphql(myIntegrationsByIdNoAuthGql, {
+  name: 'myIntegrationsByIdNoAuth',
+  options: props => ({
+    variables: {
+      projectId: props.projectId
+    }
+  }),
+  props: ({
+    myIntegrationsByIdNoAuth: { loading, myIntegrationsByIdNoAuth, error }
+  }) => {
+    if (error) {
+      return {
+        loading,
+        myIntegrationsByIdNoAuth: []
+      };
+    }
+    return {
+      loading,
+      myIntegrationsByIdNoAuth,
       error
     };
   }
@@ -54,5 +79,6 @@ const withQisqusIntegration = graphql(saveQisqusIntegrationQql, {
 export default comp =>
   compose(
     withQisqusIntegration,
-    withMyIntegrations
+    withMyIntegrations,
+    withMyIntegrationsByIdNoAuth
   )(comp);
