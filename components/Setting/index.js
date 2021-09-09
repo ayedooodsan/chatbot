@@ -49,10 +49,6 @@ const Setting = props => {
       name: 'Reset Password',
       type: 'resetPassword'
     });
-    settingMenu.push({
-      name: 'Qisqus Integration',
-      type: 'qisqusIntegration'
-    });
   }
 
   const activeSettingType = currentSettingType =>
