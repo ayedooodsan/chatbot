@@ -53,7 +53,7 @@ const RobotMessage = props => {
   const [activePlatform, setActivePlatform] = useState(platforms[0]);
   const [chats, setChats] = useState(getChats(activePlatform, payloadGroup));
   const completePlatformOptions = [
-    { value: 'zoho', label: 'Zoho' },
+    { value: 'zoho', label: 'Default' },
     ...platformOptions
   ];
 

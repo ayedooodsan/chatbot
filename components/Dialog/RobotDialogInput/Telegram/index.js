@@ -2,20 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import MessagesLayoutProvider from '../MessagesLayoutProvider';
 import TextEditor from '../../../common/TextEditor';
-import ZohoSelectResponse from './SelectInput';
-import ZohoSuggestionResponse from './SuggestionInput';
-import ZohoLinksResponse from './LinksInput';
-import ZohoImageResponse from './ImageInput';
-import ZohoHandoverResponse from './HandoverInput';
+import TelegramQuickReplyResponse from './QuickReplyInput';
+import TelegramCardResponse from './CardInput';
+import TelegramCardImageInput from './ImageInput';
+import TelegramButtonResponse from './ButtonInput';
 
-const Zoho = props => {
+const Telegram = props => {
   const messageTypes = [
     { value: 'text', label: 'Text Response' },
-    { value: 'select', label: 'Select Response - Zoho' },
-    { value: 'suggestion', label: 'Suggestion Response - Zoho' },
-    { value: 'links', label: 'Link Response - Zoho' },
-    { value: 'forward', label: 'Handover Response - Zoho' },
-    { value: 'image', label: 'Image Response - Zoho' }
+    { value: 'quickReply', label: 'Quick Reply' },
+    { value: 'button', label: 'Button' },
+    { value: 'card', label: 'Card' }
   ];
   const { messages, onChange } = props;
   const renderMessage = (message, changeMessage) => {
@@ -28,17 +25,9 @@ const Zoho = props => {
         />
       );
     }
-    if (message.type === 'select') {
+    if (message.type === 'quickReply') {
       return (
-        <ZohoSelectResponse
-          value={message.value}
-          onChange={value => changeMessage({ ...message, value })}
-        />
-      );
-    }
-    if (message.type === 'links') {
-      return (
-        <ZohoLinksResponse
+        <TelegramQuickReplyResponse
           value={message.value}
           onChange={value => changeMessage({ ...message, value })}
         />
@@ -46,24 +35,23 @@ const Zoho = props => {
     }
     if (message.type === 'image') {
       return (
-        <ZohoImageResponse
+        <TelegramCardImageInput
           value={message.value}
           onChange={value => changeMessage({ ...message, value })}
         />
       );
     }
-    if (message.type === 'suggestion') {
+    if (message.type === 'button') {
       return (
-        <ZohoSuggestionResponse
+        <TelegramButtonResponse
           value={message.value}
           onChange={value => changeMessage({ ...message, value })}
         />
       );
     }
-    if (message.type === 'forward') {
+    if (message.type === 'card') {
       return (
-        <ZohoHandoverResponse
-          label="Handover Response"
+        <TelegramCardResponse
           value={message.value}
           onChange={value => changeMessage({ ...message, value })}
         />
@@ -75,66 +63,52 @@ const Zoho = props => {
     if (messageType === 'text') {
       return {
         key: new Date().getTime() + Math.random(),
-        platform: 'zoho',
+        platform: 'telegram',
         type: messageType,
         value: []
       };
     }
-    if (messageType === 'forward') {
+    if (messageType === 'quickReply') {
       return {
         key: new Date().getTime() + Math.random(),
-        platform: 'zoho',
-        type: messageType,
-        value: ''
-      };
-    }
-    if (messageType === 'select') {
-      return {
-        key: new Date().getTime() + Math.random(),
-        platform: 'zoho',
+        platform: 'telegram',
         type: messageType,
         value: {
-          options: ['']
+          title: '',
+          replies: ['']
         }
       };
     }
-    if (messageType === 'suggestion') {
+    if (messageType === 'button') {
       return {
         key: new Date().getTime() + Math.random(),
-        platform: 'zoho',
-        type: messageType,
-        value: {
-          suggestions: ['']
-        }
-      };
-    }
-    if (messageType === 'links') {
-      return {
-        key: new Date().getTime() + Math.random(),
-        platform: 'zoho',
+        platform: 'telegram',
         type: messageType,
         value: {
           text: '',
-          image: '',
-          links: [
+          buttons: [
             {
               key: new Date().getTime() + Math.random(),
-              url: '',
-              text: '',
-              icon: ''
+              title: '',
+              value: ''
             }
           ]
         }
       };
     }
-    if (messageType === 'image') {
+    if (messageType === 'card') {
       return {
         key: new Date().getTime() + Math.random(),
-        platform: 'zoho',
+        platform: 'telegram',
         type: messageType,
         value: {
-          text: '',
-          image: ''
+          title: '',
+          buttons: [
+            {
+              key: new Date().getTime() + Math.random(),
+              text: ''
+            }
+          ]
         }
       };
     }
@@ -153,13 +127,13 @@ const Zoho = props => {
   );
 };
 
-Zoho.defaultProps = {
+Telegram.defaultProps = {
   messages: []
 };
 
-Zoho.propTypes = {
+Telegram.propTypes = {
   onChange: PropTypes.func.isRequired,
   messages: PropTypes.array
 };
 
-export default Zoho;
+export default Telegram;

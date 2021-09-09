@@ -12,6 +12,7 @@ import platformOptions from '../const';
 import Default from '../Default';
 import Zoho from '../Zoho';
 import Facebook from '../Facebook';
+import Telegram from '../Telegram';
 import styles from './style';
 
 class PlatformContainer extends React.Component {
@@ -37,7 +38,7 @@ class PlatformContainer extends React.Component {
         };
       },
       {
-        usedTabs: [{ value: 'zoho', label: 'Zoho' }],
+        usedTabs: [{ value: 'zoho', label: 'Default' }],
         unusedTabs: [...platformOptions]
       }
     );
@@ -164,6 +165,14 @@ class PlatformContainer extends React.Component {
           {value === 'zoho' && (
             <Zoho
               messages={messages.filter(message => message.platform === 'zoho')}
+              onChange={this.onChange}
+            />
+          )}
+          {value === 'telegram' && (
+            <Telegram
+              messages={messages.filter(
+                message => message.platform === 'telegram'
+              )}
               onChange={this.onChange}
             />
           )}
