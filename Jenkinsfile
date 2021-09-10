@@ -1,8 +1,7 @@
 pipeline {
-    agent any
+    agent none
         options { disableConcurrentBuilds() }
     stages {
-
         stage ('Build') {
             agent any
 
@@ -16,7 +15,7 @@ pipeline {
 
             steps {
                 sh '''#!/bin/bash
-                    npm install && npm run build
+                    echo "agung"
                 '''
             }
         }
