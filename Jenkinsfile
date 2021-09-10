@@ -1,8 +1,8 @@
 pipeline {
-    agent any
+    agent none
     options { disableConcurrentBuilds() }
     stages {
-        stage ('Build') {
+        stage ('install') {
             agent any
             steps {
                 sh 'npm install'
