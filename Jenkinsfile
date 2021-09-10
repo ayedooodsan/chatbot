@@ -4,15 +4,6 @@ pipeline {
     stages {
         stage ('Build') {
             agent any
-
-            when 
-            {
-                expression 
-                {
-                    choice == 'consolekalina'
-                }
-            }
-
             steps {
                 sh 'npm install'
             }
