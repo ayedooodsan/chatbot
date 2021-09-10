@@ -23,6 +23,7 @@ pipeline {
             }
             
             steps {
+                sh '''curl -u admin:admin -X POST "http://54.255.209.10:9000/api/projects/delete?project=3094tguj389gh3uif390"'''
                 withSonarQubeEnv('sonarcube') {
                 sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=3094tguj389gh3uif390 \
                 -Dsonar.projectName=consolekalina-prod \
