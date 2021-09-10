@@ -8,5 +8,11 @@ pipeline {
                 sh 'npm install'
             }
         }
+        stage ('build') {
+            agent any
+            steps {
+                sh 'npm run build'
+            }
+        }
     }
 }
