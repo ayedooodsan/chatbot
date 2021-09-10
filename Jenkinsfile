@@ -35,5 +35,11 @@ pipeline {
                 }
             }
         }
+        stage ('git pull') {
+            agent any
+              steps {
+              sh 'ssh webadmin@kai bash /home/webadmin/apps/shell/bin/consolekalina-pull.sh'
+            }
+        }
     }
 }
