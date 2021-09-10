@@ -14,7 +14,9 @@ pipeline {
             }
 
             steps {
-              npm install 
+                sh '''#!/bin/bash
+                    echo "npm install"
+                '''
             }
         }
     }
