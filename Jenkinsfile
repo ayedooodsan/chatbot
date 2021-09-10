@@ -43,4 +43,15 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            echo 'Running Mail'
+        }
+        success {
+            mail bcc: '', body: "<b>Success!</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "Success: Project name -> ${env.JOB_NAME}", to: "jennice.kalcare@gmail.com";
+        }  
+        failure {
+            mail bcc: '', body: "<b>Failed!</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "ERROR: Project name -> ${env.JOB_NAME}", to: "jennice.kalcare@gmail.com";
+        }
+    }
 }
