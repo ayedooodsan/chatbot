@@ -23,14 +23,14 @@ pipeline {
             }
             
             steps {
-                sh '''curl -u admin:admin -X POST "http://54.255.209.10:9000/api/projects/delete?project=3094tguj389gh3uif390"'''
+                sh '''curl -u admin:admin123 -X POST "http://54.255.209.10:9000/api/projects/delete?project=3094tguj389gh3uif390"'''
                 withSonarQubeEnv('sonarcube') {
                 sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=3094tguj389gh3uif390 \
-                -Dsonar.projectName=consolekalina-prod \
+                -Dsonar.projectName=chatbot \
                 -Dsonar.sources=. \
                 -Dsonar.host.url=http://54.255.209.10:9000 \
                 -Dsonar.login=admin \
-                -Dsonar.password=admin \
+                -Dsonar.password=admin123 \
                 -Dsonar.php.coverage.reportPath=phpunit.coverage.xml \
                 -Dsonar.php.tests.reportPath=phpunit-sonar.xml'''
                 }
